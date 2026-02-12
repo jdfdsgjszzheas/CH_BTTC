@@ -11,6 +11,7 @@
     <script src='//libtl.com/sdk.js' data-zone='10022174' data-sdk='show_10022174'></script>
 
     <style>
+        /* ... جميع الأنماط السابقة كما هي ... */
         :root {
             --primary: #00A3E0; 
             --bg: #0b0f1a;
@@ -986,7 +987,7 @@
                             <span>سحب</span>
                         </button>
                     </div>
-                    <!-- أصدقاء – سيتم إخفاؤه في المتصفحات العادية -->
+                    <!-- أصدقاء – يظهر فقط داخل تليجرام -->
                     <div class="card" id="friendsFooterCard">
                         <div class="card-title">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
@@ -1049,7 +1050,7 @@
         </div>
     </div>
 
-    <!-- نافذة الإحصائيات – مع خانة عدد المستخدمين -->
+    <!-- نافذة الإحصائيات – مع خانة عدد المستخدمين الفريدين -->
     <div class="modal-overlay" id="statsModal">
         <div class="modal stats-modal">
             <div class="modal-close-btn" onclick="closeModal('statsModal')">×</div>
@@ -1080,7 +1081,7 @@
                     <div class="stat-label">آخر سحب</div>
                     <div class="stat-value" id="lastWithdraw">لم يتم</div>
                 </div>
-                <!-- خانة عدد المستخدمين الإجمالي -->
+                <!-- عدد مستخدمي البوت الفريدين -->
                 <div class="stat-item">
                     <div class="stat-label">عدد مستخدمي البوت</div>
                     <div class="stat-value" id="totalUsers">0</div>
@@ -1093,7 +1094,7 @@
         </div>
     </div>
 
-    <!-- نافذة الإحالة – تعمل فقط على تليجرام -->
+    <!-- نافذة الإحالة – تعمل فقط داخل تليجرام -->
     <div class="modal-overlay" id="referralModal">
         <div class="modal referral-modal">
             <div class="modal-close-btn" onclick="closeModal('referralModal')">×</div>
@@ -1196,18 +1197,60 @@
             hasSubscribed: false
         };
 
-        // ===== عدد مستخدمي البوت (محاكاة) =====
-        let totalBotUsers = 0;
-        function updateTotalUsers() {
-            let users = localStorage.getItem('bttc_total_users');
-            if (users === null) {
-                users = 12345; // قيمة افتراضية
+        // ===== عداد المستخدمين الفريدين (يبدأ من 0) =====
+        let totalUniqueUsers = 0;
+        let seenUsers = [];
+
+        function initUniqueUsersCounter() {
+            // تحميل العدد والمستخدمين من localStorage
+            const savedCount = localStorage.getItem('bttc_unique_users_count');
+            const savedUsers = localStorage.getItem('bttc_unique_users_set');
+            
+            if (savedCount !== null) {
+                totalUniqueUsers = parseInt(savedCount, 10);
             } else {
-                users = parseInt(users) + 1; // زيادة العدد مع كل جلسة جديدة
+                totalUniqueUsers = 0;
+                localStorage.setItem('bttc_unique_users_count', '0');
             }
-            localStorage.setItem('bttc_total_users', users);
-            totalBotUsers = users;
-            document.getElementById('totalUsers').textContent = totalBotUsers.toLocaleString();
+            
+            if (savedUsers !== null) {
+                seenUsers = JSON.parse(savedUsers);
+            } else {
+                seenUsers = [];
+                localStorage.setItem('bttc_unique_users_set', JSON.stringify(seenUsers));
+            }
+            
+            // تحديث الواجهة
+            updateTotalUsersDisplay();
+        }
+
+        function updateUniqueUsersCounter() {
+            if (!isTelegram) return; // فقط داخل تليجرام
+            
+            const tgUser = tg.initDataUnsafe?.user;
+            if (!tgUser || !tgUser.id) return;
+            
+            const userId = String(tgUser.id);
+            
+            // التحقق من أن هذا المستخدم لم يُحتسب من قبل
+            if (!seenUsers.includes(userId)) {
+                seenUsers.push(userId);
+                totalUniqueUsers++;
+                
+                // حفظ البيانات
+                localStorage.setItem('bttc_unique_users_count', totalUniqueUsers.toString());
+                localStorage.setItem('bttc_unique_users_set', JSON.stringify(seenUsers));
+                
+                updateTotalUsersDisplay();
+            }
+        }
+
+        function updateTotalUsersDisplay() {
+            const el = document.getElementById('totalUsers');
+            if (el) {
+                // تنسيق الرقم: 12.345 (نقطة كفاصل آلاف)
+                el.textContent = totalUniqueUsers.toLocaleString('en').replace(/,/g, '.');
+            }
         }
 
         // ===== فقاعات على شكل عملة BTTC =====
@@ -1401,6 +1444,10 @@
         }
         
         function subscribeToChannel() {
+            if (!isTelegram) {
+                showCentralNotification("❌ هذه الميزة متاحة فقط داخل تطبيق تليجرام", "error");
+                return;
+            }
             tg.openTelegramLink(CHANNEL_URL);
             if (!gameData.hasSubscribed) {
                 gameData.coins += 1000;
@@ -1417,6 +1464,10 @@
         }
         
         function copyReferralCode() {
+            if (!isTelegram) {
+                showCentralNotification("❌ هذه الميزة متاحة فقط داخل تطبيق تليجرام", "error");
+                return;
+            }
             if (gameData.referralCode) {
                 const textArea = document.createElement('textarea');
                 textArea.value = gameData.referralCode;
@@ -1668,25 +1719,16 @@
                 // إخفاء الشارة العلوية للإحالة
                 const badge = document.getElementById('referralBadge');
                 if (badge) badge.style.display = 'none';
-                
-                // تعطيل أي محاولة لفتح نافذة الإحالة
-                const originalOpenModal = window.openModal;
-                window.openModal = function(modalId) {
-                    if (modalId === 'referralModal') {
-                        showCentralNotification("❌ نظام الإحالة متاح فقط داخل تطبيق تليجرام", "error");
-                        return;
-                    }
-                    document.getElementById(modalId).style.display = 'flex';
-                };
             }
         }
 
         // بدء اللعبة
         function initGame() {
             gameData.referralCode = generateReferralCode();
+            initUniqueUsersCounter();       // تهيئة عداد المستخدمين الفريدين
             updateUI();
             createBubbles();
-            updateTotalUsers(); // تحديث عدد المستخدمين
+            updateUniqueUsersCounter();    // احتساب المستخدم الحالي (إذا كان داخل تليجرام)
             loadReferralFromURL();
             disableReferralOnBrowser();
             
