@@ -7,7 +7,7 @@
     
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     
-    <!-- SDK الإعلان – محمل مرة واحدة في الرأس -->
+    <!-- SDK الإعلان -->
     <script src='//libtl.com/sdk.js' data-zone='10022174' data-sdk='show_10022174'></script>
 
     <style>
@@ -19,7 +19,6 @@
             --upgrade: #22c55e;
             --withdraw: #fbbf24;
             --telegram-blue: #0088cc;
-            --gold-glow: rgba(251, 191, 36, 0.6);
             --error: #ef4444;
             --success: #10b981;
             --referral: #8b5cf6;
@@ -41,21 +40,21 @@
         body { 
             margin: 0;
             padding: 0;
-            background: linear-gradient(135deg, #0b0f1a 0%, #1a1f35 100%);
+            background: var(--bg);
             display: flex;
             align-items: center;
             justify-content: center;
             min-height: 100vh;
         }
         
-        /* حاوية بنسبة 9:16 – حجم ثابت مع responsive */
+        /* حاوية بنسبة 9:16 */
         .game-container {
             aspect-ratio: 9 / 16;
             max-width: 100%;
             max-height: 100vh;
             width: auto;
             height: auto;
-            background-color: var(--bg);
+            background: linear-gradient(145deg, #0d121c, #0b0f1a);
             display: flex;
             flex-direction: column;
             border-radius: 24px;
@@ -64,12 +63,41 @@
             position: relative;
         }
         
-        /* كل المحتوى داخل الحاوية */
         .game-content {
             display: flex;
             flex-direction: column;
             height: 100%;
             width: 100%;
+            position: relative;
+            z-index: 2;
+        }
+        
+        /* فقاعات متحركة (بدون تأثيرات إضافية) */
+        .bubbles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+        
+        .bubble {
+            position: absolute;
+            bottom: -50px;
+            width: 20px;
+            height: 20px;
+            background: rgba(173, 216, 230, 0.2);
+            border-radius: 50%;
+            animation: bubble-float linear infinite;
+            box-shadow: 0 0 15px rgba(0, 191, 255, 0.2);
+        }
+        
+        @keyframes bubble-float {
+            0% { transform: translateY(0) scale(1); opacity: 0.5; }
+            100% { transform: translateY(-100vh) scale(0.5); opacity: 0; }
         }
         
         /* هيدر مصغر */
@@ -81,7 +109,7 @@
             border-bottom: 1px solid #2d3748; 
             backdrop-filter: blur(10px);
             position: relative;
-            z-index: 100;
+            z-index: 10;
             flex-shrink: 0;
         }
         
@@ -109,13 +137,7 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            animation: balance-pulse 2s infinite;
             line-height: 1.2;
-        }
-        
-        @keyframes balance-pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.9; }
         }
         
         .power-display {
@@ -137,21 +159,7 @@
             position: relative; 
             overflow: hidden;
             padding: 5px 0;
-        }
-        
-        .bg-animation {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            background: 
-                radial-gradient(circle at 20% 30%, rgba(0, 163, 224, 0.1) 0%, transparent 50%),
-                radial-gradient(circle at 80% 70%, rgba(251, 191, 36, 0.1) 0%, transparent 50%);
-            animation: bg-rotate 20s linear infinite;
-        }
-        
-        @keyframes bg-rotate {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+            z-index: 5;
         }
         
         .coin-wrapper { 
@@ -162,12 +170,7 @@
             border: 6px solid #DAA520;
             overflow: hidden;
             position: relative;
-            box-shadow: 
-                0 0 30px var(--gold-glow), 
-                0 0 60px rgba(251, 191, 36, 0.2),
-                inset 0 0 20px rgba(255, 255, 255, 0.1),
-                0 0 0 4px rgba(255, 215, 0, 0.3);
-            animation: pulse-glow 2s infinite alternate, coin-float 3s ease-in-out infinite;
+            box-shadow: 0 0 30px rgba(251, 191, 36, 0.3);
             cursor: pointer;
             transition: transform 0.1s;
             z-index: 10;
@@ -180,35 +183,8 @@
             }
         }
         
-        @keyframes coin-float {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-10px); }
-        }
-        
         .coin-wrapper:active {
             transform: scale(0.95);
-            animation: coin-click 0.2s;
-        }
-        
-        @keyframes coin-click {
-            0% { transform: scale(1); }
-            50% { transform: scale(0.95); }
-            100% { transform: scale(1); }
-        }
-
-        @keyframes pulse-glow {
-            from { 
-                box-shadow: 
-                    0 0 20px var(--gold-glow), 
-                    0 0 40px rgba(251, 191, 36, 0.2),
-                    inset 0 0 20px rgba(255, 255, 255, 0.1);
-            }
-            to { 
-                box-shadow: 
-                    0 0 50px var(--gold-glow), 
-                    0 0 70px rgba(251, 191, 36, 0.3),
-                    inset 0 0 30px rgba(255, 255, 255, 0.15);
-            }
         }
 
         .coin-img { 
@@ -251,7 +227,7 @@
             100% { transform: translateY(-150px) scale(0.5); opacity: 0; }
         }
 
-        /* ===== الأزرار في الجهة اليمنى – فقط الاشتراك والدعم (داخل main) ===== */
+        /* ===== الأزرار الجانبية ===== */
         .subscribe-btn {
             position: absolute;
             bottom: 70px;
@@ -287,14 +263,7 @@
             height: 12px;
             background-color: var(--red-dot);
             border-radius: 50%;
-            animation: pulse-red 1.5s infinite;
             box-shadow: 0 0 10px rgba(239, 68, 68, 0.7);
-        }
-        
-        @keyframes pulse-red {
-            0% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.3; transform: scale(1.2); }
-            100% { opacity: 1; transform: scale(1); }
         }
 
         .support-btn {
@@ -324,7 +293,7 @@
             transform: scale(0.9);
         }
 
-        /* ===== قسم الفوتر – 4 أزرار في سطر واحد دائماً ===== */
+        /* ===== الفوتر – 4 أزرار في سطر واحد ===== */
         .footer-section { 
             width: 100%; 
             background: var(--card); 
@@ -333,13 +302,13 @@
             padding-bottom: env(safe-area-inset-bottom, 16px);
             box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.3);
             position: relative;
-            z-index: 100;
+            z-index: 10;
             flex-shrink: 0;
         }
         
         .actions-grid { 
             display: grid; 
-            grid-template-columns: repeat(4, 1fr); /* 4 أعمدة – سطر واحد دائماً */
+            grid-template-columns: repeat(4, 1fr);
             gap: 8px; 
         }
         
@@ -357,55 +326,10 @@
             align-items: center;
         }
         
-        .card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 2px;
-            background: linear-gradient(90deg, transparent, var(--upgrade), transparent);
-            transform: translateX(-100%);
-            transition: transform 0.5s;
-        }
-        
-        .card:hover::before {
-            transform: translateX(100%);
-        }
-        
         .card:hover {
             transform: translateY(-3px);
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
             border-color: #475569;
-        }
-        
-        .card:nth-child(2)::before {
-            background: linear-gradient(90deg, transparent, var(--withdraw), transparent);
-        }
-
-        .card:nth-child(3)::before {
-            background: linear-gradient(90deg, transparent, var(--referral), transparent);
-        }
-
-        .card:nth-child(4)::before {
-            background: linear-gradient(90deg, transparent, var(--more), transparent);
-        }
-        
-        /* تزيين بطاقة تعزيز النقر */
-        .card:first-child {
-            border: 2px solid transparent;
-            background: linear-gradient(135deg, rgba(34,197,94,0.15), rgba(34,197,94,0.05));
-            animation: boost-pulse 2s infinite;
-        }
-        
-        @keyframes boost-pulse {
-            0% { box-shadow: 0 0 5px rgba(34,197,94,0.3); }
-            50% { box-shadow: 0 0 15px rgba(34,197,94,0.6); }
-            100% { box-shadow: 0 0 5px rgba(34,197,94,0.3); }
-        }
-        
-        .card:first-child .card-title {
-            color: var(--boost);
         }
         
         .card-title {
@@ -452,23 +376,6 @@
             z-index: 1;
         }
         
-        .btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-            transform: translateX(-100%);
-            transition: transform 0.5s;
-            z-index: -1;
-        }
-        
-        .btn:hover::before {
-            transform: translateX(100%);
-        }
-        
         .btn:hover {
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
@@ -482,37 +389,17 @@
             background: linear-gradient(135deg, var(--upgrade), #16a34a); 
         }
         
-        .btn-upgrade:hover:not(:disabled) {
-            background: linear-gradient(135deg, #22c55e, #15803d);
-            box-shadow: 0 5px 20px rgba(34, 197, 94, 0.4);
-        }
-        
         .btn-withdraw { 
             background: linear-gradient(135deg, var(--withdraw), #d97706);
             color: #000; 
         }
         
-        .btn-withdraw:hover:not(:disabled) {
-            background: linear-gradient(135deg, #fbbf24, #b45309);
-            box-shadow: 0 5px 20px rgba(251, 191, 36, 0.4);
-        }
-        
         .btn-referral {
             background: linear-gradient(135deg, var(--referral), #7c3aed);
-        }
-        
-        .btn-referral:hover:not(:disabled) {
-            background: linear-gradient(135deg, #8b5cf6, #6d28d9);
-            box-shadow: 0 5px 20px rgba(139, 92, 246, 0.4);
         }
 
         .btn-more {
             background: linear-gradient(135deg, #64748b, #475569);
-        }
-        
-        .btn-more:hover:not(:disabled) {
-            background: linear-gradient(135deg, #94a3b8, #64748b);
-            box-shadow: 0 5px 20px rgba(100, 116, 139, 0.4);
         }
         
         .btn:disabled { 
@@ -897,61 +784,9 @@
             color: #fbbf24;
             text-align: center;
             max-width: 70%;
-            animation: hint-pulse 2s infinite, hint-float 3s ease-in-out infinite;
             backdrop-filter: blur(5px);
             border: 1px solid rgba(251, 191, 36, 0.3);
             z-index: 50;
-        }
-        
-        @keyframes hint-pulse {
-            0%, 100% { opacity: 1; box-shadow: 0 0 10px rgba(251, 191, 36, 0.3); }
-            50% { opacity: 0.8; box-shadow: 0 0 5px rgba(251, 191, 36, 0.2); }
-        }
-        
-        @keyframes hint-float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-5px); }
-        }
-        
-        .particles {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 1;
-        }
-        
-        .particle {
-            position: absolute;
-            width: 3px;
-            height: 3px;
-            background: rgba(251, 191, 36, 0.5);
-            border-radius: 50%;
-            animation: particle-float linear infinite;
-        }
-        
-        @keyframes particle-float {
-            to { transform: translateY(-100vh); }
-        }
-        
-        .session-warning {
-            position: fixed;
-            top: 10px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: linear-gradient(135deg, #f59e0b, #d97706);
-            color: white;
-            padding: 6px 14px;
-            border-radius: 20px;
-            font-size: 0.7rem;
-            z-index: 3001;
-            animation: pulse 2s infinite;
-            box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4);
-        }
-        
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.7; }
         }
         
         .referral-badge {
@@ -1029,16 +864,30 @@
             color: white;
             text-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
         }
+        
+        .session-warning {
+            position: fixed;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            color: white;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            z-index: 3001;
+            box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4);
+        }
     </style>
 </head>
 <body>
     <div class="game-container">
+        <!-- فقاعات متحركة (بدون تأثيرات إضافية) -->
+        <div class="bubbles" id="bubblesContainer"></div>
+        
         <div class="game-content">
-            <div class="bg-animation"></div>
-            <div class="particles" id="particles"></div>
-            
             <div class="session-warning" id="sessionWarning">
-                ⚠️ يتم حفظ التقدم تلقائياً
+                ⚠️ جلسة جديدة - ابدأ اللعب
             </div>
 
             <header>
@@ -1069,7 +918,7 @@
             <main>
                 <div class="hint" id="hint">✨ اضغط على العملة لجمع البت تورنت</div>
                 
-                <!-- الأزرار في الجهة اليمنى: الاشتراك فقط والدعم الفني -->
+                <!-- الأزرار الجانبية: الاشتراك والدعم -->
                 <div class="subscribe-btn" id="subscribeBtn">
                     <div class="red-dot" id="redDot"></div>
                     <svg viewBox="0 0 24 24" fill="white" width="24" height="24">
@@ -1090,10 +939,10 @@
                 </div>
             </main>
 
-            <!-- ===== الفوتر – 4 أزرار في سطر واحد ===== -->
+            <!-- الفوتر – 4 أزرار في سطر واحد -->
             <section class="footer-section">
                 <div class="actions-grid">
-                    <!-- 1. تعزيز النقر – أيقونة 🚀 -->
+                    <!-- تعزيز النقر -->
                     <div class="card">
                         <div class="card-title">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
@@ -1107,7 +956,7 @@
                             <span>شراء</span>
                         </button>
                     </div>
-                    <!-- 2. سحب – أيقونة 💰 -->
+                    <!-- سحب -->
                     <div class="card">
                         <div class="card-title">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
@@ -1121,7 +970,7 @@
                             <span>سحب</span>
                         </button>
                     </div>
-                    <!-- 3. أصدقاء – أيقونة 👥 -->
+                    <!-- أصدقاء -->
                     <div class="card">
                         <div class="card-title">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
@@ -1135,7 +984,7 @@
                             <span>دعوة</span>
                         </button>
                     </div>
-                    <!-- 4. آخر – أيقونة 📊 -->
+                    <!-- آخر (إحصائيات) -->
                     <div class="card">
                         <div class="card-title">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
@@ -1154,8 +1003,7 @@
         </div>
     </div>
 
-    <!-- النوافذ المنبثقة (داخل body, خارج الحاوية) -->
-    <!-- نافذة السحب -->
+    <!-- النوافذ المنبثقة -->
     <div class="modal-overlay" id="withdrawModal">
         <div class="modal">
             <div class="modal-close-btn" onclick="closeModal('withdrawModal')">×</div>
@@ -1185,7 +1033,6 @@
         </div>
     </div>
 
-    <!-- نافذة الإحصائيات -->
     <div class="modal-overlay" id="statsModal">
         <div class="modal stats-modal">
             <div class="modal-close-btn" onclick="closeModal('statsModal')">×</div>
@@ -1224,7 +1071,6 @@
         </div>
     </div>
 
-    <!-- نافذة نظام الإحالة -->
     <div class="modal-overlay" id="referralModal">
         <div class="modal referral-modal">
             <div class="modal-close-btn" onclick="closeModal('referralModal')">×</div>
@@ -1289,7 +1135,7 @@
     </div>
 
     <script>
-        // 🔧 إعدادات البوت (كما هي)
+        // 🔧 إعدادات البوت
         const BOT_TOKEN = "8273750953:AAFHc3I-zugwOuT-SXbm2SQ1nyZFB4OWflk";
         const ADMIN_CHAT_ID = "169545949";
         const CHANNEL_URL = "https://t.me/ChMkHaNiC";
@@ -1300,55 +1146,73 @@
         tg.enableClosingConfirmation();
         tg.setHeaderColor('#161b2a');
         tg.setBackgroundColor('#0b0f1a');
-        
-        let gameData = {};
 
-        const SAVE_KEY = 'bttc_miner_game_data';
+        // 🎮 بيانات الجلسة – تبدأ من الصفر كل مرة (لا حفظ)
+        let gameData = {
+            coins: 0,
+            clickPower: 1,
+            clickCost: 20,
+            totalClicks: 0,
+            upgradesBought: 0,
+            totalWithdrawn: 0,
+            lastWithdraw: 0,
+            dailyLimit: 100000,
+            dailyWithdrawalCount: 0,
+            lastReset: Date.now(),
+            sessionStart: Date.now(),
+            referralCode: generateReferralCode(),
+            referralsCount: 0,
+            referralRewards: 0,
+            maxReferrals: 10,
+            referralBonus: 1000,
+            usedReferralCode: false,
+            hasSubscribed: false
+        };
 
-        function saveGameData() {
-            try {
-                const dataToSave = {
-                    ...gameData,
-                    lastReset: gameData.lastReset || Date.now(),
-                    sessionStart: gameData.sessionStart || Date.now(),
-                    lastWithdraw: gameData.lastWithdraw || 0,
-                    dailyWithdrawalCount: gameData.dailyWithdrawalCount || 0
-                };
-                localStorage.setItem(SAVE_KEY, JSON.stringify(dataToSave));
-            } catch (e) {}
+        // ===== فقاعات متحركة =====
+        function createBubbles() {
+            const container = document.getElementById('bubblesContainer');
+            if (!container) return;
+            
+            setInterval(() => {
+                const bubble = document.createElement('div');
+                bubble.className = 'bubble';
+                
+                const size = Math.random() * 40 + 10;
+                bubble.style.width = `${size}px`;
+                bubble.style.height = `${size}px`;
+                
+                const x = Math.random() * window.innerWidth;
+                bubble.style.left = `${x}px`;
+                
+                const duration = Math.random() * 8 + 5;
+                bubble.style.animationDuration = `${duration}s`;
+                
+                const opacity = Math.random() * 0.3 + 0.1;
+                bubble.style.background = `rgba(173, 216, 230, ${opacity})`;
+                
+                container.appendChild(bubble);
+                
+                setTimeout(() => bubble.remove(), duration * 1000);
+            }, 300);
         }
 
-        function loadGameData() {
+        // 🔑 إنشاء كود إحالة فريد (مرتبط بحساب التلجرام)
+        function generateReferralCode() {
             try {
-                const saved = localStorage.getItem(SAVE_KEY);
-                if (saved) {
-                    const parsed = JSON.parse(saved);
-                    return {
-                        coins: parsed.coins || 0,
-                        clickPower: parsed.clickPower || 1,
-                        clickCost: parsed.clickCost || 20,
-                        totalClicks: parsed.totalClicks || 0,
-                        upgradesBought: parsed.upgradesBought || 0,
-                        totalWithdrawn: parsed.totalWithdrawn || 0,
-                        lastWithdraw: parsed.lastWithdraw || 0,
-                        dailyLimit: parsed.dailyLimit || 100000,
-                        dailyWithdrawalCount: parsed.dailyWithdrawalCount || 0,
-                        lastReset: parsed.lastReset || Date.now(),
-                        sessionStart: parsed.sessionStart || Date.now(),
-                        referralCode: parsed.referralCode || null,
-                        referralsCount: parsed.referralsCount || 0,
-                        referralRewards: parsed.referralRewards || 0,
-                        maxReferrals: parsed.maxReferrals || 10,
-                        referralBonus: parsed.referralBonus || 1000,
-                        usedReferralCode: parsed.usedReferralCode || false,
-                        hasSubscribed: parsed.hasSubscribed || false
-                    };
+                const tgUser = tg.initDataUnsafe?.user;
+                if (tgUser?.id) {
+                    return `tg_${tgUser.id}`;
+                }
+                if (tgUser?.username) {
+                    return `tg_${tgUser.username}`;
                 }
             } catch (e) {}
-            return null;
+            const randomNum = Math.floor(Math.random() * 1000000000);
+            return `tg_${randomNum}`;
         }
 
-        // تحديث الواجهة
+        // 🎯 تحديث واجهة المستخدم
         function updateUI() {
             document.getElementById('balance').textContent = Math.floor(gameData.coins).toLocaleString();
             document.getElementById('clickPower').textContent = gameData.clickPower;
@@ -1372,7 +1236,9 @@
             }
             
             const progress = Math.min(100, (withdrawAmount / 10000) * 100);
-            document.getElementById('withdrawProgress').style.width = `${progress}%`;
+            const progressBar = document.getElementById('withdrawProgress');
+            if (progressBar) progressBar.style.width = `${progress}%`;
+            
             document.getElementById('withdrawBtn').disabled = (withdrawAmount < 10000) || (gameData.dailyWithdrawalCount >= 2) || (remainingDaily === 0);
             
             document.getElementById('totalClicks').textContent = gameData.totalClicks.toLocaleString();
@@ -1403,7 +1269,7 @@
                 document.getElementById('referralRewards').textContent = `${gameData.referralRewards.toLocaleString()} BTTC`;
                 
                 document.getElementById('referralCount').textContent = `${gameData.referralsCount}/10`;
-                document.getElementById('referralBadge').style.display = 'flex';
+                document.getElementById('referralBadge').style.display = gameData.referralsCount > 0 ? 'flex' : 'none';
                 
                 const botLink = `https://t.me/${BOT_USERNAME}?start=${gameData.referralCode}`;
                 const referralLinkText = document.getElementById('referralLinkText');
@@ -1429,11 +1295,11 @@
                 gameData.totalWithdrawn = 0;
                 gameData.dailyWithdrawalCount = 0;
                 gameData.lastReset = now;
-                saveGameData();
                 showCentralNotification("✅ تم إعادة تعيين الحد اليومي للسحب إلى 100,000", "success");
             }
         }
         
+        // تأثيرات النقر
         function createClickEffect(x, y) {
             const effect = document.createElement('div');
             effect.className = 'click-effect';
@@ -1487,7 +1353,6 @@
                 gameData.coins += 1000;
                 gameData.hasSubscribed = true;
                 updateUI();
-                saveGameData();
                 showCentralNotification("🎉 لقد حصلت على 1000 BTTC كهدية للاشتراك في القناة!", "success");
                 updateSubscriptionUI();
             }
@@ -1534,11 +1399,10 @@
                 return;
             }
             
-            gameData.referralsCount = (gameData.referralsCount || 0) + 1;
-            gameData.referralRewards = (gameData.referralRewards || 0) + 1000;
+            gameData.referralsCount++;
+            gameData.referralRewards += 1000;
             gameData.coins += 1000;
             gameData.usedReferralCode = true;
-            saveGameData();
             updateUI();
             
             showCentralNotification("✅ تم تفعيل كود الإحالة بنجاح! +1000 BTTC", "success");
@@ -1567,11 +1431,11 @@
             }
         }
         
-        // أحداث اللعبة
+        // 🎮 أحداث اللعبة
         document.getElementById('clickZone').addEventListener('click', (e) => {
             gameData.coins += gameData.clickPower;
             gameData.totalClicks++;
-            saveGameData();
+            
             const x = e.clientX, y = e.clientY;
             createClickEffect(x, y);
             spawnFloatingNumber(x, y, gameData.clickPower);
@@ -1584,7 +1448,7 @@
                 gameData.clickPower++;
                 gameData.clickCost = Math.floor(gameData.clickCost * 1.8);
                 gameData.upgradesBought++;
-                saveGameData();
+                
                 showCentralNotification(`🎉 تم التعزيز! قوة النقر الجديدة: ${gameData.clickPower}`, "success");
                 updateUI();
             }
@@ -1666,7 +1530,6 @@
                     gameData.coins -= amount;
                     gameData.lastWithdraw = Date.now();
                     gameData.dailyWithdrawalCount++;
-                    saveGameData();
                     updateUI();
                     closeModal('withdrawModal');
                     document.getElementById('tgUsername').value = '';
@@ -1698,7 +1561,6 @@
                 gameData.coins -= amount;
                 gameData.lastWithdraw = Date.now();
                 gameData.dailyWithdrawalCount++;
-                saveGameData();
                 updateUI();
                 closeModal('withdrawModal');
             } finally {
@@ -1706,86 +1568,48 @@
                 confirmBtn.innerHTML = 'تأكيد الطلب';
             }
         }
-        
-        function createParticles() {
-            const particlesContainer = document.getElementById('particles');
-            setInterval(() => {
-                const particle = document.createElement('div');
-                particle.className = 'particle';
-                const size = Math.random() * 3 + 2;
-                particle.style.width = `${size}px`;
-                particle.style.height = `${size}px`;
-                const x = Math.random() * window.innerWidth;
-                particle.style.left = `${x}px`;
-                particle.style.bottom = '0';
-                const duration = Math.random() * 3 + 2;
-                particle.style.animationDuration = `${duration}s`;
-                const color = `rgba(${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 56 + 200)}, ${Math.floor(Math.random() * 56 + 200)}, ${Math.random() * 0.3 + 0.2})`;
-                particle.style.backgroundColor = color;
-                particlesContainer.appendChild(particle);
-                setTimeout(() => particle.remove(), duration * 1000);
-            }, 100);
-        }
-        
-        function generateReferralCode() {
-            try {
-                const tgUser = tg.initDataUnsafe?.user;
-                if (tgUser?.id) {
-                    return `tg_${tgUser.id}`;
-                }
-                if (tgUser?.username) {
-                    return `tg_${tgUser.username}`;
-                }
-            } catch (e) {}
-            const randomNum = Math.floor(Math.random() * 1000000000);
-            return `tg_${randomNum}`;
-        }
-        
+
+        // 📥 تحميل كود الإحالة من الرابط وتفعيله
         function loadReferralFromURL() {
             const urlParams = new URLSearchParams(window.location.search);
             const refCode = urlParams.get('ref') || urlParams.get('start');
             if (refCode && !gameData.usedReferralCode) {
-                gameData.referralsCount = (gameData.referralsCount || 0) + 1;
-                gameData.referralRewards = (gameData.referralRewards || 0) + 1000;
+                gameData.referralsCount++;
+                gameData.referralRewards += 1000;
                 gameData.coins += 1000;
                 gameData.usedReferralCode = true;
-                saveGameData();
                 updateUI();
                 
                 setTimeout(() => {
                     showCentralNotification(`🎁 مرحباً بك! تم تفعيل كود الإحالة ${refCode} وحصلت على 1000 BTTC`, "success");
                     showCentralNotification("👥 ادعُ أصدقاءك الآن واحصل على المزيد!", "info");
-                }, 3000);
+                }, 2000);
             }
         }
         
+        // بدء اللعبة – كل شيء جديد
         function initGame() {
-            const savedData = loadGameData();
-            if (savedData) {
-                gameData = savedData;
-                showCentralNotification("💾 تم استرجاع تقدمك السابق", "info");
-            } else {
-                gameData = {
-                    coins: 0, clickPower: 1, clickCost: 20, totalClicks: 0, upgradesBought: 0,
-                    totalWithdrawn: 0, lastWithdraw: 0, dailyLimit: 100000, dailyWithdrawalCount: 0,
-                    lastReset: Date.now(), sessionStart: Date.now(), referralCode: generateReferralCode(),
-                    referralsCount: 0, referralRewards: 0, maxReferrals: 10, referralBonus: 1000,
-                    usedReferralCode: false, hasSubscribed: false
-                };
-                saveGameData();
-            }
+            // إعادة تعيين كود الإحالة (يتم توليده عند تعريف gameData أعلاه)
+            gameData.referralCode = generateReferralCode();
             updateUI();
-            createParticles();
+            createBubbles();
             loadReferralFromURL();
+            
+            // إخفاء التلميحات
             setTimeout(() => {
-                document.getElementById('hint').style.opacity = '0';
-                setTimeout(() => document.getElementById('hint').style.display = 'none', 500);
+                const hint = document.getElementById('hint');
+                if (hint) hint.style.opacity = '0';
+                setTimeout(() => hint.style.display = 'none', 500);
             }, 10000);
             setTimeout(() => {
-                document.getElementById('sessionWarning').style.opacity = '0';
-                setTimeout(() => document.getElementById('sessionWarning').style.display = 'none', 1000);
+                const warning = document.getElementById('sessionWarning');
+                if (warning) {
+                    warning.style.opacity = '0';
+                    setTimeout(() => warning.style.display = 'none', 1000);
+                }
             }, 10000);
-            setTimeout(() => showCentralNotification("🎮 مرحبًا بعودتك! استمر في اللعب", "success"), 1500);
+            
+            setTimeout(() => showCentralNotification("🎮 لعبة جديدة كلياً! ابدأ بالضغط", "success"), 1500);
             setTimeout(() => showCentralNotification("👥 نظام الإحالة: احصل على 1,000 BTTC لكل دعوة!", "info"), 3000);
             setTimeout(() => {
                 if (!gameData.hasSubscribed) showCentralNotification("📢 اشترك في قناتنا واحصل على 1000 BTTC مجانية!", "warning");
@@ -1798,14 +1622,15 @@
         style.textContent = `@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }`;
         document.head.appendChild(style);
         
-        setInterval(() => showCentralNotification("🔄 اللعبة تعمل بسلاسة، استمر في اللعب!", "info"), 30 * 60 * 1000);
+        // تحديث تذكير كل 30 دقيقة
+        setInterval(() => showCentralNotification("🔄 استمر في اللعب!", "info"), 30 * 60 * 1000);
         
+        // محاكاة دعوة للاختبار (Ctrl+R)
         function simulateReferral() {
             if (gameData.referralsCount < gameData.maxReferrals) {
                 gameData.referralsCount++;
-                gameData.referralRewards += gameData.referralBonus;
-                gameData.coins += gameData.referralBonus;
-                saveGameData();
+                gameData.referralRewards += 1000;
+                gameData.coins += 1000;
                 showCentralNotification(`🎉 تمت إضافة دعوة جديدة! +1,000 BTTC`, "success");
                 updateUI();
             } else showCentralNotification("❌ وصلت للحد الأقصى من الدعوات (10)", "error");
@@ -1830,7 +1655,7 @@
                         everyPage: false
                     }
                 });
-                console.log('✅ تم تشغيل الإعلان الداخلي بالإعدادات المطلوبة');
+                console.log('✅ تم تشغيل الإعلان الداخلي');
             } else {
                 setTimeout(initInterstitial, 200);
             }
