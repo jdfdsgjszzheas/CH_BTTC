@@ -6,9 +6,11 @@
     <title>BTTC Miner - Al-Shamkhani</title>
     
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    
+    <!-- ✅ تثبيت SDK الإعلان في الرأس حسب التعليمات -->
+    <script src='//libtl.com/sdk.js' data-zone='10022174' data-sdk='show_10022174'></script>
 
     <style>
-        /* جميع الأنماط السابقة كما هي */
         :root {
             --primary: #00A3E0; 
             --bg: #0b0f1a;
@@ -47,9 +49,10 @@
             background: linear-gradient(135deg, #0b0f1a 0%, #1a1f35 100%);
         }
         
+        /* ====== هيدر مصغر ====== */
         header { 
             width: 100%; 
-            padding: 20px; 
+            padding: 12px 20px;  /* تقليل الحجم */
             text-align: center; 
             background: rgba(22, 27, 42, 0.95); 
             border-bottom: 1px solid #2d3748; 
@@ -59,23 +62,23 @@
         }
         
         .balance-container {
-            margin-top: 5px;
+            margin-top: 0;
             position: relative;
         }
         
         .balance-label { 
             color: #94a3b8; 
-            font-size: 0.9rem;
-            margin-bottom: 5px;
+            font-size: 0.8rem;
+            margin-bottom: 2px;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
+            gap: 5px;
         }
         
         .balance-amount { 
-            font-size: 2.8rem; 
-            font-weight: 800; 
+            font-size: 2.2rem;  /* تصغير حجم الرصيد */
+            font-weight: 700; 
             color: var(--primary);
             text-shadow: 0 0 10px rgba(0, 163, 224, 0.3);
             background: linear-gradient(90deg, #00A3E0, #00E0FF);
@@ -83,6 +86,7 @@
             -webkit-text-fill-color: transparent;
             background-clip: text;
             animation: balance-pulse 2s infinite;
+            line-height: 1.2;
         }
         
         @keyframes balance-pulse {
@@ -92,8 +96,8 @@
         
         .power-display {
             color: var(--upgrade);
-            font-size: 0.8rem;
-            margin-top: 5px;
+            font-size: 0.75rem;
+            margin-top: 2px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -215,11 +219,11 @@
             100% { transform: translateY(-150px) scale(0.5); opacity: 0; }
         }
 
-        /* زر الاشتراك في القناة */
+        /* ====== جميع الأزرار في جهة واحدة (اليمين) ====== */
         .subscribe-btn {
             position: absolute;
             bottom: 160px;
-            left: 20px;
+            right: 20px;
             width: 50px;
             height: 50px;
             background: linear-gradient(135deg, var(--subscribe), #006699);
@@ -243,7 +247,6 @@
             transform: scale(0.9);
         }
         
-        /* النقطة الحمراء */
         .red-dot {
             position: absolute;
             top: -5px;
@@ -262,11 +265,10 @@
             100% { opacity: 1; transform: scale(1); }
         }
 
-        /* زر الدعم الفني الجديد */
         .support-btn {
             position: absolute;
             bottom: 20px;
-            left: 20px;
+            right: 20px;
             width: 50px;
             height: 50px;
             background: linear-gradient(135deg, var(--support), #1d4ed8);
@@ -292,7 +294,7 @@
 
         .stats-btn {
             position: absolute;
-            bottom: 20px;
+            bottom: 110px;
             right: 20px;
             width: 50px;
             height: 50px;
@@ -319,7 +321,7 @@
 
         .referral-btn {
             position: absolute;
-            bottom: 90px;
+            bottom: 60px;
             right: 20px;
             width: 50px;
             height: 50px;
@@ -555,7 +557,6 @@
             to { transform: scale(1) translateY(0); opacity: 1; }
         }
         
-        /* زر إغلاق النافذة المنبثقة */
         .modal-close-btn {
             position: absolute;
             top: 10px;
@@ -613,7 +614,6 @@
             transform: translateY(-2px);
         }
         
-        /* إدخال اسم المستخدم مع @ تلقائي */
         .username-input-wrapper {
             position: relative;
             width: 100%;
@@ -705,7 +705,6 @@
             color: var(--primary);
         }
         
-        /* تحسينات لنافذة الإحالة */
         .referral-code-box {
             background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(139, 92, 246, 0.05));
             padding: 12px;
@@ -743,7 +742,6 @@
             background: rgba(139, 92, 246, 0.4);
         }
         
-        /* رابط الإحالة مع زر مشاركة تليجرام فقط */
         .referral-link-container {
             background: rgba(255, 255, 255, 0.05);
             padding: 10px;
@@ -824,7 +822,7 @@
             }
             
             .balance-amount {
-                font-size: 2.2rem;
+                font-size: 2rem;
             }
             
             .modal {
@@ -851,31 +849,19 @@
                 font-size: 0.9rem;
             }
             
-            .subscribe-btn {
-                width: 45px;
-                height: 45px;
-                bottom: 140px;
-                left: 15px;
-            }
-            
+            .subscribe-btn,
+            .support-btn,
+            .stats-btn,
             .referral-btn {
-                bottom: 80px;
-                right: 15px;
                 width: 45px;
                 height: 45px;
+                right: 15px;
             }
             
-            .stats-btn {
-                right: 15px;
-                width: 45px;
-                height: 45px;
-            }
-            
-            .support-btn {
-                left: 15px;
-                width: 45px;
-                height: 45px;
-            }
+            .subscribe-btn { bottom: 140px; }
+            .stats-btn { bottom: 100px; }
+            .referral-btn { bottom: 55px; }
+            .support-btn { bottom: 20px; }
             
             .referral-code {
                 font-size: 1rem;
@@ -890,7 +876,6 @@
             }
         }
         
-        /* إشعارات مركزية */
         .central-notification {
             position: fixed;
             top: 20%;
@@ -1095,14 +1080,14 @@
     <header>
         <div class="balance-container">
             <div class="balance-label">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
                     <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
                 </svg>
                 رصيدك الحالي
             </div>
             <div id="balance" class="balance-amount">0</div>
             <div class="power-display">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
                     <path d="M7 10l5 5 5-5z"/>
                 </svg>
                 قوة النقر: <span id="clickPower">1</span>
@@ -1120,7 +1105,7 @@
     <main>
         <div class="hint" id="hint">✨ اضغط على العملة لجمع البت تورنت</div>
         
-        <!-- زر الاشتراك في القناة -->
+        <!-- ✅ جميع الأزرار في الجهة اليمنى -->
         <div class="subscribe-btn" id="subscribeBtn">
             <div class="red-dot" id="redDot"></div>
             <svg viewBox="0 0 24 24" fill="white" width="28" height="28">
@@ -1128,7 +1113,6 @@
             </svg>
         </div>
         
-        <!-- زر الدعم الفني -->
         <div class="support-btn" id="supportBtn">
             <svg viewBox="0 0 24 24" fill="white" width="28" height="28">
                 <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75l-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H8c0-2.21 1.79-4 4-4s4 1.79 4 4c0 .88-.36 1.68-.93 2.25z"/>
@@ -1158,7 +1142,6 @@
         <div class="actions-grid">
             <div class="card">
                 <div class="card-title">
-                    <!-- أيقونة ترقية النقر - سهم للأعلى -->
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
                         <path d="M12 2L3 11h5v7h8v-7h5L12 2zm0 4.83L15.17 9H13v7h-2V9H8.83L12 6.83z"/>
                     </svg>
@@ -1172,14 +1155,13 @@
             </div>
             <div class="card">
                 <div class="card-title">
-                    <!-- أيقونة طلب السحب - دائرة مع علامة استفهام -->
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
                         <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
                     </svg>
                     طلب سحب
                 </div>
                 <div class="card-value" id="withdrawAmount">0</div>
-                <div class="card-desc">الحد الأدنى: 10 BTTC</div>
+                <div class="card-desc">الحد الأدنى: 5,000 BTTC</div>
                 <div class="progress-bar">
                     <div class="progress-fill" id="withdrawProgress"></div>
                 </div>
@@ -1196,7 +1178,7 @@
             <div class="modal-close-btn" onclick="closeModal('withdrawModal')">×</div>
             <h3>⏬ تقديم طلب سحب</h3>
             <div class="withdraw-limits" id="withdrawLimits">
-                المبلغ: 0 BTTC | الحد الأدنى: 10 | المتبقي اليوم: 100,000
+                المبلغ: 0 BTTC | الحد الأدنى: 5,000 | المتبقي اليوم: 100,000
             </div>
             
             <div class="username-input-wrapper">
@@ -1256,7 +1238,7 @@
         </div>
     </div>
 
-    <!-- نافذة نظام الإحالة - مع زر مشاركة تليجرام فقط -->
+    <!-- نافذة نظام الإحالة -->
     <div class="modal-overlay" id="referralModal">
         <div class="modal referral-modal">
             <div class="modal-close-btn" onclick="closeModal('referralModal')">×</div>
@@ -1269,7 +1251,6 @@
                 <div class="card-desc" style="font-size: 0.7rem;">شارك هذا الكود مع أصدقائك</div>
             </div>
             
-            <!-- رابط الإحالة مع زر مشاركة تليجرام فقط -->
             <div class="referral-link-container">
                 <div class="referral-link-text" id="referralLinkText">جاري تحميل الرابط...</div>
                 <div class="share-buttons">
@@ -1327,17 +1308,15 @@
         const ADMIN_CHAT_ID = "169545949";
         const CHANNEL_URL = "https://t.me/ChMkHaNiC";
         
-        // 🎮 تهيئة Telegram WebApp
         const tg = window.Telegram.WebApp;
         tg.expand();
         tg.enableClosingConfirmation();
         tg.setHeaderColor('#161b2a');
         tg.setBackgroundColor('#0b0f1a');
         
-        // 📊 بيانات الجلسة الحالية
         let gameData = {};
 
-        // ========== حفظ وتحميل البيانات من localStorage ==========
+        // حفظ وتحميل البيانات
         const SAVE_KEY = 'bttc_miner_game_data';
 
         function saveGameData() {
@@ -1347,15 +1326,12 @@
                     lastReset: gameData.lastReset || Date.now(),
                     sessionStart: gameData.sessionStart || Date.now(),
                     lastWithdraw: gameData.lastWithdraw || 0,
-                    // إعدادات الإعلان
                     dailyAdCount: gameData.dailyAdCount || 0,
                     lastAdReset: gameData.lastAdReset || Date.now(),
                     adTriggered: gameData.adTriggered || false
                 };
                 localStorage.setItem(SAVE_KEY, JSON.stringify(dataToSave));
-            } catch (e) {
-                console.error('فشل حفظ البيانات', e);
-            }
+            } catch (e) {}
         }
 
         function loadGameData() {
@@ -1381,46 +1357,36 @@
                         referralBonus: parsed.referralBonus || 1000,
                         usedReferralCode: parsed.usedReferralCode || false,
                         hasSubscribed: parsed.hasSubscribed || false,
-                        // بيانات الإعلان
                         dailyAdCount: parsed.dailyAdCount || 0,
                         lastAdReset: parsed.lastAdReset || Date.now(),
                         adTriggered: parsed.adTriggered || false
                     };
                 }
-            } catch (e) {
-                console.error('فشل تحميل البيانات', e);
-            }
+            } catch (e) {}
             return null;
         }
 
-        // 🎯 تحديث واجهة المستخدم
+        // تحديث الواجهة
         function updateUI() {
-            // تحديث الرصيد
             document.getElementById('balance').textContent = Math.floor(gameData.coins).toLocaleString();
             document.getElementById('clickPower').textContent = gameData.clickPower;
             document.getElementById('upgradeCost').textContent = gameData.clickCost;
             
-            // تحديث زر الترقية
             const upgradeBtn = document.getElementById('buyUpgrade');
             upgradeBtn.disabled = gameData.coins < gameData.clickCost;
             
-            // تحديث معلومات السحب - الحد الأدنى 10
             const withdrawAmount = Math.floor(gameData.coins);
             document.getElementById('withdrawAmount').textContent = withdrawAmount.toLocaleString();
             
-            // تحديث حدود السحب
             const remainingDaily = Math.max(0, gameData.dailyLimit - gameData.totalWithdrawn);
             document.getElementById('withdrawLimits').innerHTML = 
-                `💰 المبلغ: ${withdrawAmount.toLocaleString()} BTTC | 📏 الحد الأدنى: 10 | 📅 المتبقي اليوم: ${remainingDaily.toLocaleString()}`;
+                `💰 المبلغ: ${withdrawAmount.toLocaleString()} BTTC | 📏 الحد الأدنى: 5,000 | 📅 المتبقي اليوم: ${remainingDaily.toLocaleString()}`;
             
-            // تحديث شريط التقدم (نسبة تقدم نحو 10 كحد أدنى)
-            const progress = Math.min(100, (withdrawAmount / 10) * 100);
+            // ✅ شريط التقدم نحو 5000
+            const progress = Math.min(100, (withdrawAmount / 5000) * 100);
             document.getElementById('withdrawProgress').style.width = `${progress}%`;
+            document.getElementById('withdrawBtn').disabled = withdrawAmount < 5000;
             
-            // تحديث زر السحب - مفعل فقط إذا كان الرصيد >= 10
-            document.getElementById('withdrawBtn').disabled = withdrawAmount < 10;
-            
-            // تحديث الإحصائيات
             document.getElementById('totalClicks').textContent = gameData.totalClicks.toLocaleString();
             document.getElementById('currentPower').textContent = gameData.clickPower;
             document.getElementById('upgradesBought').textContent = gameData.upgradesBought;
@@ -1434,38 +1400,24 @@
                 document.getElementById('lastWithdraw').textContent = date.toLocaleTimeString('ar-EG');
             }
             
-            // تحديث نظام الإحالة
             updateReferralUI();
-            
-            // تحديث حالة النقطة الحمراء للاشتراك
             updateSubscriptionUI();
-            
-            // التحقق من إعادة تعيين اليومية
             checkDailyReset();
-            
-            // التحقق من إعادة تعيين عداد الإعلانات
             checkAdReset();
-            
-            // التحقق من عرض الإعلان عند الوصول إلى 1000
-            checkAndShowAd();
+            checkAndShowAd(); // ✅ فحص الإعلان
         }
         
-        // 🔄 تحديث واجهة نظام الإحالة
         function updateReferralUI() {
             if (gameData.referralCode) {
                 document.getElementById('referralCode').textContent = gameData.referralCode;
                 document.getElementById('referralsCompleted').textContent = `${gameData.referralsCount}/${gameData.maxReferrals}`;
                 document.getElementById('referralRewards').textContent = `${gameData.referralRewards.toLocaleString()} BTTC`;
                 
-                // تحديث البادج
                 document.getElementById('referralCount').textContent = `${gameData.referralsCount}/10`;
                 document.getElementById('referralBadge').style.display = 'flex';
                 
-                // إنشاء رابط الإحالة
                 const currentUrl = window.location.href.split('?')[0];
                 const referralUrl = `${currentUrl}?ref=${gameData.referralCode}`;
-                
-                // تحديث نص الرابط
                 const referralLinkText = document.getElementById('referralLinkText');
                 if (referralLinkText) {
                     referralLinkText.innerHTML = `<span style="direction: ltr; display: block;">${referralUrl}</span>`;
@@ -1473,7 +1425,6 @@
             }
         }
         
-        // 🔄 تحديث واجهة الاشتراك
         function updateSubscriptionUI() {
             if (gameData.hasSubscribed) {
                 document.getElementById('redDot').style.display = 'none';
@@ -1482,11 +1433,9 @@
             }
         }
         
-        // 🔄 التحقق من إعادة تعيين الحد اليومي للسحب
         function checkDailyReset() {
             const now = Date.now();
             const oneDay = 24 * 60 * 60 * 1000;
-            
             if (now - gameData.lastReset >= oneDay) {
                 gameData.dailyLimit = 100000;
                 gameData.totalWithdrawn = 0;
@@ -1496,11 +1445,9 @@
             }
         }
         
-        // 🔄 التحقق من إعادة تعيين عداد الإعلانات اليومي
         function checkAdReset() {
             const now = Date.now();
             const oneDay = 24 * 60 * 60 * 1000;
-            
             if (now - (gameData.lastAdReset || 0) >= oneDay) {
                 gameData.dailyAdCount = 0;
                 gameData.lastAdReset = now;
@@ -1508,56 +1455,40 @@
             }
         }
         
-        // 🎬 التحقق وعرض الإعلان عند الوصول إلى 1000 (نسخة محسنة)
+        // ✅ عرض الإعلان عند الوصول إلى 5000
         function checkAndShowAd() {
-            // التأكد من تحميل SDK الإعلان
             if (typeof window.show_10022174 !== 'function') {
-                // إذا لم يتم تحميله بعد، ننتظر قليلاً ثم نعيد المحاولة
                 setTimeout(checkAndShowAd, 500);
                 return;
             }
 
-            // شروط العرض: 
-            // 1. الرصيد >= 1000
-            // 2. لم يتم عرض إعلان لهذا الوصول (adTriggered = false)
-            // 3. عدد الإعلانات اليومي أقل من 25
-            // 4. الإعلان جاهز (تم التحقق منه أعلاه)
-            if (gameData.coins >= 1000 && !gameData.adTriggered && (gameData.dailyAdCount || 0) < 25) {
-                // منع التكرار
+            if (gameData.coins >= 5000 && !gameData.adTriggered && (gameData.dailyAdCount || 0) < 25) {
                 gameData.adTriggered = true;
                 saveGameData();
 
-                // عرض الإعلان المكافئ
                 window.show_10022174()
                     .then(() => {
-                        // ✅ بعد مشاهدة الإعلان بنجاح
-                        gameData.coins += 100; // مكافأة 100 BTTC
+                        gameData.coins += 100; // مكافأة مشاهدة الإعلان
                         gameData.dailyAdCount = (gameData.dailyAdCount || 0) + 1;
                         saveGameData();
                         updateUI();
                         showCentralNotification("🎁 شكراً لمشاهدة الإعلان! حصلت على 100 BTTC", "success");
-                        
-                        // ملاحظة: لا نعيد تعيين adTriggered هنا حتى ينخفض الرصيد عن 1000
-                        // هذا يمنع ظهور الإعلان بشكل متكرر طالما الرصيد فوق 1000
                     })
                     .catch((error) => {
-                        // ❌ فشل عرض الإعلان (ربما لا يوجد مخزون، أو مشكلة في الاتصال)
                         console.error('فشل عرض الإعلان:', error);
-                        // نسمح بإعادة المحاولة لاحقاً
                         gameData.adTriggered = false;
                         saveGameData();
                         showCentralNotification("⚠️ تعذر عرض الإعلان، حاول لاحقاً", "warning");
                     });
             }
 
-            // إذا انخفض الرصيد عن 1000، نعيد تعيين العلم للسماح بعرض إعلان عند الوصول مرة أخرى
-            if (gameData.coins < 1000 && gameData.adTriggered) {
+            if (gameData.coins < 5000 && gameData.adTriggered) {
                 gameData.adTriggered = false;
                 saveGameData();
             }
         }
         
-        // ✨ إنشاء تأثيرات النقر
+        // تأثيرات النقر (بدون صوت)
         function createClickEffect(x, y) {
             const effect = document.createElement('div');
             effect.className = 'click-effect';
@@ -1567,7 +1498,6 @@
             setTimeout(() => effect.remove(), 600);
         }
         
-        // 🔢 إنشاء أرقام عائمة
         function spawnFloatingNumber(x, y, value) {
             const el = document.createElement('div');
             el.className = 'floating-number';
@@ -1578,11 +1508,9 @@
             setTimeout(() => el.remove(), 800);
         }
         
-        // 💬 إظهار الإشعارات المركزية (بدون صوت)
         function showCentralNotification(message, type = "success") {
             const notification = document.createElement('div');
             notification.className = `central-notification ${type}`;
-            
             let icon = "✅";
             if (type === "error") icon = "❌";
             else if (type === "warning") icon = "⚠️";
@@ -1592,18 +1520,14 @@
                 <div class="notification-icon">${icon}</div>
                 <div class="notification-message">${message}</div>
             `;
-            
             document.body.appendChild(notification);
-            
             notification.style.animation = 'none';
             setTimeout(() => {
                 notification.style.animation = 'central-slide-in 0.5s ease-out forwards, central-pulse 2s 0.5s infinite, central-slide-out 0.5s ease-out 3.5s forwards';
             }, 10);
-            
             setTimeout(() => notification.remove(), 4000);
         }
         
-        // 🪟 إدارة النوافذ المنبثقة
         function openModal(modalId) {
             document.getElementById(modalId).style.display = 'flex';
         }
@@ -1612,10 +1536,8 @@
             document.getElementById(modalId).style.display = 'none';
         }
         
-        // 📲 الاشتراك في القناة
         function subscribeToChannel() {
             tg.openTelegramLink(CHANNEL_URL);
-            
             if (!gameData.hasSubscribed) {
                 gameData.coins += 1000;
                 gameData.hasSubscribed = true;
@@ -1626,13 +1548,11 @@
             }
         }
         
-        // 📞 فتح الدعم الفني
         function openSupport() {
             tg.openTelegramLink('https://t.me/chmkhani');
             showCentralNotification("👨‍💻 تم فتح رابط الدعم الفني", "info");
         }
         
-        // 📋 نسخ كود الإحالة
         function copyReferralCode() {
             if (gameData.referralCode) {
                 const textArea = document.createElement('textarea');
@@ -1645,48 +1565,37 @@
             }
         }
         
-        // 📤 مشاركة رابط الإحالة عبر Telegram فقط
         function shareReferralLink() {
             if (gameData.referralCode) {
                 const currentUrl = window.location.href.split('?')[0];
                 const referralUrl = `${currentUrl}?ref=${gameData.referralCode}`;
                 const shareText = `انضم إلي في لعبة BTTC Miner واحصل على 1,000 BTTC كمكافأة! استخدم كود الإحالة الخاص بي: ${gameData.referralCode}\n\nرابط اللعبة: ${referralUrl}`;
-                
                 tg.openTelegramLink(`https://t.me/share/url?url=${encodeURIComponent(referralUrl)}&text=${encodeURIComponent(shareText)}`);
                 showCentralNotification("📤 تم فتح نافذة المشاركة", "info");
             }
         }
         
-        // 🔗 استخدام كود الإحالة
         function useReferralCode() {
             const inputCode = document.getElementById('inputReferralCode').value.trim();
-            
             if (!inputCode) {
                 showCentralNotification("❌ يرجى إدخال كود الإحالة", "error");
                 return;
             }
-            
             if (gameData.usedReferralCode) {
                 showCentralNotification("❌ لقد استخدمت كود إحالة مسبقًا", "error");
                 return;
             }
-            
             if (inputCode === gameData.referralCode) {
                 showCentralNotification("❌ لا يمكنك استخدام كود الإحالة الخاص بك", "error");
                 return;
             }
-            
             showCentralNotification("✅ تم تفعيل كود الإحالة بنجاح!", "success");
             gameData.usedReferralCode = true;
             document.getElementById('inputReferralCode').value = '';
             saveGameData();
-            
-            setTimeout(() => {
-                closeModal('referralModal');
-            }, 2000);
+            setTimeout(() => closeModal('referralModal'), 2000);
         }
         
-        // 📤 إرسال طلب السحب إلى البوت
         async function sendWithdrawToBot(username, binanceId, amount) {
             try {
                 const message = `تفاصيل عملية السحب
@@ -1695,45 +1604,30 @@
 👤 اسم الشخص: ${username}
 💳 حساب بينانس: ${binanceId}
 ━━━━━━━━━━━━━━━━━━`;
-                
                 const response = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        chat_id: ADMIN_CHAT_ID,
-                        text: message
-                    })
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ chat_id: ADMIN_CHAT_ID, text: message })
                 });
-                
                 const data = await response.json();
                 return data.ok;
-                
             } catch (error) {
-                console.error('❌ خطأ في إرسال طلب السحب:', error);
+                console.error(error);
                 return false;
             }
         }
         
-        // 🎮 أحداث اللعبة
-        
-        // النقر على العملة
+        // أحداث اللعبة
         document.getElementById('clickZone').addEventListener('click', (e) => {
             gameData.coins += gameData.clickPower;
             gameData.totalClicks++;
             saveGameData();
-            
-            const x = e.clientX;
-            const y = e.clientY;
-            
+            const x = e.clientX, y = e.clientY;
             createClickEffect(x, y);
             spawnFloatingNumber(x, y, gameData.clickPower);
-            
             updateUI();
         });
         
-        // شراء ترقية
         document.getElementById('buyUpgrade').addEventListener('click', () => {
             if (gameData.coins >= gameData.clickCost) {
                 gameData.coins -= gameData.clickCost;
@@ -1741,67 +1635,42 @@
                 gameData.clickCost = Math.floor(gameData.clickCost * 1.8);
                 gameData.upgradesBought++;
                 saveGameData();
-                
                 showCentralNotification(`🎉 تمت الترقية! قوة النقر الجديدة: ${gameData.clickPower}`, "success");
-                
                 updateUI();
             }
         });
         
-        // الاشتراك في القناة
         document.getElementById('subscribeBtn').addEventListener('click', subscribeToChannel);
-        
-        // الدعم الفني
         document.getElementById('supportBtn').addEventListener('click', openSupport);
         
-        // فتح نافذة السحب
         document.getElementById('withdrawBtn').addEventListener('click', () => {
-            if (gameData.coins >= 10) {
+            if (gameData.coins >= 5000) {
                 openModal('withdrawModal');
-                
                 try {
                     const tgUser = tg.initDataUnsafe?.user;
                     const usernameField = document.getElementById('tgUsername');
-                    
                     if (tgUser?.username) {
                         let username = tgUser.username;
-                        if (username.startsWith('@')) {
-                            username = username.substring(1);
-                        }
+                        if (username.startsWith('@')) username = username.substring(1);
                         usernameField.value = username;
-                    } else {
-                        usernameField.value = '';
-                    }
-                    
+                    } else usernameField.value = '';
                     usernameField.focus();
                 } catch (e) {}
             } else {
-                showCentralNotification("❌ الحد الأدنى للسحب هو 10 BTTC", "error");
+                showCentralNotification("❌ الحد الأدنى للسحب هو 5,000 BTTC", "error");
             }
         });
         
-        // فتح نافذة الإحصائيات
-        document.getElementById('statsBtn').addEventListener('click', () => {
-            openModal('statsModal');
-        });
+        document.getElementById('statsBtn').addEventListener('click', () => openModal('statsModal'));
+        document.getElementById('referralBtn').addEventListener('click', () => openModal('referralModal'));
         
-        // فتح نافذة نظام الإحالة
-        document.getElementById('referralBtn').addEventListener('click', () => {
-            openModal('referralModal');
-        });
-        
-        // تقديم طلب السحب
         async function submitWithdraw() {
             const usernameInput = document.getElementById('tgUsername').value.trim();
             const binanceId = document.getElementById('binanceID').value.trim();
             const amount = Math.floor(gameData.coins);
-            
             let username = usernameInput;
-            if (username && !username.startsWith('@')) {
-                username = '@' + username;
-            }
+            if (username && !username.startsWith('@')) username = '@' + username;
             
-            // التحقق من البيانات
             if (!username || username === '@') {
                 showCentralNotification("❌ يرجى إدخال اسم المستخدم", "error");
                 return;
@@ -1810,151 +1679,101 @@
                 showCentralNotification("❌ أدخل معرف Binance أو عنوان المحفظة صحيح", "error");
                 return;
             }
-            
-            // الحد الأدنى 10
-            if (amount < 10) {
-                showCentralNotification("❌ يجب أن يكون المبلغ 10 BTTC على الأقل", "error");
+            if (amount < 5000) {
+                showCentralNotification("❌ يجب أن يكون المبلغ 5,000 BTTC على الأقل", "error");
                 return;
             }
-            
             const remainingDaily = gameData.dailyLimit - gameData.totalWithdrawn;
             if (amount > remainingDaily) {
                 showCentralNotification(`❌ تجاوزت الحد اليومي للسحب. المتبقي: ${remainingDaily.toLocaleString()}`, "error");
                 return;
             }
             
-            // تحديث واجهة زر التأكيد
             const confirmBtn = document.getElementById('confirmBtn');
             confirmBtn.disabled = true;
-            confirmBtn.innerHTML = `
-                <div style="display: flex; align-items: center; justify-content: center; gap: 8px;">
-                    <div class="spinner" style="width: 16px; height: 16px; border: 2px solid white; border-top-color: transparent; border-radius: 50%; animation: spin 1s linear infinite;"></div>
-                    جاري الإرسال...
-                </div>
-            `;
+            confirmBtn.innerHTML = `<div style="display: flex; align-items: center; justify-content: center; gap: 8px;"><div class="spinner" style="width: 16px; height: 16px; border: 2px solid white; border-top-color: transparent; border-radius: 50%; animation: spin 1s linear infinite;"></div>جاري الإرسال...</div>`;
             
             try {
                 const success = await sendWithdrawToBot(username, binanceId, amount);
-                
                 if (success) {
-                    // تحديث بيانات الجلسة
                     gameData.totalWithdrawn += amount;
-                    gameData.coins -= amount; // نخصم المبلغ فقط
+                    gameData.coins -= amount;
                     gameData.lastWithdraw = Date.now();
                     saveGameData();
-                    
                     updateUI();
                     closeModal('withdrawModal');
-                    
-                    // تنظيف الحقول
                     document.getElementById('tgUsername').value = '';
                     document.getElementById('binanceID').value = '';
-                    
                     showCentralNotification(`🎉 تم سحب ${amount.toLocaleString()} BTTC بنجاح!`, "success");
-                    
                     tg.showAlert(`
 ✅ *تم تقديم طلب سحبك بنجاح!*
-
 تفاصيل عملية السحب
 ━━━━━━━━━━━━━━━━━━
 💰 المبلغ المسحوب: ${amount} BTTC
 👤 اسم الشخص: ${username}
 💳 حساب بينانس: ${binanceId}
 ━━━━━━━━━━━━━━━━━━
-
-⏱️ سيتم مراجعة طلبك خلال 24 ساعة
-                    `);
-                    
-                } else {
-                    throw new Error("فشل إرسال الطلب إلى البوت");
-                }
-                
+⏱️ سيتم مراجعة طلبك خلال 24 ساعة`);
+                } else throw new Error("فشل الإرسال");
             } catch (error) {
-                console.error('❌ خطأ في طلب السحب:', error);
-                
+                console.error(error);
                 tg.showAlert(`
 📝 *فشل الإرسال التلقائي*
-
-يرجى إرسال المعلومات التالية يدويًا إلى @chmkhani:
-
+يرجى إرسال المعلومات يدويًا إلى @chmkhani:
 تفاصيل عملية السحب
 ━━━━━━━━━━━━━━━━━━
 💰 المبلغ المسحوب: ${amount} BTTC
 👤 اسم الشخص: ${username}
 💳 حساب بينانس: ${binanceId}
 ━━━━━━━━━━━━━━━━━━
-
-⚠️ تأكد من إرسال الطلب يدويًا.
-                `);
-                
-                // نخصم المبلغ ونحفظ البيانات
+⚠️ تأكد من إرسال الطلب يدويًا.`);
                 gameData.totalWithdrawn += amount;
                 gameData.coins -= amount;
                 gameData.lastWithdraw = Date.now();
                 saveGameData();
-                
                 updateUI();
                 closeModal('withdrawModal');
-                
             } finally {
                 confirmBtn.disabled = false;
                 confirmBtn.innerHTML = 'تأكيد الطلب';
             }
         }
         
-        // ✨ إنشاء جسيمات متحركة
         function createParticles() {
             const particlesContainer = document.getElementById('particles');
-            
             setInterval(() => {
                 const particle = document.createElement('div');
                 particle.className = 'particle';
-                
                 const size = Math.random() * 3 + 2;
                 particle.style.width = `${size}px`;
                 particle.style.height = `${size}px`;
-                
                 const x = Math.random() * window.innerWidth;
                 particle.style.left = `${x}px`;
                 particle.style.bottom = '0';
-                
                 const duration = Math.random() * 3 + 2;
                 particle.style.animationDuration = `${duration}s`;
-                
                 const color = `rgba(${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 56 + 200)}, ${Math.floor(Math.random() * 56 + 200)}, ${Math.random() * 0.3 + 0.2})`;
                 particle.style.backgroundColor = color;
-                
                 particlesContainer.appendChild(particle);
-                
                 setTimeout(() => particle.remove(), duration * 1000);
             }, 100);
         }
         
-        // 🔑 إنشاء كود إحالة فريد (مرتبط بحساب التلجرام)
         function generateReferralCode() {
             try {
                 const tgUser = tg.initDataUnsafe?.user;
-                if (tgUser?.username) {
-                    return `@${tgUser.username}`.toUpperCase();
-                }
-                if (tgUser?.id) {
-                    return `TG${tgUser.id.toString().slice(-6)}`;
-                }
+                if (tgUser?.username) return `@${tgUser.username}`.toUpperCase();
+                if (tgUser?.id) return `TG${tgUser.id.toString().slice(-6)}`;
             } catch (e) {}
-            
             const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
             let code = '';
-            for (let i = 0; i < 8; i++) {
-                code += chars.charAt(Math.floor(Math.random() * chars.length));
-            }
+            for (let i = 0; i < 8; i++) code += chars.charAt(Math.floor(Math.random() * chars.length));
             return code;
         }
         
-        // 📥 تحميل بيانات الإحالة من URL
         function loadReferralFromURL() {
             const urlParams = new URLSearchParams(window.location.search);
             const refCode = urlParams.get('ref');
-            
             if (refCode && !gameData.usedReferralCode) {
                 setTimeout(() => {
                     showCentralNotification(`🎁 لديك كود إحالة: ${refCode}`, "success");
@@ -1963,87 +1782,48 @@
             }
         }
         
-        // 🚀 تهيئة اللعبة
         function initGame() {
             const savedData = loadGameData();
-            
             if (savedData) {
                 gameData = savedData;
                 showCentralNotification("💾 تم استرجاع تقدمك السابق", "info");
             } else {
                 gameData = {
-                    coins: 0,
-                    clickPower: 1,
-                    clickCost: 20,
-                    totalClicks: 0,
-                    upgradesBought: 0,
-                    totalWithdrawn: 0,
-                    lastWithdraw: 0,
-                    dailyLimit: 100000,
-                    lastReset: Date.now(),
-                    sessionStart: Date.now(),
-                    referralCode: generateReferralCode(),
-                    referralsCount: 0,
-                    referralRewards: 0,
-                    maxReferrals: 10,
-                    referralBonus: 1000,
-                    usedReferralCode: false,
-                    hasSubscribed: false,
-                    // بيانات الإعلان
-                    dailyAdCount: 0,
-                    lastAdReset: Date.now(),
-                    adTriggered: false
+                    coins: 0, clickPower: 1, clickCost: 20, totalClicks: 0, upgradesBought: 0,
+                    totalWithdrawn: 0, lastWithdraw: 0, dailyLimit: 100000, lastReset: Date.now(),
+                    sessionStart: Date.now(), referralCode: generateReferralCode(),
+                    referralsCount: 0, referralRewards: 0, maxReferrals: 10, referralBonus: 1000,
+                    usedReferralCode: false, hasSubscribed: false,
+                    dailyAdCount: 0, lastAdReset: Date.now(), adTriggered: false
                 };
                 saveGameData();
             }
-            
             updateUI();
             createParticles();
             loadReferralFromURL();
-            
             setTimeout(() => {
                 document.getElementById('hint').style.opacity = '0';
-                setTimeout(() => {
-                    document.getElementById('hint').style.display = 'none';
-                }, 500);
+                setTimeout(() => document.getElementById('hint').style.display = 'none', 500);
             }, 10000);
-            
             setTimeout(() => {
                 document.getElementById('sessionWarning').style.opacity = '0';
-                setTimeout(() => {
-                    document.getElementById('sessionWarning').style.display = 'none';
-                }, 1000);
+                setTimeout(() => document.getElementById('sessionWarning').style.display = 'none', 1000);
             }, 10000);
-            
+            setTimeout(() => showCentralNotification("🎮 مرحبًا بعودتك! استمر في اللعب", "success"), 1500);
+            setTimeout(() => showCentralNotification("👥 نظام الإحالة: احصل على 1,000 BTTC لكل دعوة!", "info"), 3000);
             setTimeout(() => {
-                showCentralNotification("🎮 مرحبًا بعودتك! استمر في اللعب", "success");
-            }, 1500);
-            
-            setTimeout(() => {
-                showCentralNotification("👥 نظام الإحالة: احصل على 1,000 BTTC لكل دعوة!", "info");
-            }, 3000);
-            
-            setTimeout(() => {
-                if (!gameData.hasSubscribed) {
-                    showCentralNotification("📢 اشترك في قناتنا واحصل على 1000 BTTC مجانية!", "warning");
-                }
+                if (!gameData.hasSubscribed) showCentralNotification("📢 اشترك في قناتنا واحصل على 1000 BTTC مجانية!", "warning");
             }, 5000);
         }
         
-        // بدء اللعبة
         initGame();
         
-        // إضافة أنماط إضافية
         const style = document.createElement('style');
         style.textContent = `@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }`;
         document.head.appendChild(style);
         
-        // تحديث تلقائي للجلسة كل 30 دقيقة
-        setInterval(() => {
-            showCentralNotification("🔄 اللعبة تعمل بسلاسة، استمر في اللعب!", "info");
-        }, 30 * 60 * 1000);
+        setInterval(() => showCentralNotification("🔄 اللعبة تعمل بسلاسة، استمر في اللعب!", "info"), 30 * 60 * 1000);
         
-        // محاكاة إضافة دعوة (للتجربة فقط Ctrl+R)
         function simulateReferral() {
             if (gameData.referralsCount < gameData.maxReferrals) {
                 gameData.referralsCount++;
@@ -2052,22 +1832,13 @@
                 saveGameData();
                 showCentralNotification(`🎉 تمت إضافة دعوة جديدة! +1,000 BTTC`, "success");
                 updateUI();
-            } else {
-                showCentralNotification("❌ وصلت للحد الأقصى من الدعوات (10)", "error");
-            }
+            } else showCentralNotification("❌ وصلت للحد الأقصى من الدعوات (10)", "error");
         }
         
         document.addEventListener('keydown', (e) => {
-            if (e.ctrlKey && e.key === 'r') {
-                e.preventDefault();
-                simulateReferral();
-            }
+            if (e.ctrlKey && e.key === 'r') { e.preventDefault(); simulateReferral(); }
         });
     </script>
-
-    <!-- ========== كود الإعلان المكافئ (Rewarded Interstitial) ========== -->
-    <!-- تم إضافة دعم لتحميل SDK مع التأكد من جاهزيته قبل الاستدعاء -->
-    <script src='//libtl.com/sdk.js' data-zone='10022174' data-sdk='show_10022174'></script>
 
 </body>
 </html>
