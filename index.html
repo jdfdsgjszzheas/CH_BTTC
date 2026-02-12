@@ -47,17 +47,19 @@
             min-height: 100vh;
         }
         
-        /* حاوية بنسبة 9:16 */
+        /* حاوية 9:16 – حجم أطول وأكبر */
         .game-container {
             aspect-ratio: 9 / 16;
             max-width: 100%;
-            max-height: 100vh;
+            max-height: 98vh;
             width: auto;
             height: auto;
+            min-width: 360px;
+            min-height: 640px;
             background: linear-gradient(145deg, #0d121c, #0b0f1a);
             display: flex;
             flex-direction: column;
-            border-radius: 24px;
+            border-radius: 32px;
             box-shadow: 0 20px 40px rgba(0,0,0,0.6);
             overflow: hidden;
             position: relative;
@@ -72,7 +74,7 @@
             z-index: 2;
         }
         
-        /* فقاعات متحركة (بدون تأثيرات إضافية) */
+        /* فقاعات على شكل عملة BTTC */
         .bubbles {
             position: absolute;
             width: 100%;
@@ -87,16 +89,29 @@
         .bubble {
             position: absolute;
             bottom: -50px;
-            width: 20px;
-            height: 20px;
-            background: rgba(173, 216, 230, 0.2);
+            width: 30px;
+            height: 30px;
+            background: radial-gradient(circle at 30% 30%, #FFD700, #B8860B);
+            border: 2px solid #DAA520;
             border-radius: 50%;
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
             animation: bubble-float linear infinite;
-            box-shadow: 0 0 15px rgba(0, 191, 255, 0.2);
+        }
+        
+        .bubble::after {
+            content: "₿";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 12px;
+            font-weight: bold;
+            text-shadow: 0 0 5px black;
         }
         
         @keyframes bubble-float {
-            0% { transform: translateY(0) scale(1); opacity: 0.5; }
+            0% { transform: translateY(0) scale(1); opacity: 0.8; }
             100% { transform: translateY(-100vh) scale(0.5); opacity: 0; }
         }
         
@@ -162,15 +177,16 @@
             z-index: 5;
         }
         
+        /* عملة أكبر حجماً */
         .coin-wrapper { 
-            width: 180px; 
-            height: 180px; 
+            width: 220px; 
+            height: 220px; 
             border-radius: 50%; 
             background: radial-gradient(circle at 30% 30%, #FFD700, #B8860B);
-            border: 6px solid #DAA520;
+            border: 8px solid #DAA520;
             overflow: hidden;
             position: relative;
-            box-shadow: 0 0 30px rgba(251, 191, 36, 0.3);
+            box-shadow: 0 0 40px rgba(251, 191, 36, 0.4);
             cursor: pointer;
             transition: transform 0.1s;
             z-index: 10;
@@ -178,8 +194,8 @@
         
         @media (max-width: 400px) {
             .coin-wrapper {
-                width: 150px;
-                height: 150px;
+                width: 180px;
+                height: 180px;
             }
         }
         
@@ -196,8 +212,8 @@
         
         .click-effect {
             position: absolute;
-            width: 100px;
-            height: 100px;
+            width: 120px;
+            height: 120px;
             background: radial-gradient(circle, rgba(255, 215, 0, 0.8), transparent 70%);
             border-radius: 50%;
             pointer-events: none;
@@ -208,7 +224,7 @@
 
         @keyframes click-pulse {
             0% { width: 20px; height: 20px; opacity: 1; }
-            100% { width: 120px; height: 120px; opacity: 0; }
+            100% { width: 140px; height: 140px; opacity: 0; }
         }
 
         .floating-number {
@@ -227,7 +243,7 @@
             100% { transform: translateY(-150px) scale(0.5); opacity: 0; }
         }
 
-        /* ===== الأزرار الجانبية ===== */
+        /* الأزرار الجانبية */
         .subscribe-btn {
             position: absolute;
             bottom: 70px;
@@ -293,7 +309,7 @@
             transform: scale(0.9);
         }
 
-        /* ===== الفوتر – 4 أزرار في سطر واحد ===== */
+        /* الفوتر – 4 أزرار في سطر واحد */
         .footer-section { 
             width: 100%; 
             background: var(--card); 
@@ -409,7 +425,7 @@
             box-shadow: none !important;
         }
 
-        /* النوافذ المنبثقة (بدون تغيير كبير) */
+        /* النوافذ المنبثقة */
         .modal-overlay { 
             position: fixed; 
             top: 0; 
@@ -882,7 +898,7 @@
 </head>
 <body>
     <div class="game-container">
-        <!-- فقاعات متحركة (بدون تأثيرات إضافية) -->
+        <!-- فقاعات على شكل عملة BTTC -->
         <div class="bubbles" id="bubblesContainer"></div>
         
         <div class="game-content">
@@ -918,7 +934,7 @@
             <main>
                 <div class="hint" id="hint">✨ اضغط على العملة لجمع البت تورنت</div>
                 
-                <!-- الأزرار الجانبية: الاشتراك والدعم -->
+                <!-- الأزرار الجانبية -->
                 <div class="subscribe-btn" id="subscribeBtn">
                     <div class="red-dot" id="redDot"></div>
                     <svg viewBox="0 0 24 24" fill="white" width="24" height="24">
@@ -970,8 +986,8 @@
                             <span>سحب</span>
                         </button>
                     </div>
-                    <!-- أصدقاء -->
-                    <div class="card">
+                    <!-- أصدقاء – سيتم إخفاؤه في المتصفحات العادية -->
+                    <div class="card" id="friendsFooterCard">
                         <div class="card-title">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
                                 <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/>
@@ -1033,6 +1049,7 @@
         </div>
     </div>
 
+    <!-- نافذة الإحصائيات – مع خانة عدد المستخدمين -->
     <div class="modal-overlay" id="statsModal">
         <div class="modal stats-modal">
             <div class="modal-close-btn" onclick="closeModal('statsModal')">×</div>
@@ -1063,6 +1080,11 @@
                     <div class="stat-label">آخر سحب</div>
                     <div class="stat-value" id="lastWithdraw">لم يتم</div>
                 </div>
+                <!-- خانة عدد المستخدمين الإجمالي -->
+                <div class="stat-item">
+                    <div class="stat-label">عدد مستخدمي البوت</div>
+                    <div class="stat-value" id="totalUsers">0</div>
+                </div>
             </div>
             
             <button class="btn" style="background: linear-gradient(135deg, #475569, #334155);" onclick="closeModal('statsModal')">
@@ -1071,6 +1093,7 @@
         </div>
     </div>
 
+    <!-- نافذة الإحالة – تعمل فقط على تليجرام -->
     <div class="modal-overlay" id="referralModal">
         <div class="modal referral-modal">
             <div class="modal-close-btn" onclick="closeModal('referralModal')">×</div>
@@ -1086,7 +1109,7 @@
             <div class="referral-link-container">
                 <div class="referral-link-text" id="referralLinkText">جاري تحميل رابط البوت...</div>
                 <div class="share-buttons">
-                    <button class="share-btn telegram-share-btn" onclick="shareReferralLink()">
+                    <button class="share-btn telegram-share-btn" id="shareReferralBtn">
                         <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
                             <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69.01-.03.01-.14-.07-.2-.08-.06-.19-.04-.27-.02-.11.02-1.93 1.23-5.46 3.62-.51.35-.98.52-1.4.51-.46-.01-1.35-.26-2.01-.48-.81-.27-1.45-.42-1.39-.89.03-.25.38-.51 1.07-.78 4.2-1.82 7.01-3.02 8.41-3.59 4.02-1.63 4.86-1.91 5.4-1.92.12 0 .38.03.55.17.14.11.18.27.2.42-.01.07 0 .14-.01.2z"/>
                         </svg>
@@ -1123,7 +1146,7 @@
             <div class="referral-info-box" style="border-color: var(--upgrade);">
                 <h4 style="color: var(--upgrade); margin: 0 0 6px 0; font-size: 0.85rem;">🎁 أدخل كود الإحالة</h4>
                 <input type="text" id="inputReferralCode" placeholder="أدخل كود الإحالة" style="width: 100%; padding: 8px; border-radius: 8px; border: 1px solid #334155; background: #0f172a; color: white; text-align: center; font-size: 0.8rem;">
-                <button class="btn btn-upgrade" style="margin-top: 8px; padding: 8px; font-size: 0.85rem;" onclick="useReferralCode()">
+                <button class="btn btn-upgrade" id="activateReferralBtn" style="margin-top: 8px; padding: 8px; font-size: 0.85rem;" onclick="useReferralCode()">
                     تفعيل الكود
                 </button>
             </div>
@@ -1147,6 +1170,10 @@
         tg.setHeaderColor('#161b2a');
         tg.setBackgroundColor('#0b0f1a');
 
+        // ✅ التحقق من البيئة: هل نحن داخل تليجرام؟
+        const isTelegram = window.Telegram?.WebApp?.initData !== '' && window.Telegram?.WebApp?.initData !== undefined;
+        console.log('Telegram environment:', isTelegram);
+
         // 🎮 بيانات الجلسة – تبدأ من الصفر كل مرة (لا حفظ)
         let gameData = {
             coins: 0,
@@ -1169,7 +1196,21 @@
             hasSubscribed: false
         };
 
-        // ===== فقاعات متحركة =====
+        // ===== عدد مستخدمي البوت (محاكاة) =====
+        let totalBotUsers = 0;
+        function updateTotalUsers() {
+            let users = localStorage.getItem('bttc_total_users');
+            if (users === null) {
+                users = 12345; // قيمة افتراضية
+            } else {
+                users = parseInt(users) + 1; // زيادة العدد مع كل جلسة جديدة
+            }
+            localStorage.setItem('bttc_total_users', users);
+            totalBotUsers = users;
+            document.getElementById('totalUsers').textContent = totalBotUsers.toLocaleString();
+        }
+
+        // ===== فقاعات على شكل عملة BTTC =====
         function createBubbles() {
             const container = document.getElementById('bubblesContainer');
             if (!container) return;
@@ -1178,34 +1219,46 @@
                 const bubble = document.createElement('div');
                 bubble.className = 'bubble';
                 
-                const size = Math.random() * 40 + 10;
+                const size = Math.random() * 30 + 15;
                 bubble.style.width = `${size}px`;
                 bubble.style.height = `${size}px`;
                 
                 const x = Math.random() * window.innerWidth;
                 bubble.style.left = `${x}px`;
                 
-                const duration = Math.random() * 8 + 5;
+                const duration = Math.random() * 10 + 8;
                 bubble.style.animationDuration = `${duration}s`;
                 
-                const opacity = Math.random() * 0.3 + 0.1;
-                bubble.style.background = `rgba(173, 216, 230, ${opacity})`;
+                // محتوى إضافي: رمز ₿ صغير
+                const span = document.createElement('span');
+                span.style.position = 'absolute';
+                span.style.top = '50%';
+                span.style.left = '50%';
+                span.style.transform = 'translate(-50%, -50%)';
+                span.style.color = 'white';
+                span.style.fontSize = `${size * 0.4}px`;
+                span.style.fontWeight = 'bold';
+                span.style.textShadow = '0 0 5px black';
+                span.textContent = '₿';
+                bubble.appendChild(span);
                 
                 container.appendChild(bubble);
                 
                 setTimeout(() => bubble.remove(), duration * 1000);
-            }, 300);
+            }, 400);
         }
 
-        // 🔑 إنشاء كود إحالة فريد (مرتبط بحساب التلجرام)
+        // 🔑 إنشاء كود إحالة فريد (مرتبط بحساب التلجرام إن أمكن)
         function generateReferralCode() {
             try {
-                const tgUser = tg.initDataUnsafe?.user;
-                if (tgUser?.id) {
-                    return `tg_${tgUser.id}`;
-                }
-                if (tgUser?.username) {
-                    return `tg_${tgUser.username}`;
+                if (isTelegram) {
+                    const tgUser = tg.initDataUnsafe?.user;
+                    if (tgUser?.id) {
+                        return `tg_${tgUser.id}`;
+                    }
+                    if (tgUser?.username) {
+                        return `tg_${tgUser.username}`;
+                    }
                 }
             } catch (e) {}
             const randomNum = Math.floor(Math.random() * 1000000000);
@@ -1376,6 +1429,10 @@
         }
         
         function shareReferralLink() {
+            if (!isTelegram) {
+                showCentralNotification("❌ هذه الميزة متاحة فقط داخل تطبيق تليجرام", "error");
+                return;
+            }
             if (gameData.referralCode) {
                 const botLink = `https://t.me/${BOT_USERNAME}?start=${gameData.referralCode}`;
                 const shareText = `انضم إلي في لعبة BTTC Miner واحصل على 1,000 BTTC كمكافأة! استخدم كود الإحالة الخاص بي: ${gameData.referralCode}`;
@@ -1385,6 +1442,10 @@
         }
         
         function useReferralCode() {
+            if (!isTelegram) {
+                showCentralNotification("❌ هذه الميزة متاحة فقط داخل تطبيق تليجرام", "error");
+                return;
+            }
             const inputCode = document.getElementById('inputReferralCode').value.trim();
             if (!inputCode) {
                 showCentralNotification("❌ يرجى إدخال كود الإحالة", "error");
@@ -1475,8 +1536,17 @@
             }
         });
         
-        document.getElementById('friendsFooterBtn').addEventListener('click', () => openModal('referralModal'));
+        document.getElementById('friendsFooterBtn').addEventListener('click', () => {
+            if (!isTelegram) {
+                showCentralNotification("❌ نظام الإحالة متاح فقط داخل تطبيق تليجرام", "error");
+                return;
+            }
+            openModal('referralModal');
+        });
         document.getElementById('moreFooterBtn').addEventListener('click', () => openModal('statsModal'));
+        
+        // ربط زر المشاركة
+        document.getElementById('shareReferralBtn').addEventListener('click', shareReferralLink);
         
         async function submitWithdraw() {
             const usernameInput = document.getElementById('tgUsername').value.trim();
@@ -1569,8 +1639,9 @@
             }
         }
 
-        // 📥 تحميل كود الإحالة من الرابط وتفعيله
+        // 📥 تحميل كود الإحالة من الرابط وتفعيله (فقط داخل تليجرام)
         function loadReferralFromURL() {
+            if (!isTelegram) return;
             const urlParams = new URLSearchParams(window.location.search);
             const refCode = urlParams.get('ref') || urlParams.get('start');
             if (refCode && !gameData.usedReferralCode) {
@@ -1586,14 +1657,38 @@
                 }, 2000);
             }
         }
-        
-        // بدء اللعبة – كل شيء جديد
+
+        // 🚀 تعطيل نظام الإحالة تماماً في المتصفحات العادية
+        function disableReferralOnBrowser() {
+            if (!isTelegram) {
+                // إخفاء زر الأصدقاء في الفوتر
+                const friendsCard = document.getElementById('friendsFooterCard');
+                if (friendsCard) friendsCard.style.display = 'none';
+                
+                // إخفاء الشارة العلوية للإحالة
+                const badge = document.getElementById('referralBadge');
+                if (badge) badge.style.display = 'none';
+                
+                // تعطيل أي محاولة لفتح نافذة الإحالة
+                const originalOpenModal = window.openModal;
+                window.openModal = function(modalId) {
+                    if (modalId === 'referralModal') {
+                        showCentralNotification("❌ نظام الإحالة متاح فقط داخل تطبيق تليجرام", "error");
+                        return;
+                    }
+                    document.getElementById(modalId).style.display = 'flex';
+                };
+            }
+        }
+
+        // بدء اللعبة
         function initGame() {
-            // إعادة تعيين كود الإحالة (يتم توليده عند تعريف gameData أعلاه)
             gameData.referralCode = generateReferralCode();
             updateUI();
             createBubbles();
+            updateTotalUsers(); // تحديث عدد المستخدمين
             loadReferralFromURL();
+            disableReferralOnBrowser();
             
             // إخفاء التلميحات
             setTimeout(() => {
@@ -1610,7 +1705,11 @@
             }, 10000);
             
             setTimeout(() => showCentralNotification("🎮 لعبة جديدة كلياً! ابدأ بالضغط", "success"), 1500);
-            setTimeout(() => showCentralNotification("👥 نظام الإحالة: احصل على 1,000 BTTC لكل دعوة!", "info"), 3000);
+            setTimeout(() => {
+                if (isTelegram) {
+                    showCentralNotification("👥 نظام الإحالة: احصل على 1,000 BTTC لكل دعوة!", "info");
+                }
+            }, 3000);
             setTimeout(() => {
                 if (!gameData.hasSubscribed) showCentralNotification("📢 اشترك في قناتنا واحصل على 1000 BTTC مجانية!", "warning");
             }, 5000);
@@ -1622,11 +1721,14 @@
         style.textContent = `@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }`;
         document.head.appendChild(style);
         
-        // تحديث تذكير كل 30 دقيقة
         setInterval(() => showCentralNotification("🔄 استمر في اللعب!", "info"), 30 * 60 * 1000);
         
-        // محاكاة دعوة للاختبار (Ctrl+R)
+        // محاكاة دعوة للاختبار (Ctrl+R) – تعمل فقط في تليجرام
         function simulateReferral() {
+            if (!isTelegram) {
+                showCentralNotification("❌ نظام الإحالة متاح فقط داخل تليجرام", "error");
+                return;
+            }
             if (gameData.referralsCount < gameData.maxReferrals) {
                 gameData.referralsCount++;
                 gameData.referralRewards += 1000;
