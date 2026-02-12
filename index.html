@@ -742,7 +742,7 @@
             background: rgba(139, 92, 246, 0.4);
         }
         
-        /* رابط الإحالة الجديد مع أزرار المشاركة */
+        /* رابط الإحالة مع زر مشاركة تليجرام فقط */
         .referral-link-container {
             background: rgba(255, 255, 255, 0.05);
             padding: 10px;
@@ -788,10 +788,6 @@
         
         .share-btn:hover {
             transform: translateY(-2px);
-        }
-        
-        .copy-link-btn {
-            background: linear-gradient(135deg, #475569, #334155);
         }
         
         .telegram-share-btn {
@@ -893,7 +889,7 @@
             }
         }
         
-        /* إشعارات مركزية مع صوت */
+        /* إشعارات مركزية */
         .central-notification {
             position: fixed;
             top: 20%;
@@ -1161,7 +1157,7 @@
         <div class="actions-grid">
             <div class="card">
                 <div class="card-title">
-                    <!-- أيقونة ترقية النقر الجديدة - سهم للأعلى -->
+                    <!-- أيقونة ترقية النقر - سهم للأعلى -->
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
                         <path d="M12 2L3 11h5v7h8v-7h5L12 2zm0 4.83L15.17 9H13v7h-2V9H8.83L12 6.83z"/>
                     </svg>
@@ -1175,14 +1171,14 @@
             </div>
             <div class="card">
                 <div class="card-title">
-                    <!-- أيقونة طلب السحب الجديدة - دائرة مع علامة استفهام (رمز المساعدة/السحب) -->
+                    <!-- أيقونة طلب السحب - دائرة مع علامة استفهام -->
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
                         <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
                     </svg>
                     طلب سحب
                 </div>
                 <div class="card-value" id="withdrawAmount">0</div>
-                <div class="card-desc">الحد الأدنى: 10,000 BTTC</div>
+                <div class="card-desc">الحد الأدنى: 10 BTTC</div>
                 <div class="progress-bar">
                     <div class="progress-fill" id="withdrawProgress"></div>
                 </div>
@@ -1199,10 +1195,7 @@
             <div class="modal-close-btn" onclick="closeModal('withdrawModal')">×</div>
             <h3>⏬ تقديم طلب سحب</h3>
             <div class="withdraw-limits" id="withdrawLimits">
-                المبلغ: 0 BTTC | الحد الأدنى: 10,000 | المتبقي اليوم: 100,000
-            </div>
-            <div class="withdraw-limits" style="background: rgba(139,92,246,0.2); margin-top: 0;" id="withdrawStageInfo">
-                السحب الأول: 10,000 | السحب الثاني: 50,000 | السحب الثالث: الباقي
+                المبلغ: 0 BTTC | الحد الأدنى: 10 | المتبقي اليوم: 100,000
             </div>
             
             <div class="username-input-wrapper">
@@ -1262,7 +1255,7 @@
         </div>
     </div>
 
-    <!-- نافذة نظام الإحالة - مع أزرار المشاركة -->
+    <!-- نافذة نظام الإحالة - مع زر مشاركة تليجرام فقط -->
     <div class="modal-overlay" id="referralModal">
         <div class="modal referral-modal">
             <div class="modal-close-btn" onclick="closeModal('referralModal')">×</div>
@@ -1275,16 +1268,10 @@
                 <div class="card-desc" style="font-size: 0.7rem;">شارك هذا الكود مع أصدقائك</div>
             </div>
             
-            <!-- رابط الإحالة مع أزرار المشاركة -->
+            <!-- رابط الإحالة مع زر مشاركة تليجرام فقط -->
             <div class="referral-link-container">
                 <div class="referral-link-text" id="referralLinkText">جاري تحميل الرابط...</div>
                 <div class="share-buttons">
-                    <button class="share-btn copy-link-btn" onclick="copyReferralLink()">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/>
-                        </svg>
-                        نسخ الرابط
-                    </button>
                     <button class="share-btn telegram-share-btn" onclick="shareReferralLink()">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
                             <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69.01-.03.01-.14-.07-.2-.08-.06-.19-.04-.27-.02-.11.02-1.93 1.23-5.46 3.62-.51.35-.98.52-1.4.51-.46-.01-1.35-.26-2.01-.48-.81-.27-1.45-.42-1.39-.89.03-.25.38-.51 1.07-.78 4.2-1.82 7.01-3.02 8.41-3.59 4.02-1.63 4.86-1.91 5.4-1.92.12 0 .38.03.55.17.14.11.18.27.2.42-.01.07 0 .14-.01.2z"/>
@@ -1346,7 +1333,7 @@
         tg.setHeaderColor('#161b2a');
         tg.setBackgroundColor('#0b0f1a');
         
-        // 📊 بيانات الجلسة الحالية - سيتم تحميلها من localStorage
+        // 📊 بيانات الجلسة الحالية
         let gameData = {};
 
         // ========== حفظ وتحميل البيانات من localStorage ==========
@@ -1356,10 +1343,13 @@
             try {
                 const dataToSave = {
                     ...gameData,
-                    // نضيف حماية للتواريخ
                     lastReset: gameData.lastReset || Date.now(),
                     sessionStart: gameData.sessionStart || Date.now(),
-                    lastWithdraw: gameData.lastWithdraw || 0
+                    lastWithdraw: gameData.lastWithdraw || 0,
+                    // إعدادات الإعلان
+                    dailyAdCount: gameData.dailyAdCount || 0,
+                    lastAdReset: gameData.lastAdReset || Date.now(),
+                    adTriggered: gameData.adTriggered || false
                 };
                 localStorage.setItem(SAVE_KEY, JSON.stringify(dataToSave));
             } catch (e) {
@@ -1372,7 +1362,6 @@
                 const saved = localStorage.getItem(SAVE_KEY);
                 if (saved) {
                     const parsed = JSON.parse(saved);
-                    // التأكد من وجود كل الحقول
                     return {
                         coins: parsed.coins || 0,
                         clickPower: parsed.clickPower || 1,
@@ -1382,7 +1371,6 @@
                         totalWithdrawn: parsed.totalWithdrawn || 0,
                         lastWithdraw: parsed.lastWithdraw || 0,
                         dailyLimit: parsed.dailyLimit || 100000,
-                        dailyWithdrawalCount: parsed.dailyWithdrawalCount || 0, // عدد عمليات السحب اليوم
                         lastReset: parsed.lastReset || Date.now(),
                         sessionStart: parsed.sessionStart || Date.now(),
                         referralCode: parsed.referralCode || null,
@@ -1391,7 +1379,11 @@
                         maxReferrals: parsed.maxReferrals || 10,
                         referralBonus: parsed.referralBonus || 1000,
                         usedReferralCode: parsed.usedReferralCode || false,
-                        hasSubscribed: parsed.hasSubscribed || false
+                        hasSubscribed: parsed.hasSubscribed || false,
+                        // بيانات الإعلان
+                        dailyAdCount: parsed.dailyAdCount || 0,
+                        lastAdReset: parsed.lastAdReset || Date.now(),
+                        adTriggered: parsed.adTriggered || false
                     };
                 }
             } catch (e) {
@@ -1411,29 +1403,21 @@
             const upgradeBtn = document.getElementById('buyUpgrade');
             upgradeBtn.disabled = gameData.coins < gameData.clickCost;
             
-            // تحديث معلومات السحب
+            // تحديث معلومات السحب - الحد الأدنى 10
             const withdrawAmount = Math.floor(gameData.coins);
             document.getElementById('withdrawAmount').textContent = withdrawAmount.toLocaleString();
             
-            // تحديث حدود السحب - الحد الأدنى الجديد 10,000
+            // تحديث حدود السحب
             const remainingDaily = Math.max(0, gameData.dailyLimit - gameData.totalWithdrawn);
             document.getElementById('withdrawLimits').innerHTML = 
-                `💰 المبلغ: ${withdrawAmount.toLocaleString()} BTTC | 📏 الحد الأدنى: 10,000 | 📅 المتبقي اليوم: ${remainingDaily.toLocaleString()}`;
+                `💰 المبلغ: ${withdrawAmount.toLocaleString()} BTTC | 📏 الحد الأدنى: 10 | 📅 المتبقي اليوم: ${remainingDaily.toLocaleString()}`;
             
-            // عرض مرحلة السحب الحالية
-            let stageText = '';
-            if (gameData.dailyWithdrawalCount === 0) {
-                stageText = '🎯 السحب الأول: 10,000 BTTC (يجب أن يكون 10,000 بالضبط)';
-            } else if (gameData.dailyWithdrawalCount === 1) {
-                stageText = '🎯 السحب الثاني: 50,000 BTTC (يجب أن يكون 50,000 بالضبط)';
-            } else if (gameData.dailyWithdrawalCount >= 2) {
-                stageText = `🎯 السحب الثالث: ما تبقى (الحد الأقصى ${remainingDaily.toLocaleString()} BTTC)`;
-            }
-            document.getElementById('withdrawStageInfo').innerHTML = stageText;
-            
-            // تحديث شريط التقدم (نسبة تقدم نحو 10,000 كحد أدنى)
-            const progress = Math.min(100, (withdrawAmount / 10000) * 100);
+            // تحديث شريط التقدم (نسبة تقدم نحو 10 كحد أدنى)
+            const progress = Math.min(100, (withdrawAmount / 10) * 100);
             document.getElementById('withdrawProgress').style.width = `${progress}%`;
+            
+            // تحديث زر السحب - مفعل فقط إذا كان الرصيد >= 10
+            document.getElementById('withdrawBtn').disabled = withdrawAmount < 10;
             
             // تحديث الإحصائيات
             document.getElementById('totalClicks').textContent = gameData.totalClicks.toLocaleString();
@@ -1457,6 +1441,12 @@
             
             // التحقق من إعادة تعيين اليومية
             checkDailyReset();
+            
+            // التحقق من إعادة تعيين عداد الإعلانات
+            checkAdReset();
+            
+            // التحقق من عرض الإعلان عند الوصول إلى 1000
+            checkAndShowAd();
         }
         
         // 🔄 تحديث واجهة نظام الإحالة
@@ -1491,7 +1481,7 @@
             }
         }
         
-        // 🔄 التحقق من إعادة تعيين الحد اليومي (كل 24 ساعة)
+        // 🔄 التحقق من إعادة تعيين الحد اليومي للسحب
         function checkDailyReset() {
             const now = Date.now();
             const oneDay = 24 * 60 * 60 * 1000;
@@ -1499,10 +1489,56 @@
             if (now - gameData.lastReset >= oneDay) {
                 gameData.dailyLimit = 100000;
                 gameData.totalWithdrawn = 0;
-                gameData.dailyWithdrawalCount = 0; // إعادة تعيين عدد السحوبات
                 gameData.lastReset = now;
                 saveGameData();
                 showCentralNotification("✅ تم إعادة تعيين الحد اليومي للسحب إلى 100,000", "success");
+            }
+        }
+        
+        // 🔄 التحقق من إعادة تعيين عداد الإعلانات اليومي
+        function checkAdReset() {
+            const now = Date.now();
+            const oneDay = 24 * 60 * 60 * 1000;
+            
+            if (now - (gameData.lastAdReset || 0) >= oneDay) {
+                gameData.dailyAdCount = 0;
+                gameData.lastAdReset = now;
+                saveGameData();
+            }
+        }
+        
+        // 🎬 التحقق وعرض الإعلان عند الوصول إلى 1000
+        function checkAndShowAd() {
+            if (!window.show_10022174) {
+                setTimeout(checkAndShowAd, 500);
+                return;
+            }
+            
+            // شروط العرض: الرصيد >= 1000، لم يتم عرض إعلان لهذه النقطة، لم نتجاوز 25 إعلان في اليوم
+            if (gameData.coins >= 1000 && !gameData.adTriggered && (gameData.dailyAdCount || 0) < 25) {
+                gameData.adTriggered = true;
+                saveGameData();
+                
+                // عرض الإعلان المكافئ
+                window.show_10022174().then(() => {
+                    // بعد مشاهدة الإعلان - نعطي مكافأة 100 BTTC
+                    gameData.coins += 100;
+                    gameData.dailyAdCount = (gameData.dailyAdCount || 0) + 1;
+                    gameData.adTriggered = false; // إعادة تعيين العلم للسماح بعرض إعلان مرة أخرى بعد انخفاض الرصيد
+                    saveGameData();
+                    updateUI();
+                    showCentralNotification("🎁 شكراً لمشاهدة الإعلان! حصلت على 100 BTTC", "success");
+                }).catch(() => {
+                    // إذا فشل الإعلان، نعيد تعيين العلم
+                    gameData.adTriggered = false;
+                    saveGameData();
+                });
+            }
+            
+            // إذا انخفض الرصيد عن 1000، نعيد تعيين العلم للسماح بعرض إعلان عند الوصول مرة أخرى
+            if (gameData.coins < 1000 && gameData.adTriggered) {
+                gameData.adTriggered = false;
+                saveGameData();
             }
         }
         
@@ -1527,10 +1563,8 @@
             setTimeout(() => el.remove(), 800);
         }
         
-        // 💬 إظهار الإشعارات المركزية مع صوت
+        // 💬 إظهار الإشعارات المركزية (بدون صوت)
         function showCentralNotification(message, type = "success") {
-            playNotificationSound();
-            
             const notification = document.createElement('div');
             notification.className = `central-notification ${type}`;
             
@@ -1554,27 +1588,6 @@
             setTimeout(() => notification.remove(), 4000);
         }
         
-        // 🔊 تشغيل صوت الإشعار
-        function playNotificationSound() {
-            try {
-                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-                const oscillator = audioContext.createOscillator();
-                const gainNode = audioContext.createGain();
-                
-                oscillator.connect(gainNode);
-                gainNode.connect(audioContext.destination);
-                
-                oscillator.frequency.value = 800;
-                oscillator.type = 'sine';
-                
-                gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
-                gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
-                
-                oscillator.start();
-                oscillator.stop(audioContext.currentTime + 0.5);
-            } catch (e) {}
-        }
-        
         // 🪟 إدارة النوافذ المنبثقة
         function openModal(modalId) {
             document.getElementById(modalId).style.display = 'flex';
@@ -1594,11 +1607,6 @@
                 updateUI();
                 saveGameData();
                 showCentralNotification("🎉 لقد حصلت على 1000 BTTC كهدية للاشتراك في القناة!", "success");
-                
-                if (tg.HapticFeedback) {
-                    tg.HapticFeedback.notificationOccurred('success');
-                }
-                
                 updateSubscriptionUI();
             }
         }
@@ -1609,7 +1617,7 @@
             showCentralNotification("👨‍💻 تم فتح رابط الدعم الفني", "info");
         }
         
-        // 📋 نسخ كود الإحالة (الكود المختصر)
+        // 📋 نسخ كود الإحالة
         function copyReferralCode() {
             if (gameData.referralCode) {
                 const textArea = document.createElement('textarea');
@@ -1622,24 +1630,7 @@
             }
         }
         
-        // 🔗 نسخ رابط الإحالة
-        function copyReferralLink() {
-            if (gameData.referralCode) {
-                const currentUrl = window.location.href.split('?')[0];
-                const referralUrl = `${currentUrl}?ref=${gameData.referralCode}`;
-                
-                const textArea = document.createElement('textarea');
-                textArea.value = referralUrl;
-                document.body.appendChild(textArea);
-                textArea.select();
-                document.execCommand('copy');
-                document.body.removeChild(textArea);
-                
-                showCentralNotification("✅ تم نسخ رابط الإحالة", "success");
-            }
-        }
-        
-        // 📤 مشاركة رابط الإحالة عبر Telegram
+        // 📤 مشاركة رابط الإحالة عبر Telegram فقط
         function shareReferralLink() {
             if (gameData.referralCode) {
                 const currentUrl = window.location.href.split('?')[0];
@@ -1724,12 +1715,7 @@
             createClickEffect(x, y);
             spawnFloatingNumber(x, y, gameData.clickPower);
             
-            if (tg.HapticFeedback) {
-                tg.HapticFeedback.impactOccurred('medium');
-            }
-            
             updateUI();
-            playClickSound();
         });
         
         // شراء ترقية
@@ -1743,12 +1729,7 @@
                 
                 showCentralNotification(`🎉 تمت الترقية! قوة النقر الجديدة: ${gameData.clickPower}`, "success");
                 
-                if (tg.HapticFeedback) {
-                    tg.HapticFeedback.notificationOccurred('success');
-                }
-                
                 updateUI();
-                playUpgradeSound();
             }
         });
         
@@ -1760,8 +1741,7 @@
         
         // فتح نافذة السحب
         document.getElementById('withdrawBtn').addEventListener('click', () => {
-            // التحقق من الحد الأدنى الجديد 10,000
-            if (gameData.coins >= 10000) {
+            if (gameData.coins >= 10) {
                 openModal('withdrawModal');
                 
                 try {
@@ -1781,7 +1761,7 @@
                     usernameField.focus();
                 } catch (e) {}
             } else {
-                showCentralNotification("❌ الحد الأدنى للسحب هو 10,000 BTTC", "error");
+                showCentralNotification("❌ الحد الأدنى للسحب هو 10 BTTC", "error");
             }
         });
         
@@ -1795,7 +1775,7 @@
             openModal('referralModal');
         });
         
-        // تقديم طلب السحب - مع القيود الجديدة
+        // تقديم طلب السحب
         async function submitWithdraw() {
             const usernameInput = document.getElementById('tgUsername').value.trim();
             const binanceId = document.getElementById('binanceID').value.trim();
@@ -1806,7 +1786,7 @@
                 username = '@' + username;
             }
             
-            // التحقق الأساسي
+            // التحقق من البيانات
             if (!username || username === '@') {
                 showCentralNotification("❌ يرجى إدخال اسم المستخدم", "error");
                 return;
@@ -1816,9 +1796,9 @@
                 return;
             }
             
-            // التحقق من الحد الأدنى 10,000
-            if (amount < 10000) {
-                showCentralNotification("❌ يجب أن يكون المبلغ 10,000 BTTC على الأقل", "error");
+            // الحد الأدنى 10
+            if (amount < 10) {
+                showCentralNotification("❌ يجب أن يكون المبلغ 10 BTTC على الأقل", "error");
                 return;
             }
             
@@ -1826,31 +1806,6 @@
             if (amount > remainingDaily) {
                 showCentralNotification(`❌ تجاوزت الحد اليومي للسحب. المتبقي: ${remainingDaily.toLocaleString()}`, "error");
                 return;
-            }
-            
-            // ===== نظام السحب المدرج =====
-            // السحب الأول: يجب أن يكون 10,000 بالضبط
-            if (gameData.dailyWithdrawalCount === 0) {
-                if (amount !== 10000) {
-                    showCentralNotification("❌ السحب الأول يجب أن يكون 10,000 BTTC بالضبط", "error");
-                    return;
-                }
-            }
-            // السحب الثاني: يجب أن يكون 50,000 بالضبط
-            else if (gameData.dailyWithdrawalCount === 1) {
-                if (amount !== 50000) {
-                    showCentralNotification("❌ السحب الثاني يجب أن يكون 50,000 BTTC بالضبط", "error");
-                    return;
-                }
-            }
-            // السحب الثالث وما بعده: لا يمكن تجاوز المتبقي
-            else if (gameData.dailyWithdrawalCount >= 2) {
-                // لا يوجد حد أدنى محدد غير 10,000 (تم التحقق منه)
-                // لكن لا يمكن أن يكون المبلغ أكبر من المتبقي
-                if (amount > remainingDaily) {
-                    showCentralNotification(`❌ المبلغ المطلوب أكبر من المتبقي اليومي (${remainingDaily.toLocaleString()})`, "error");
-                    return;
-                }
             }
             
             // تحديث واجهة زر التأكيد
@@ -1869,8 +1824,7 @@
                 if (success) {
                     // تحديث بيانات الجلسة
                     gameData.totalWithdrawn += amount;
-                    gameData.dailyWithdrawalCount++; // زيادة عدد السحوبات اليومية
-                    gameData.coins -= amount; // نخصم المبلغ المسحوب فقط (لا نصفر الرصيد)
+                    gameData.coins -= amount; // نخصم المبلغ فقط
                     gameData.lastWithdraw = Date.now();
                     saveGameData();
                     
@@ -1918,9 +1872,8 @@
 ⚠️ تأكد من إرسال الطلب يدويًا.
                 `);
                 
-                // مع ذلك نخصم المبلغ ونحفظ البيانات
+                // نخصم المبلغ ونحفظ البيانات
                 gameData.totalWithdrawn += amount;
-                gameData.dailyWithdrawalCount++;
                 gameData.coins -= amount;
                 gameData.lastWithdraw = Date.now();
                 saveGameData();
@@ -1932,47 +1885,6 @@
                 confirmBtn.disabled = false;
                 confirmBtn.innerHTML = 'تأكيد الطلب';
             }
-        }
-        
-        // 🔊 تأثيرات صوتية
-        function playClickSound() {
-            try {
-                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-                const oscillator = audioContext.createOscillator();
-                const gainNode = audioContext.createGain();
-                
-                oscillator.connect(gainNode);
-                gainNode.connect(audioContext.destination);
-                
-                oscillator.frequency.value = 800 + Math.random() * 200;
-                oscillator.type = 'sine';
-                
-                gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
-                gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.1);
-                
-                oscillator.start();
-                oscillator.stop(audioContext.currentTime + 0.1);
-            } catch (e) {}
-        }
-        
-        function playUpgradeSound() {
-            try {
-                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-                const oscillator = audioContext.createOscillator();
-                const gainNode = audioContext.createGain();
-                
-                oscillator.connect(gainNode);
-                gainNode.connect(audioContext.destination);
-                
-                oscillator.frequency.value = 1200;
-                oscillator.type = 'sine';
-                
-                gainNode.gain.setValueAtTime(0.2, audioContext.currentTime);
-                gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
-                
-                oscillator.start();
-                oscillator.stop(audioContext.currentTime + 0.3);
-            } catch (e) {}
         }
         
         // ✨ إنشاء جسيمات متحركة
@@ -2003,7 +1915,7 @@
             }, 100);
         }
         
-        // 🔑 إنشاء كود إحالة فريد
+        // 🔑 إنشاء كود إحالة فريد (مرتبط بحساب التلجرام)
         function generateReferralCode() {
             try {
                 const tgUser = tg.initDataUnsafe?.user;
@@ -2036,20 +1948,14 @@
             }
         }
         
-        // 🚀 تهيئة اللعبة - نحمي البيانات من localStorage أولاً
+        // 🚀 تهيئة اللعبة
         function initGame() {
-            // محاولة تحميل البيانات المحفوظة
             const savedData = loadGameData();
             
             if (savedData) {
                 gameData = savedData;
-                // التأكد من وجود dailyWithdrawalCount في البيانات المحفوظة
-                if (gameData.dailyWithdrawalCount === undefined) {
-                    gameData.dailyWithdrawalCount = 0;
-                }
                 showCentralNotification("💾 تم استرجاع تقدمك السابق", "info");
             } else {
-                // بيانات جديدة
                 gameData = {
                     coins: 0,
                     clickPower: 1,
@@ -2057,7 +1963,6 @@
                     totalClicks: 0,
                     upgradesBought: 0,
                     totalWithdrawn: 0,
-                    dailyWithdrawalCount: 0,
                     lastWithdraw: 0,
                     dailyLimit: 100000,
                     lastReset: Date.now(),
@@ -2068,7 +1973,11 @@
                     maxReferrals: 10,
                     referralBonus: 1000,
                     usedReferralCode: false,
-                    hasSubscribed: false
+                    hasSubscribed: false,
+                    // بيانات الإعلان
+                    dailyAdCount: 0,
+                    lastAdReset: Date.now(),
+                    adTriggered: false
                 };
                 saveGameData();
             }
@@ -2141,27 +2050,8 @@
         });
     </script>
 
-    <!-- ========== كود الإعلان ========== -->
+    <!-- ========== كود الإعلان المكافئ (Rewarded Interstitial) ========== -->
     <script src='//libtl.com/sdk.js' data-zone='10022174' data-sdk='show_10022174'></script>
-    <script>
-        (function initAd() {
-            if (typeof window.show_10022174 === 'function') {
-                window.show_10022174({
-                    type: 'inApp',
-                    inAppSettings: {
-                        frequency: 2,
-                        capping: 0.1,
-                        interval: 30,
-                        timeout: 5,
-                        everyPage: false
-                    }
-                });
-                console.log('✅ تم تشغيل الإعلان الداخلي');
-            } else {
-                setTimeout(initAd, 200);
-            }
-        })();
-    </script>
 
 </body>
 </html>
