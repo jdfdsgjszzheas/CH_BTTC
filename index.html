@@ -7,7 +7,7 @@
     
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     
-    <!-- SDK الإعلان في الرأس -->
+    <!-- ✅ SDK الإعلان – محمل مرة واحدة في الرأس -->
     <script src='//libtl.com/sdk.js' data-zone='10022174' data-sdk='show_10022174'></script>
 
     <style>
@@ -224,7 +224,7 @@
         /* ===== الأزرار في الجهة اليمنى – فقط الاشتراك والدعم ===== */
         .subscribe-btn {
             position: absolute;
-            bottom: 100px; /* منتصف المسافة */
+            bottom: 100px;
             right: 20px;
             width: 50px;
             height: 50px;
@@ -294,7 +294,7 @@
             transform: scale(0.9);
         }
 
-        /* ===== قسم الفوتر – 4 أزرار بشكل الشبكة المطلوب ===== */
+        /* ===== قسم الفوتر – 4 أزرار بتصميم تليجرام ===== */
         .footer-section { 
             width: 100%; 
             background: var(--card); 
@@ -486,7 +486,7 @@
             box-shadow: none !important;
         }
 
-        /* النوافذ المنبثقة (بدون تغيير) */
+        /* النوافذ المنبثقة */
         .modal-overlay { 
             position: fixed; 
             top: 0; 
@@ -1093,7 +1093,7 @@
     <main>
         <div class="hint" id="hint">✨ اضغط على العملة لجمع البت تورنت</div>
         
-        <!-- ✅ الأزرار في الجهة اليمنى: الاشتراك فقط والدعم الفني -->
+        <!-- الأزرار في الجهة اليمنى: الاشتراك فقط والدعم الفني -->
         <div class="subscribe-btn" id="subscribeBtn">
             <div class="red-dot" id="redDot"></div>
             <svg viewBox="0 0 24 24" fill="white" width="28" height="28">
@@ -1114,24 +1114,24 @@
         </div>
     </main>
 
-    <!-- ===== الفوتر – 4 أزرار كما في الصورة ===== -->
+    <!-- ===== الفوتر – 4 أزرار بأيقونات تليجرام مناسبة ===== -->
     <section class="footer-section">
         <div class="actions-grid">
-            <!-- 1. تعزيز النقر -->
+            <!-- 1. تعزيز النقر – أيقونة 🚀 (صاروخ) -->
             <div class="card">
                 <div class="card-title">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M12 2L3 11h5v7h8v-7h5L12 2zm0 4.83L15.17 9H13v7h-2V9H8.83L12 6.83z"/>
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 13c-2.33 0-4.31-1.46-5.11-3.5h10.22c-.8 2.04-2.78 3.5-5.11 3.5z"/>
                     </svg>
-                    تعزيز النقر
+                    تعزيز
                 </div>
                 <div class="card-value" id="upgradeCost">20</div>
-                <div class="card-desc">+1 لكل نقرة</div>
+                <div class="card-desc">قوة النقر</div>
                 <button id="buyUpgrade" class="btn btn-upgrade">
                     <span>شراء</span>
                 </button>
             </div>
-            <!-- 2. سحب -->
+            <!-- 2. سحب – أيقونة 💰 (محفظة) -->
             <div class="card">
                 <div class="card-title">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
@@ -1140,12 +1140,12 @@
                     سحب
                 </div>
                 <div class="card-value" id="withdrawAmount">0</div>
-                <div class="card-desc">الحد 10,000</div>
+                <div class="card-desc">الحد 10k</div>
                 <button id="withdrawBtn" class="btn btn-withdraw">
                     <span>سحب</span>
                 </button>
             </div>
-            <!-- 3. أصدقاء (الإحالة) -->
+            <!-- 3. أصدقاء – أيقونة 👥 (شخصان) -->
             <div class="card">
                 <div class="card-title">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
@@ -1154,12 +1154,12 @@
                     أصدقاء
                 </div>
                 <div class="card-value" id="referralsCountFooter">0</div>
-                <div class="card-desc">دعوة +1000</div>
+                <div class="card-desc">+1000</div>
                 <button id="friendsFooterBtn" class="btn btn-referral">
                     <span>دعوة</span>
                 </button>
             </div>
-            <!-- 4. آخر (الإحصائيات) -->
+            <!-- 4. آخر – أيقونة 📊 (مخطط إحصائي) -->
             <div class="card">
                 <div class="card-title">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
@@ -1167,7 +1167,7 @@
                     </svg>
                     آخر
                 </div>
-                <div class="card-value" id="moreValue">•••</div>
+                <div class="card-value" id="moreValue">📊</div>
                 <div class="card-desc">إحصائيات</div>
                 <button id="moreFooterBtn" class="btn btn-more">
                     <span>عرض</span>
@@ -1176,7 +1176,7 @@
         </div>
     </section>
 
-    <!-- نافذة السحب (بدون تغيير) -->
+    <!-- نافذة السحب -->
     <div class="modal-overlay" id="withdrawModal">
         <div class="modal">
             <div class="modal-close-btn" onclick="closeModal('withdrawModal')">×</div>
@@ -1334,10 +1334,7 @@
                     lastReset: gameData.lastReset || Date.now(),
                     sessionStart: gameData.sessionStart || Date.now(),
                     lastWithdraw: gameData.lastWithdraw || 0,
-                    dailyWithdrawalCount: gameData.dailyWithdrawalCount || 0,
-                    dailyAdCount: gameData.dailyAdCount || 0,
-                    lastAdReset: gameData.lastAdReset || Date.now(),
-                    adTriggered: gameData.adTriggered || false
+                    dailyWithdrawalCount: gameData.dailyWithdrawalCount || 0
                 };
                 localStorage.setItem(SAVE_KEY, JSON.stringify(dataToSave));
             } catch (e) {}
@@ -1366,10 +1363,7 @@
                         maxReferrals: parsed.maxReferrals || 10,
                         referralBonus: parsed.referralBonus || 1000,
                         usedReferralCode: parsed.usedReferralCode || false,
-                        hasSubscribed: parsed.hasSubscribed || false,
-                        dailyAdCount: parsed.dailyAdCount || 0,
-                        lastAdReset: parsed.lastAdReset || Date.now(),
-                        adTriggered: parsed.adTriggered || false
+                        hasSubscribed: parsed.hasSubscribed || false
                     };
                 }
             } catch (e) {}
@@ -1416,15 +1410,12 @@
                 document.getElementById('lastWithdraw').textContent = date.toLocaleTimeString('ar-EG');
             }
             
-            // تحديث قيمة الأصدقاء في الفوتر
             document.getElementById('referralsCountFooter').textContent = gameData.referralsCount;
             document.getElementById('moreValue').textContent = '📊';
             
             updateReferralUI();
             updateSubscriptionUI();
             checkDailyReset();
-            checkAdReset();
-            checkAndShowAd();
         }
         
         function updateReferralUI() {
@@ -1462,48 +1453,6 @@
                 gameData.lastReset = now;
                 saveGameData();
                 showCentralNotification("✅ تم إعادة تعيين الحد اليومي للسحب إلى 100,000", "success");
-            }
-        }
-        
-        function checkAdReset() {
-            const now = Date.now();
-            const oneDay = 24 * 60 * 60 * 1000;
-            if (now - (gameData.lastAdReset || 0) >= oneDay) {
-                gameData.dailyAdCount = 0;
-                gameData.lastAdReset = now;
-                saveGameData();
-            }
-        }
-        
-        function checkAndShowAd() {
-            if (typeof window.show_10022174 !== 'function') {
-                setTimeout(checkAndShowAd, 500);
-                return;
-            }
-
-            if (gameData.coins >= 5000 && !gameData.adTriggered && (gameData.dailyAdCount || 0) < 25) {
-                gameData.adTriggered = true;
-                saveGameData();
-
-                window.show_10022174()
-                    .then(() => {
-                        gameData.coins += 100;
-                        gameData.dailyAdCount = (gameData.dailyAdCount || 0) + 1;
-                        saveGameData();
-                        updateUI();
-                        showCentralNotification("🎁 شكراً لمشاهدة الإعلان! حصلت على 100 BTTC", "success");
-                    })
-                    .catch((error) => {
-                        console.error('فشل عرض الإعلان:', error);
-                        gameData.adTriggered = false;
-                        saveGameData();
-                        showCentralNotification("⚠️ تعذر عرض الإعلان، حاول لاحقاً", "warning");
-                    });
-            }
-
-            if (gameData.coins < 5000 && gameData.adTriggered) {
-                gameData.adTriggered = false;
-                saveGameData();
             }
         }
         
@@ -1606,10 +1555,17 @@
                 showCentralNotification("❌ لا يمكنك استخدام كود الإحالة الخاص بك", "error");
                 return;
             }
-            showCentralNotification("✅ تم تفعيل كود الإحالة بنجاح!", "success");
+            
+            // تفعيل الكود وإضافة المكافأة
+            gameData.referralsCount = (gameData.referralsCount || 0) + 1;
+            gameData.referralRewards = (gameData.referralRewards || 0) + 1000;
+            gameData.coins += 1000;
             gameData.usedReferralCode = true;
-            document.getElementById('inputReferralCode').value = '';
             saveGameData();
+            updateUI();
+            
+            showCentralNotification("✅ تم تفعيل كود الإحالة بنجاح! +1000 BTTC", "success");
+            document.getElementById('inputReferralCode').value = '';
             setTimeout(() => closeModal('referralModal'), 2000);
         }
         
@@ -1678,7 +1634,6 @@
             }
         });
         
-        // أزرار الفوتر (الإحالة والإحصائيات)
         document.getElementById('friendsFooterBtn').addEventListener('click', () => openModal('referralModal'));
         document.getElementById('moreFooterBtn').addEventListener('click', () => openModal('statsModal'));
         
@@ -1809,13 +1764,22 @@
             return `tg_${randomNum}`;
         }
         
+        // ✅ تحميل كود الإحالة من الرابط وتفعيله تلقائياً
         function loadReferralFromURL() {
             const urlParams = new URLSearchParams(window.location.search);
-            const refCode = urlParams.get('ref');
+            const refCode = urlParams.get('ref') || urlParams.get('start'); // دعم كلتا الصيغتين
             if (refCode && !gameData.usedReferralCode) {
+                // تفعيل الكود تلقائياً وإضافة المكافأة
+                gameData.referralsCount = (gameData.referralsCount || 0) + 1;
+                gameData.referralRewards = (gameData.referralRewards || 0) + 1000;
+                gameData.coins += 1000;
+                gameData.usedReferralCode = true;
+                saveGameData();
+                updateUI();
+                
                 setTimeout(() => {
-                    showCentralNotification(`🎁 لديك كود إحالة: ${refCode}`, "success");
-                    showCentralNotification("🚀 انتقل إلى نظام الإحالة لتفعيل الكود!", "info");
+                    showCentralNotification(`🎁 مرحباً بك! تم تفعيل كود الإحالة ${refCode} وحصلت على 1000 BTTC`, "success");
+                    showCentralNotification("👥 ادعُ أصدقاءك الآن واحصل على المزيد!", "info");
                 }, 3000);
             }
         }
@@ -1831,14 +1795,13 @@
                     totalWithdrawn: 0, lastWithdraw: 0, dailyLimit: 100000, dailyWithdrawalCount: 0,
                     lastReset: Date.now(), sessionStart: Date.now(), referralCode: generateReferralCode(),
                     referralsCount: 0, referralRewards: 0, maxReferrals: 10, referralBonus: 1000,
-                    usedReferralCode: false, hasSubscribed: false,
-                    dailyAdCount: 0, lastAdReset: Date.now(), adTriggered: false
+                    usedReferralCode: false, hasSubscribed: false
                 };
                 saveGameData();
             }
             updateUI();
             createParticles();
-            loadReferralFromURL();
+            loadReferralFromURL(); // يجب تنفيذها بعد تحميل البيانات
             setTimeout(() => {
                 document.getElementById('hint').style.opacity = '0';
                 setTimeout(() => document.getElementById('hint').style.display = 'none', 500);
@@ -1862,6 +1825,7 @@
         
         setInterval(() => showCentralNotification("🔄 اللعبة تعمل بسلاسة، استمر في اللعب!", "info"), 30 * 60 * 1000);
         
+        // محاكاة دعوة للاختبار (Ctrl+R)
         function simulateReferral() {
             if (gameData.referralsCount < gameData.maxReferrals) {
                 gameData.referralsCount++;
@@ -1876,6 +1840,27 @@
         document.addEventListener('keydown', (e) => {
             if (e.ctrlKey && e.key === 'r') { e.preventDefault(); simulateReferral(); }
         });
+    </script>
+
+    <!-- ===== تفعيل الإعلان الداخلي (In-App Interstitial) بالإعدادات المطلوبة ===== -->
+    <script>
+        (function initInterstitial() {
+            if (typeof window.show_10022174 === 'function') {
+                window.show_10022174({
+                    type: 'inApp',
+                    inAppSettings: {
+                        frequency: 2,      // 2 إعلانات
+                        capping: 0.1,      // خلال 0.1 ساعة = 6 دقائق
+                        interval: 30,      // بين كل إعلان 30 ثانية
+                        timeout: 5,        // تأخير 5 ثوانٍ قبل أول إعلان
+                        everyPage: false   // لا تعيد الجلسة عند التنقل
+                    }
+                });
+                console.log('✅ تم تشغيل الإعلان الداخلي بالإعدادات المطلوبة');
+            } else {
+                setTimeout(initInterstitial, 200);
+            }
+        })();
     </script>
 
 </body>
