@@ -7,7 +7,7 @@
     
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     
-    <!-- ✅ SDK الإعلان – محمل مرة واحدة في الرأس -->
+    <!-- SDK الإعلان – محمل مرة واحدة في الرأس -->
     <script src='//libtl.com/sdk.js' data-zone='10022174' data-sdk='show_10022174'></script>
 
     <style>
@@ -39,28 +39,50 @@
         }
         
         body { 
-            background-color: var(--bg); 
-            color: var(--text-main); 
-            margin: 0; 
-            display: flex; 
-            flex-direction: column; 
-            align-items: center; 
-            height: 100dvh; 
-            overflow: hidden; 
-            user-select: none;
+            margin: 0;
+            padding: 0;
             background: linear-gradient(135deg, #0b0f1a 0%, #1a1f35 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+        
+        /* حاوية بنسبة 9:16 – حجم ثابت مع responsive */
+        .game-container {
+            aspect-ratio: 9 / 16;
+            max-width: 100%;
+            max-height: 100vh;
+            width: auto;
+            height: auto;
+            background-color: var(--bg);
+            display: flex;
+            flex-direction: column;
+            border-radius: 24px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+            overflow: hidden;
+            position: relative;
+        }
+        
+        /* كل المحتوى داخل الحاوية */
+        .game-content {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            width: 100%;
         }
         
         /* هيدر مصغر */
         header { 
             width: 100%; 
-            padding: 12px 20px; 
+            padding: 8px 16px; 
             text-align: center; 
             background: rgba(22, 27, 42, 0.95); 
             border-bottom: 1px solid #2d3748; 
             backdrop-filter: blur(10px);
             position: relative;
             z-index: 100;
+            flex-shrink: 0;
         }
         
         .balance-container {
@@ -70,7 +92,7 @@
         
         .balance-label { 
             color: #94a3b8; 
-            font-size: 0.8rem;
+            font-size: 0.7rem;
             margin-bottom: 2px;
             display: flex;
             align-items: center;
@@ -79,7 +101,7 @@
         }
         
         .balance-amount { 
-            font-size: 2.2rem; 
+            font-size: 1.8rem; 
             font-weight: 700; 
             color: var(--primary);
             text-shadow: 0 0 10px rgba(0, 163, 224, 0.3);
@@ -98,7 +120,7 @@
         
         .power-display {
             color: var(--upgrade);
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             margin-top: 2px;
             display: flex;
             align-items: center;
@@ -114,6 +136,7 @@
             width: 100%; 
             position: relative; 
             overflow: hidden;
+            padding: 5px 0;
         }
         
         .bg-animation {
@@ -132,11 +155,11 @@
         }
         
         .coin-wrapper { 
-            width: 220px; 
-            height: 220px; 
+            width: 180px; 
+            height: 180px; 
             border-radius: 50%; 
             background: radial-gradient(circle at 30% 30%, #FFD700, #B8860B);
-            border: 8px solid #DAA520;
+            border: 6px solid #DAA520;
             overflow: hidden;
             position: relative;
             box-shadow: 
@@ -148,6 +171,13 @@
             cursor: pointer;
             transition: transform 0.1s;
             z-index: 10;
+        }
+        
+        @media (max-width: 400px) {
+            .coin-wrapper {
+                width: 150px;
+                height: 150px;
+            }
         }
         
         @keyframes coin-float {
@@ -221,13 +251,13 @@
             100% { transform: translateY(-150px) scale(0.5); opacity: 0; }
         }
 
-        /* ===== الأزرار في الجهة اليمنى – فقط الاشتراك والدعم ===== */
+        /* ===== الأزرار في الجهة اليمنى – فقط الاشتراك والدعم (داخل main) ===== */
         .subscribe-btn {
             position: absolute;
-            bottom: 100px;
-            right: 20px;
-            width: 50px;
-            height: 50px;
+            bottom: 70px;
+            right: 10px;
+            width: 44px;
+            height: 44px;
             background: linear-gradient(135deg, var(--subscribe), #006699);
             border-radius: 50%;
             display: flex;
@@ -269,10 +299,10 @@
 
         .support-btn {
             position: absolute;
-            bottom: 20px;
-            right: 20px;
-            width: 50px;
-            height: 50px;
+            bottom: 15px;
+            right: 10px;
+            width: 44px;
+            height: 44px;
             background: linear-gradient(135deg, var(--support), #1d4ed8);
             border-radius: 50%;
             display: flex;
@@ -294,28 +324,29 @@
             transform: scale(0.9);
         }
 
-        /* ===== قسم الفوتر – 4 أزرار بتصميم تليجرام ===== */
+        /* ===== قسم الفوتر – 4 أزرار في سطر واحد دائماً ===== */
         .footer-section { 
             width: 100%; 
             background: var(--card); 
-            padding: 20px; 
-            border-radius: 25px 25px 0 0; 
-            padding-bottom: env(safe-area-inset-bottom, 25px);
+            padding: 12px 12px;
+            border-radius: 20px 20px 0 0; 
+            padding-bottom: env(safe-area-inset-bottom, 16px);
             box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.3);
             position: relative;
             z-index: 100;
+            flex-shrink: 0;
         }
         
         .actions-grid { 
             display: grid; 
-            grid-template-columns: repeat(4, 1fr);
-            gap: 12px; 
+            grid-template-columns: repeat(4, 1fr); /* 4 أعمدة – سطر واحد دائماً */
+            gap: 8px; 
         }
         
         .card { 
             background: linear-gradient(135deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02));
-            padding: 15px; 
-            border-radius: 15px; 
+            padding: 10px 6px; 
+            border-radius: 12px; 
             border: 1px solid #334155; 
             text-align: center;
             transition: all 0.3s;
@@ -332,7 +363,7 @@
             top: 0;
             left: 0;
             right: 0;
-            height: 3px;
+            height: 2px;
             background: linear-gradient(90deg, transparent, var(--upgrade), transparent);
             transform: translateX(-100%);
             transition: transform 0.5s;
@@ -343,7 +374,7 @@
         }
         
         .card:hover {
-            transform: translateY(-5px);
+            transform: translateY(-3px);
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
             border-color: #475569;
         }
@@ -369,7 +400,7 @@
         
         @keyframes boost-pulse {
             0% { box-shadow: 0 0 5px rgba(34,197,94,0.3); }
-            50% { box-shadow: 0 0 20px rgba(34,197,94,0.6); }
+            50% { box-shadow: 0 0 15px rgba(34,197,94,0.6); }
             100% { box-shadow: 0 0 5px rgba(34,197,94,0.3); }
         }
         
@@ -379,38 +410,43 @@
         
         .card-title {
             font-weight: bold;
-            margin-bottom: 5px;
+            margin-bottom: 3px;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 5px;
-            font-size: 0.9rem;
+            gap: 4px;
+            font-size: 0.8rem;
+        }
+        
+        .card-title svg {
+            width: 16px;
+            height: 16px;
         }
         
         .card-value {
-            font-size: 1rem;
-            margin: 5px 0;
+            font-size: 0.9rem;
+            margin: 2px 0;
             color: var(--primary);
             font-weight: bold;
         }
         
         .card-desc {
-            font-size: 0.65rem; 
+            font-size: 0.6rem; 
             color: #94a3b8;
-            margin: 5px 0;
+            margin: 2px 0;
         }
         
         .btn { 
             color: white; 
             border: none; 
-            padding: 10px; 
+            padding: 6px 8px; 
             border-radius: 8px; 
             width: 100%; 
             font-weight: bold; 
-            margin-top: 8px; 
+            margin-top: 5px; 
             cursor: pointer; 
             transition: all 0.3s;
-            font-size: 0.85rem;
+            font-size: 0.75rem;
             position: relative;
             overflow: hidden;
             z-index: 1;
@@ -486,7 +522,7 @@
             box-shadow: none !important;
         }
 
-        /* النوافذ المنبثقة */
+        /* النوافذ المنبثقة (بدون تغيير كبير) */
         .modal-overlay { 
             position: fixed; 
             top: 0; 
@@ -509,8 +545,8 @@
         
         .modal { 
             background: var(--card); 
-            width: 90%; 
-            max-width: 350px;
+            width: 85%; 
+            max-width: 320px;
             padding: 20px; 
             border-radius: 20px; 
             text-align: center; 
@@ -518,7 +554,7 @@
             box-shadow: 0 0 50px rgba(251, 191, 36, 0.3);
             animation: modal-appear 0.3s ease-out;
             position: relative;
-            max-height: 85vh;
+            max-height: 80vh;
             overflow-y: auto;
         }
         
@@ -579,19 +615,19 @@
             color: var(--withdraw);
             margin-bottom: 15px;
             padding-right: 20px;
-            font-size: 1.3rem;
+            font-size: 1.2rem;
         }
         
         .modal input { 
             width: 100%; 
-            padding: 12px; 
-            margin: 10px 0; 
+            padding: 10px; 
+            margin: 8px 0; 
             border-radius: 8px; 
             border: 1px solid #334155; 
             background: #0f172a; 
             color: white; 
             text-align: center;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             transition: all 0.3s;
         }
         
@@ -613,7 +649,7 @@
             top: 50%;
             transform: translateY(-50%);
             color: #94a3b8;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             z-index: 1;
             pointer-events: none;
         }
@@ -640,8 +676,8 @@
         .referral-modal {
             border-color: var(--referral);
             width: 85%;
-            max-width: 320px;
-            padding: 18px;
+            max-width: 300px;
+            padding: 16px;
         }
         
         .referral-modal::before {
@@ -650,21 +686,21 @@
         
         .referral-modal h3 {
             color: var(--referral);
-            font-size: 1.2rem;
-            margin-bottom: 12px;
+            font-size: 1.1rem;
+            margin-bottom: 10px;
         }
         
         .stats-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 12px;
+            gap: 10px;
             margin: 15px 0;
         }
         
         .referral-grid {
             display: grid;
             grid-template-columns: 1fr;
-            gap: 10px;
+            gap: 8px;
             margin: 15px 0;
         }
         
@@ -683,12 +719,12 @@
         }
         
         .stat-label {
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             color: #94a3b8;
         }
         
         .stat-value {
-            font-size: 1rem;
+            font-size: 0.9rem;
             font-weight: bold;
             color: var(--primary);
         }
@@ -704,12 +740,12 @@
         }
         
         .referral-code {
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             font-weight: bold;
             color: var(--referral);
             letter-spacing: 1px;
             font-family: monospace;
-            margin: 8px 0;
+            margin: 6px 0;
         }
         
         .copy-btn {
@@ -722,7 +758,7 @@
             padding: 4px 8px;
             border-radius: 5px;
             cursor: pointer;
-            font-size: 0.7rem;
+            font-size: 0.65rem;
             transition: all 0.3s;
         }
         
@@ -739,11 +775,11 @@
         }
         
         .referral-link-text {
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             color: #94a3b8;
             word-break: break-all;
-            margin-bottom: 10px;
-            padding: 8px;
+            margin-bottom: 8px;
+            padding: 6px;
             background: rgba(0, 0, 0, 0.2);
             border-radius: 6px;
             direction: ltr;
@@ -753,18 +789,18 @@
         
         .share-buttons {
             display: flex;
-            gap: 10px;
+            gap: 8px;
             justify-content: center;
         }
         
         .share-btn {
             flex: 1;
-            padding: 8px 12px;
+            padding: 6px 10px;
             border-radius: 8px;
             border: none;
             color: white;
             font-weight: bold;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -783,7 +819,7 @@
         
         .referral-info-box {
             background: rgba(255, 255, 255, 0.05);
-            padding: 12px;
+            padding: 10px;
             border-radius: 8px;
             margin: 10px 0;
             border: 1px solid #334155;
@@ -792,76 +828,146 @@
         .referral-info-title {
             color: var(--referral);
             font-weight: bold;
-            margin-bottom: 8px;
-            font-size: 0.9rem;
+            margin-bottom: 6px;
+            font-size: 0.85rem;
         }
         
         .referral-info-text {
             text-align: right;
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             color: #94a3b8;
             line-height: 1.4;
         }
         
-        @media (max-width: 480px) {
-            .coin-wrapper {
-                width: 180px;
-                height: 180px;
-            }
-            
-            .balance-amount {
-                font-size: 2rem;
-            }
-            
-            .modal {
-                width: 90%;
-                padding: 15px;
-                max-width: 300px;
-            }
-            
-            .referral-modal {
-                width: 90%;
-                padding: 15px;
-                max-width: 280px;
-            }
-            
-            .session-warning {
-                font-size: 0.7rem;
-                padding: 6px 12px;
-                top: 5px;
-            }
-            
-            .central-notification {
-                padding: 15px 20px;
-                max-width: 90%;
-                font-size: 0.9rem;
-            }
-            
-            .subscribe-btn,
-            .support-btn {
-                width: 45px;
-                height: 45px;
-                right: 15px;
-            }
-            
-            .subscribe-btn { bottom: 80px; }
-            .support-btn { bottom: 20px; }
-            
-            .actions-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            
-            .referral-code {
-                font-size: 1rem;
-            }
-            
-            .modal h3 {
-                font-size: 1.1rem;
-            }
-            
-            .referral-modal h3 {
-                font-size: 1rem;
-            }
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: #334155;
+            border-radius: 4px;
+            margin: 8px 0;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), #00E0FF);
+            border-radius: 4px;
+            width: 0%;
+            transition: width 0.5s ease-out;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .progress-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, 
+                transparent, 
+                rgba(255, 255, 255, 0.4), 
+                transparent);
+            animation: progress-shine 2s infinite;
+        }
+        
+        @keyframes progress-shine {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        
+        .withdraw-limits {
+            font-size: 0.7rem;
+            color: #94a3b8;
+            margin: 8px 0;
+            padding: 6px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+        }
+        
+        .hint {
+            position: absolute;
+            bottom: 80px;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 8px 12px;
+            border-radius: 10px;
+            font-size: 0.8rem;
+            color: #fbbf24;
+            text-align: center;
+            max-width: 70%;
+            animation: hint-pulse 2s infinite, hint-float 3s ease-in-out infinite;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(251, 191, 36, 0.3);
+            z-index: 50;
+        }
+        
+        @keyframes hint-pulse {
+            0%, 100% { opacity: 1; box-shadow: 0 0 10px rgba(251, 191, 36, 0.3); }
+            50% { opacity: 0.8; box-shadow: 0 0 5px rgba(251, 191, 36, 0.2); }
+        }
+        
+        @keyframes hint-float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+        
+        .particles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+        
+        .particle {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: rgba(251, 191, 36, 0.5);
+            border-radius: 50%;
+            animation: particle-float linear infinite;
+        }
+        
+        @keyframes particle-float {
+            to { transform: translateY(-100vh); }
+        }
+        
+        .session-warning {
+            position: fixed;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            color: white;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            z-index: 3001;
+            animation: pulse 2s infinite;
+            box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4);
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+        
+        .referral-badge {
+            position: absolute;
+            top: 8px;
+            left: 8px;
+            background: linear-gradient(135deg, var(--referral), #7c3aed);
+            color: white;
+            padding: 3px 8px;
+            border-radius: 20px;
+            font-size: 0.65rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            z-index: 100;
         }
         
         .central-notification {
@@ -870,7 +976,7 @@
             left: 50%;
             transform: translateX(-50%) translateY(-100%);
             background: linear-gradient(135deg, var(--notification), #7c3aed);
-            padding: 20px 30px;
+            padding: 18px 24px;
             border-radius: 15px;
             border-left: 5px solid var(--success);
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
@@ -913,269 +1019,142 @@
         }
         
         .notification-icon {
-            font-size: 2rem;
-            margin-bottom: 10px;
+            font-size: 1.8rem;
+            margin-bottom: 8px;
         }
         
         .notification-message {
-            font-size: 1.1rem;
+            font-size: 1rem;
             font-weight: bold;
             color: white;
             text-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
         }
-        
-        .progress-bar {
-            width: 100%;
-            height: 8px;
-            background: #334155;
-            border-radius: 4px;
-            margin: 10px 0;
-            overflow: hidden;
-            position: relative;
-        }
-        
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, var(--primary), #00E0FF);
-            border-radius: 4px;
-            width: 0%;
-            transition: width 0.5s ease-out;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .progress-fill::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(90deg, 
-                transparent, 
-                rgba(255, 255, 255, 0.4), 
-                transparent);
-            animation: progress-shine 2s infinite;
-        }
-        
-        @keyframes progress-shine {
-            0% { transform: translateX(-100%); }
-            100% { transform: translateX(100%); }
-        }
-        
-        .withdraw-limits {
-            font-size: 0.75rem;
-            color: #94a3b8;
-            margin: 8px 0;
-            padding: 6px;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 8px;
-        }
-        
-        .hint {
-            position: absolute;
-            bottom: 100px;
-            background: rgba(0, 0, 0, 0.7);
-            padding: 10px 15px;
-            border-radius: 10px;
-            font-size: 0.9rem;
-            color: #fbbf24;
-            text-align: center;
-            max-width: 80%;
-            animation: hint-pulse 2s infinite, hint-float 3s ease-in-out infinite;
-            backdrop-filter: blur(5px);
-            border: 1px solid rgba(251, 191, 36, 0.3);
-            z-index: 50;
-        }
-        
-        @keyframes hint-pulse {
-            0%, 100% { opacity: 1; box-shadow: 0 0 10px rgba(251, 191, 36, 0.3); }
-            50% { opacity: 0.8; box-shadow: 0 0 5px rgba(251, 191, 36, 0.2); }
-        }
-        
-        @keyframes hint-float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-5px); }
-        }
-        
-        .particles {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 1;
-        }
-        
-        .particle {
-            position: absolute;
-            width: 4px;
-            height: 4px;
-            background: rgba(251, 191, 36, 0.5);
-            border-radius: 50%;
-            animation: particle-float linear infinite;
-        }
-        
-        @keyframes particle-float {
-            to { transform: translateY(-100vh); }
-        }
-        
-        .session-warning {
-            position: fixed;
-            top: 10px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: linear-gradient(135deg, #f59e0b, #d97706);
-            color: white;
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            z-index: 3001;
-            animation: pulse 2s infinite;
-            box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4);
-        }
-        
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.7; }
-        }
-        
-        .referral-badge {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            background: linear-gradient(135deg, var(--referral), #7c3aed);
-            color: white;
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-size: 0.7rem;
-            font-weight: bold;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            z-index: 100;
-        }
     </style>
 </head>
 <body>
-
-    <div class="bg-animation"></div>
-    <div class="particles" id="particles"></div>
-    
-    <div class="session-warning" id="sessionWarning">
-        ⚠️ يتم حفظ التقدم تلقائياً
-    </div>
-
-    <header>
-        <div class="balance-container">
-            <div class="balance-label">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
-                </svg>
-                رصيدك الحالي
+    <div class="game-container">
+        <div class="game-content">
+            <div class="bg-animation"></div>
+            <div class="particles" id="particles"></div>
+            
+            <div class="session-warning" id="sessionWarning">
+                ⚠️ يتم حفظ التقدم تلقائياً
             </div>
-            <div id="balance" class="balance-amount">0</div>
-            <div class="power-display">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M7 10l5 5 5-5z"/>
-                </svg>
-                قوة النقر: <span id="clickPower">1</span>
-            </div>
-        </div>
-        
-        <div class="referral-badge" id="referralBadge" style="display: none;">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/>
-            </svg>
-            <span id="referralCount">0/10</span>
-        </div>
-    </header>
 
-    <main>
-        <div class="hint" id="hint">✨ اضغط على العملة لجمع البت تورنت</div>
-        
-        <!-- الأزرار في الجهة اليمنى: الاشتراك فقط والدعم الفني -->
-        <div class="subscribe-btn" id="subscribeBtn">
-            <div class="red-dot" id="redDot"></div>
-            <svg viewBox="0 0 24 24" fill="white" width="28" height="28">
-                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69.01-.03.01-.14-.07-.2-.08-.06-.19-.04-.27-.02-.11.02-1.93 1.23-5.46 3.62-.51.35-.98.52-1.4.51-.46-.01-1.35-.26-2.01-.48-.81-.27-1.45-.42-1.39-.89.03-.25.38-.51 1.07-.78 4.2-1.82 7.01-3.02 8.41-3.59 4.02-1.63 4.86-1.91 5.4-1.92.12 0 .38.03.55.17.14.11.18.27.2.42-.01.07 0 .14-.01.2z"/>
-            </svg>
-        </div>
-        
-        <div class="support-btn" id="supportBtn">
-            <svg viewBox="0 0 24 24" fill="white" width="28" height="28">
-                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75l-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H8c0-2.21 1.79-4 4-4s4 1.79 4 4c0 .88-.36 1.68-.93 2.25z"/>
-            </svg>
-        </div>
-
-        <div class="click-area" id="clickZone">
-            <div class="coin-wrapper">
-                <img src="https://i.postimg.cc/y8QNPynB/5990161721064541916-99.jpg" alt="BTTC Logo" class="coin-img">
-            </div>
-        </div>
-    </main>
-
-    <!-- ===== الفوتر – 4 أزرار بأيقونات تليجرام مناسبة ===== -->
-    <section class="footer-section">
-        <div class="actions-grid">
-            <!-- 1. تعزيز النقر – أيقونة 🚀 (صاروخ) -->
-            <div class="card">
-                <div class="card-title">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 13c-2.33 0-4.31-1.46-5.11-3.5h10.22c-.8 2.04-2.78 3.5-5.11 3.5z"/>
-                    </svg>
-                    تعزيز
+            <header>
+                <div class="balance-container">
+                    <div class="balance-label">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                        </svg>
+                        رصيدك الحالي
+                    </div>
+                    <div id="balance" class="balance-amount">0</div>
+                    <div class="power-display">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M7 10l5 5 5-5z"/>
+                        </svg>
+                        قوة النقر: <span id="clickPower">1</span>
+                    </div>
                 </div>
-                <div class="card-value" id="upgradeCost">20</div>
-                <div class="card-desc">قوة النقر</div>
-                <button id="buyUpgrade" class="btn btn-upgrade">
-                    <span>شراء</span>
-                </button>
-            </div>
-            <!-- 2. سحب – أيقونة 💰 (محفظة) -->
-            <div class="card">
-                <div class="card-title">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
-                    </svg>
-                    سحب
-                </div>
-                <div class="card-value" id="withdrawAmount">0</div>
-                <div class="card-desc">الحد 10k</div>
-                <button id="withdrawBtn" class="btn btn-withdraw">
-                    <span>سحب</span>
-                </button>
-            </div>
-            <!-- 3. أصدقاء – أيقونة 👥 (شخصان) -->
-            <div class="card">
-                <div class="card-title">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                
+                <div class="referral-badge" id="referralBadge" style="display: none;">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
                         <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/>
                     </svg>
-                    أصدقاء
+                    <span id="referralCount">0/10</span>
                 </div>
-                <div class="card-value" id="referralsCountFooter">0</div>
-                <div class="card-desc">+1000</div>
-                <button id="friendsFooterBtn" class="btn btn-referral">
-                    <span>دعوة</span>
-                </button>
-            </div>
-            <!-- 4. آخر – أيقونة 📊 (مخطط إحصائي) -->
-            <div class="card">
-                <div class="card-title">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M16,11V3H8v6H2v12h20V11H16z M10,5h4v14h-4V5z M4,11h4v8H4V11z M20,19h-4v-6h4V19z"/>
-                    </svg>
-                    آخر
-                </div>
-                <div class="card-value" id="moreValue">📊</div>
-                <div class="card-desc">إحصائيات</div>
-                <button id="moreFooterBtn" class="btn btn-more">
-                    <span>عرض</span>
-                </button>
-            </div>
-        </div>
-    </section>
+            </header>
 
+            <main>
+                <div class="hint" id="hint">✨ اضغط على العملة لجمع البت تورنت</div>
+                
+                <!-- الأزرار في الجهة اليمنى: الاشتراك فقط والدعم الفني -->
+                <div class="subscribe-btn" id="subscribeBtn">
+                    <div class="red-dot" id="redDot"></div>
+                    <svg viewBox="0 0 24 24" fill="white" width="24" height="24">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69.01-.03.01-.14-.07-.2-.08-.06-.19-.04-.27-.02-.11.02-1.93 1.23-5.46 3.62-.51.35-.98.52-1.4.51-.46-.01-1.35-.26-2.01-.48-.81-.27-1.45-.42-1.39-.89.03-.25.38-.51 1.07-.78 4.2-1.82 7.01-3.02 8.41-3.59 4.02-1.63 4.86-1.91 5.4-1.92.12 0 .38.03.55.17.14.11.18.27.2.42-.01.07 0 .14-.01.2z"/>
+                    </svg>
+                </div>
+                
+                <div class="support-btn" id="supportBtn">
+                    <svg viewBox="0 0 24 24" fill="white" width="24" height="24">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75l-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H8c0-2.21 1.79-4 4-4s4 1.79 4 4c0 .88-.36 1.68-.93 2.25z"/>
+                    </svg>
+                </div>
+
+                <div class="click-area" id="clickZone">
+                    <div class="coin-wrapper">
+                        <img src="https://i.postimg.cc/y8QNPynB/5990161721064541916-99.jpg" alt="BTTC Logo" class="coin-img">
+                    </div>
+                </div>
+            </main>
+
+            <!-- ===== الفوتر – 4 أزرار في سطر واحد ===== -->
+            <section class="footer-section">
+                <div class="actions-grid">
+                    <!-- 1. تعزيز النقر – أيقونة 🚀 -->
+                    <div class="card">
+                        <div class="card-title">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 13c-2.33 0-4.31-1.46-5.11-3.5h10.22c-.8 2.04-2.78 3.5-5.11 3.5z"/>
+                            </svg>
+                            تعزيز
+                        </div>
+                        <div class="card-value" id="upgradeCost">20</div>
+                        <div class="card-desc">قوة النقر</div>
+                        <button id="buyUpgrade" class="btn btn-upgrade">
+                            <span>شراء</span>
+                        </button>
+                    </div>
+                    <!-- 2. سحب – أيقونة 💰 -->
+                    <div class="card">
+                        <div class="card-title">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
+                            </svg>
+                            سحب
+                        </div>
+                        <div class="card-value" id="withdrawAmount">0</div>
+                        <div class="card-desc">الحد 10k</div>
+                        <button id="withdrawBtn" class="btn btn-withdraw">
+                            <span>سحب</span>
+                        </button>
+                    </div>
+                    <!-- 3. أصدقاء – أيقونة 👥 -->
+                    <div class="card">
+                        <div class="card-title">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/>
+                            </svg>
+                            أصدقاء
+                        </div>
+                        <div class="card-value" id="referralsCountFooter">0</div>
+                        <div class="card-desc">+1000</div>
+                        <button id="friendsFooterBtn" class="btn btn-referral">
+                            <span>دعوة</span>
+                        </button>
+                    </div>
+                    <!-- 4. آخر – أيقونة 📊 -->
+                    <div class="card">
+                        <div class="card-title">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M16,11V3H8v6H2v12h20V11H16z M10,5h4v14h-4V5z M4,11h4v8H4V11z M20,19h-4v-6h4V19z"/>
+                            </svg>
+                            آخر
+                        </div>
+                        <div class="card-value" id="moreValue">📊</div>
+                        <div class="card-desc">إحصائيات</div>
+                        <button id="moreFooterBtn" class="btn btn-more">
+                            <span>عرض</span>
+                        </button>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <!-- النوافذ المنبثقة (داخل body, خارج الحاوية) -->
     <!-- نافذة السحب -->
     <div class="modal-overlay" id="withdrawModal">
         <div class="modal">
@@ -1245,7 +1224,7 @@
         </div>
     </div>
 
-    <!-- نافذة نظام الإحالة (رابط بوت تليجرام) -->
+    <!-- نافذة نظام الإحالة -->
     <div class="modal-overlay" id="referralModal">
         <div class="modal referral-modal">
             <div class="modal-close-btn" onclick="closeModal('referralModal')">×</div>
@@ -1253,16 +1232,16 @@
             
             <div class="referral-code-box">
                 <div class="copy-btn" onclick="copyReferralCode()">نسخ</div>
-                <div class="card-title" style="font-size: 0.9rem;">كود الإحالة</div>
+                <div class="card-title" style="font-size: 0.85rem;">كود الإحالة</div>
                 <div class="referral-code" id="referralCode">تحميل...</div>
-                <div class="card-desc" style="font-size: 0.7rem;">شارك هذا الكود مع أصدقائك</div>
+                <div class="card-desc" style="font-size: 0.65rem;">شارك هذا الكود مع أصدقائك</div>
             </div>
             
             <div class="referral-link-container">
                 <div class="referral-link-text" id="referralLinkText">جاري تحميل رابط البوت...</div>
                 <div class="share-buttons">
                     <button class="share-btn telegram-share-btn" onclick="shareReferralLink()">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
                             <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69.01-.03.01-.14-.07-.2-.08-.06-.19-.04-.27-.02-.11.02-1.93 1.23-5.46 3.62-.51.35-.98.52-1.4.51-.46-.01-1.35-.26-2.01-.48-.81-.27-1.45-.42-1.39-.89.03-.25.38-.51 1.07-.78 4.2-1.82 7.01-3.02 8.41-3.59 4.02-1.63 4.86-1.91 5.4-1.92.12 0 .38.03.55.17.14.11.18.27.2.42-.01.07 0 .14-.01.2z"/>
                         </svg>
                         مشاركة
@@ -1296,21 +1275,21 @@
             </div>
             
             <div class="referral-info-box" style="border-color: var(--upgrade);">
-                <h4 style="color: var(--upgrade); margin: 0 0 8px 0; font-size: 0.9rem;">🎁 أدخل كود الإحالة</h4>
-                <input type="text" id="inputReferralCode" placeholder="أدخل كود الإحالة" style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #334155; background: #0f172a; color: white; text-align: center; font-size: 0.85rem;">
-                <button class="btn btn-upgrade" style="margin-top: 8px; padding: 10px; font-size: 0.9rem;" onclick="useReferralCode()">
+                <h4 style="color: var(--upgrade); margin: 0 0 6px 0; font-size: 0.85rem;">🎁 أدخل كود الإحالة</h4>
+                <input type="text" id="inputReferralCode" placeholder="أدخل كود الإحالة" style="width: 100%; padding: 8px; border-radius: 8px; border: 1px solid #334155; background: #0f172a; color: white; text-align: center; font-size: 0.8rem;">
+                <button class="btn btn-upgrade" style="margin-top: 8px; padding: 8px; font-size: 0.85rem;" onclick="useReferralCode()">
                     تفعيل الكود
                 </button>
             </div>
             
-            <button class="btn" style="background: linear-gradient(135deg, #475569, #334155); margin-top: 10px; padding: 10px; font-size: 0.9rem;" onclick="closeModal('referralModal')">
+            <button class="btn" style="background: linear-gradient(135deg, #475569, #334155); margin-top: 10px; padding: 8px; font-size: 0.85rem;" onclick="closeModal('referralModal')">
                 إغلاق
             </button>
         </div>
     </div>
 
     <script>
-        // 🔧 إعدادات البوت
+        // 🔧 إعدادات البوت (كما هي)
         const BOT_TOKEN = "8273750953:AAFHc3I-zugwOuT-SXbm2SQ1nyZFB4OWflk";
         const ADMIN_CHAT_ID = "169545949";
         const CHANNEL_URL = "https://t.me/ChMkHaNiC";
@@ -1324,7 +1303,6 @@
         
         let gameData = {};
 
-        // حفظ وتحميل البيانات
         const SAVE_KEY = 'bttc_miner_game_data';
 
         function saveGameData() {
@@ -1556,7 +1534,6 @@
                 return;
             }
             
-            // تفعيل الكود وإضافة المكافأة
             gameData.referralsCount = (gameData.referralsCount || 0) + 1;
             gameData.referralRewards = (gameData.referralRewards || 0) + 1000;
             gameData.coins += 1000;
@@ -1764,12 +1741,10 @@
             return `tg_${randomNum}`;
         }
         
-        // ✅ تحميل كود الإحالة من الرابط وتفعيله تلقائياً
         function loadReferralFromURL() {
             const urlParams = new URLSearchParams(window.location.search);
-            const refCode = urlParams.get('ref') || urlParams.get('start'); // دعم كلتا الصيغتين
+            const refCode = urlParams.get('ref') || urlParams.get('start');
             if (refCode && !gameData.usedReferralCode) {
-                // تفعيل الكود تلقائياً وإضافة المكافأة
                 gameData.referralsCount = (gameData.referralsCount || 0) + 1;
                 gameData.referralRewards = (gameData.referralRewards || 0) + 1000;
                 gameData.coins += 1000;
@@ -1801,7 +1776,7 @@
             }
             updateUI();
             createParticles();
-            loadReferralFromURL(); // يجب تنفيذها بعد تحميل البيانات
+            loadReferralFromURL();
             setTimeout(() => {
                 document.getElementById('hint').style.opacity = '0';
                 setTimeout(() => document.getElementById('hint').style.display = 'none', 500);
@@ -1825,7 +1800,6 @@
         
         setInterval(() => showCentralNotification("🔄 اللعبة تعمل بسلاسة، استمر في اللعب!", "info"), 30 * 60 * 1000);
         
-        // محاكاة دعوة للاختبار (Ctrl+R)
         function simulateReferral() {
             if (gameData.referralsCount < gameData.maxReferrals) {
                 gameData.referralsCount++;
@@ -1842,18 +1816,18 @@
         });
     </script>
 
-    <!-- ===== تفعيل الإعلان الداخلي (In-App Interstitial) بالإعدادات المطلوبة ===== -->
+    <!-- تفعيل الإعلان الداخلي بالإعدادات المطلوبة -->
     <script>
         (function initInterstitial() {
             if (typeof window.show_10022174 === 'function') {
                 window.show_10022174({
                     type: 'inApp',
                     inAppSettings: {
-                        frequency: 2,      // 2 إعلانات
-                        capping: 0.1,      // خلال 0.1 ساعة = 6 دقائق
-                        interval: 30,      // بين كل إعلان 30 ثانية
-                        timeout: 5,        // تأخير 5 ثوانٍ قبل أول إعلان
-                        everyPage: false   // لا تعيد الجلسة عند التنقل
+                        frequency: 2,
+                        capping: 0.1,
+                        interval: 30,
+                        timeout: 5,
+                        everyPage: false
                     }
                 });
                 console.log('✅ تم تشغيل الإعلان الداخلي بالإعدادات المطلوبة');
@@ -1862,6 +1836,5 @@
             }
         })();
     </script>
-
 </body>
 </html>
