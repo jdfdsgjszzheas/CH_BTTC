@@ -1,0 +1,2167 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>BTTC Miner - Al-Shamkhani</title>
+    
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+
+    <style>
+        :root {
+            --primary: #00A3E0; 
+            --bg: #0b0f1a;
+            --card: #161b2a;
+            --text-main: #ffffff;
+            --upgrade: #22c55e;
+            --withdraw: #fbbf24;
+            --telegram-blue: #0088cc;
+            --gold-glow: rgba(251, 191, 36, 0.6);
+            --error: #ef4444;
+            --success: #10b981;
+            --referral: #8b5cf6;
+            --subscribe: #0088cc;
+            --red-dot: #ef4444;
+            --notification: #8b5cf6;
+            --support: #3b82f6;
+        }
+
+        * { 
+            box-sizing: border-box; 
+            -webkit-tap-highlight-color: transparent; 
+            touch-action: manipulation; 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+        }
+        
+        body { 
+            background-color: var(--bg); 
+            color: var(--text-main); 
+            margin: 0; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            height: 100dvh; 
+            overflow: hidden; 
+            user-select: none;
+            background: linear-gradient(135deg, #0b0f1a 0%, #1a1f35 100%);
+        }
+        
+        header { 
+            width: 100%; 
+            padding: 20px; 
+            text-align: center; 
+            background: rgba(22, 27, 42, 0.95); 
+            border-bottom: 1px solid #2d3748; 
+            backdrop-filter: blur(10px);
+            position: relative;
+            z-index: 100;
+        }
+        
+        .balance-container {
+            margin-top: 5px;
+            position: relative;
+        }
+        
+        .balance-label { 
+            color: #94a3b8; 
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .balance-amount { 
+            font-size: 2.8rem; 
+            font-weight: 800; 
+            color: var(--primary);
+            text-shadow: 0 0 10px rgba(0, 163, 224, 0.3);
+            background: linear-gradient(90deg, #00A3E0, #00E0FF);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: balance-pulse 2s infinite;
+        }
+        
+        @keyframes balance-pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.9; }
+        }
+        
+        .power-display {
+            color: var(--upgrade);
+            font-size: 0.8rem;
+            margin-top: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+        }
+        
+        main { 
+            flex: 1; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            width: 100%; 
+            position: relative; 
+            overflow: hidden;
+        }
+        
+        .bg-animation {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(0, 163, 224, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(251, 191, 36, 0.1) 0%, transparent 50%);
+            animation: bg-rotate 20s linear infinite;
+        }
+        
+        @keyframes bg-rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .coin-wrapper { 
+            width: 220px; 
+            height: 220px; 
+            border-radius: 50%; 
+            background: radial-gradient(circle at 30% 30%, #FFD700, #B8860B);
+            border: 8px solid #DAA520;
+            overflow: hidden;
+            position: relative;
+            box-shadow: 
+                0 0 30px var(--gold-glow), 
+                0 0 60px rgba(251, 191, 36, 0.2),
+                inset 0 0 20px rgba(255, 255, 255, 0.1),
+                0 0 0 4px rgba(255, 215, 0, 0.3);
+            animation: pulse-glow 2s infinite alternate, coin-float 3s ease-in-out infinite;
+            cursor: pointer;
+            transition: transform 0.1s;
+            z-index: 10;
+        }
+        
+        @keyframes coin-float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .coin-wrapper:active {
+            transform: scale(0.95);
+            animation: coin-click 0.2s;
+        }
+        
+        @keyframes coin-click {
+            0% { transform: scale(1); }
+            50% { transform: scale(0.95); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes pulse-glow {
+            from { 
+                box-shadow: 
+                    0 0 20px var(--gold-glow), 
+                    0 0 40px rgba(251, 191, 36, 0.2),
+                    inset 0 0 20px rgba(255, 255, 255, 0.1);
+            }
+            to { 
+                box-shadow: 
+                    0 0 50px var(--gold-glow), 
+                    0 0 70px rgba(251, 191, 36, 0.3),
+                    inset 0 0 30px rgba(255, 255, 255, 0.15);
+            }
+        }
+
+        .coin-img { 
+            width: 100%; 
+            height: 100%; 
+            object-fit: cover; 
+            pointer-events: none; 
+        }
+        
+        .click-effect {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            background: radial-gradient(circle, rgba(255, 215, 0, 0.8), transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 5;
+            transform: translate(-50%, -50%);
+            animation: click-pulse 0.6s ease-out;
+        }
+
+        @keyframes click-pulse {
+            0% { width: 20px; height: 20px; opacity: 1; }
+            100% { width: 120px; height: 120px; opacity: 0; }
+        }
+
+        .floating-number {
+            position: fixed;
+            color: #fbbf24;
+            font-size: 2rem;
+            font-weight: bold;
+            pointer-events: none;
+            z-index: 1000;
+            animation: float-up 0.8s ease-out forwards;
+            text-shadow: 0 0 10px rgba(0, 0, 0, 0.8);
+        }
+
+        @keyframes float-up {
+            0% { transform: translateY(0) scale(1); opacity: 1; }
+            100% { transform: translateY(-150px) scale(0.5); opacity: 0; }
+        }
+
+        /* زر الاشتراك في القناة */
+        .subscribe-btn {
+            position: absolute;
+            bottom: 160px;
+            left: 20px;
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--subscribe), #006699);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(0, 136, 204, 0.4);
+            cursor: pointer;
+            z-index: 500;
+            border: 2px solid white;
+            transition: all 0.3s;
+        }
+        
+        .subscribe-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(0, 136, 204, 0.6);
+        }
+        
+        .subscribe-btn:active {
+            transform: scale(0.9);
+        }
+        
+        /* النقطة الحمراء */
+        .red-dot {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            width: 12px;
+            height: 12px;
+            background-color: var(--red-dot);
+            border-radius: 50%;
+            animation: pulse-red 1.5s infinite;
+            box-shadow: 0 0 10px rgba(239, 68, 68, 0.7);
+        }
+        
+        @keyframes pulse-red {
+            0% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.3; transform: scale(1.2); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        /* زر الدعم الفني الجديد */
+        .support-btn {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--support), #1d4ed8);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
+            cursor: pointer;
+            z-index: 500;
+            border: 2px solid white;
+            transition: all 0.3s;
+        }
+        
+        .support-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(59, 130, 246, 0.6);
+        }
+        
+        .support-btn:active {
+            transform: scale(0.9);
+        }
+
+        .stats-btn {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--upgrade), #16a34a);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(34, 197, 94, 0.4);
+            cursor: pointer;
+            z-index: 500;
+            border: 2px solid white;
+            transition: all 0.3s;
+        }
+        
+        .stats-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(34, 197, 94, 0.6);
+        }
+        
+        .stats-btn:active {
+            transform: scale(0.9);
+        }
+
+        .referral-btn {
+            position: absolute;
+            bottom: 90px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--referral), #7c3aed);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(139, 92, 246, 0.4);
+            cursor: pointer;
+            z-index: 500;
+            border: 2px solid white;
+            transition: all 0.3s;
+        }
+        
+        .referral-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(139, 92, 246, 0.6);
+        }
+        
+        .referral-btn:active {
+            transform: scale(0.9);
+        }
+
+        .footer-section { 
+            width: 100%; 
+            background: var(--card); 
+            padding: 20px; 
+            border-radius: 25px 25px 0 0; 
+            padding-bottom: env(safe-area-inset-bottom, 25px);
+            box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.3);
+            position: relative;
+            z-index: 100;
+        }
+        
+        .actions-grid { 
+            display: grid; 
+            grid-template-columns: 1fr 1fr; 
+            gap: 12px; 
+        }
+        
+        .card { 
+            background: linear-gradient(135deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02));
+            padding: 15px; 
+            border-radius: 15px; 
+            border: 1px solid #334155; 
+            text-align: center;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--upgrade), transparent);
+            transform: translateX(-100%);
+            transition: transform 0.5s;
+        }
+        
+        .card:hover::before {
+            transform: translateX(100%);
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            border-color: #475569;
+        }
+        
+        .card:nth-child(2)::before {
+            background: linear-gradient(90deg, transparent, var(--withdraw), transparent);
+        }
+        
+        .card-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+        }
+        
+        .card-value {
+            font-size: 1.2rem;
+            margin: 5px 0;
+            color: var(--primary);
+            font-weight: bold;
+        }
+        
+        .card-desc {
+            font-size: 0.7rem; 
+            color: #94a3b8;
+            margin: 5px 0;
+        }
+        
+        .btn { 
+            color: white; 
+            border: none; 
+            padding: 12px; 
+            border-radius: 10px; 
+            width: 100%; 
+            font-weight: bold; 
+            margin-top: 10px; 
+            cursor: pointer; 
+            transition: all 0.3s;
+            font-size: 1rem;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+        
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transform: translateX(-100%);
+            transition: transform 0.5s;
+            z-index: -1;
+        }
+        
+        .btn:hover::before {
+            transform: translateX(100%);
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        .btn:active {
+            transform: scale(0.98);
+        }
+        
+        .btn-upgrade { 
+            background: linear-gradient(135deg, var(--upgrade), #16a34a); 
+        }
+        
+        .btn-upgrade:hover:not(:disabled) {
+            background: linear-gradient(135deg, #22c55e, #15803d);
+            box-shadow: 0 5px 20px rgba(34, 197, 94, 0.4);
+        }
+        
+        .btn-withdraw { 
+            background: linear-gradient(135deg, var(--withdraw), #d97706);
+            color: #000; 
+        }
+        
+        .btn-withdraw:hover:not(:disabled) {
+            background: linear-gradient(135deg, #fbbf24, #b45309);
+            box-shadow: 0 5px 20px rgba(251, 191, 36, 0.4);
+        }
+        
+        .btn-referral {
+            background: linear-gradient(135deg, var(--referral), #7c3aed);
+        }
+        
+        .btn-referral:hover:not(:disabled) {
+            background: linear-gradient(135deg, #8b5cf6, #6d28d9);
+            box-shadow: 0 5px 20px rgba(139, 92, 246, 0.4);
+        }
+        
+        .btn:disabled { 
+            opacity: 0.5; 
+            cursor: not-allowed;
+            transform: none !important;
+            box-shadow: none !important;
+        }
+
+        .modal-overlay { 
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%; 
+            background: rgba(0,0,0,0.9); 
+            display: none; 
+            align-items: center; 
+            justify-content: center; 
+            z-index: 2000; 
+            backdrop-filter: blur(5px);
+            animation: fade-in 0.3s ease-out;
+        }
+        
+        @keyframes fade-in {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .modal { 
+            background: var(--card); 
+            width: 90%; 
+            max-width: 350px;
+            padding: 20px; 
+            border-radius: 20px; 
+            text-align: center; 
+            border: 2px solid var(--withdraw);
+            box-shadow: 0 0 50px rgba(251, 191, 36, 0.3);
+            animation: modal-appear 0.3s ease-out;
+            position: relative;
+            max-height: 85vh;
+            overflow-y: auto;
+        }
+        
+        .modal::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, var(--withdraw), #fbbf24, var(--withdraw));
+            border-radius: 22px;
+            z-index: -1;
+            animation: border-glow 2s linear infinite;
+        }
+        
+        @keyframes border-glow {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+        
+        @keyframes modal-appear {
+            from { transform: scale(0.8) translateY(20px); opacity: 0; }
+            to { transform: scale(1) translateY(0); opacity: 1; }
+        }
+        
+        /* زر إغلاق النافذة المنبثقة */
+        .modal-close-btn {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            width: 30px;
+            height: 30px;
+            background: rgba(239, 68, 68, 0.2);
+            border: 1px solid #ef4444;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: bold;
+            transition: all 0.3s;
+            z-index: 100;
+        }
+        
+        .modal-close-btn:hover {
+            background: rgba(239, 68, 68, 0.4);
+            transform: scale(1.1);
+        }
+        
+        .modal-close-btn:active {
+            transform: scale(0.9);
+        }
+        
+        .modal h3 {
+            margin-top: 0;
+            color: var(--withdraw);
+            margin-bottom: 15px;
+            padding-right: 20px;
+            font-size: 1.3rem;
+        }
+        
+        .modal input { 
+            width: 100%; 
+            padding: 12px; 
+            margin: 10px 0; 
+            border-radius: 8px; 
+            border: 1px solid #334155; 
+            background: #0f172a; 
+            color: white; 
+            text-align: center;
+            font-size: 0.95rem;
+            transition: all 0.3s;
+        }
+        
+        .modal input:focus {
+            outline: none;
+            border-color: var(--withdraw);
+            box-shadow: 0 0 10px rgba(251, 191, 36, 0.3);
+            transform: translateY(-2px);
+        }
+        
+        /* إدخال اسم المستخدم مع @ تلقائي */
+        .username-input-wrapper {
+            position: relative;
+            width: 100%;
+        }
+        
+        .username-at-symbol {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #94a3b8;
+            font-size: 0.95rem;
+            z-index: 1;
+            pointer-events: none;
+        }
+        
+        .username-input {
+            padding-left: 30px !important;
+            text-align: left !important;
+        }
+        
+        .modal-buttons { 
+            display: flex; 
+            gap: 10px; 
+            margin-top: 20px; 
+        }
+        
+        .stats-modal {
+            border-color: var(--upgrade);
+        }
+        
+        .stats-modal::before {
+            background: linear-gradient(45deg, var(--upgrade), #22c55e, var(--upgrade));
+        }
+        
+        .referral-modal {
+            border-color: var(--referral);
+            width: 85%;
+            max-width: 320px;
+            padding: 18px;
+        }
+        
+        .referral-modal::before {
+            background: linear-gradient(45deg, var(--referral), #8b5cf6, var(--referral));
+        }
+        
+        .referral-modal h3 {
+            color: var(--referral);
+            font-size: 1.2rem;
+            margin-bottom: 12px;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin: 15px 0;
+        }
+        
+        .referral-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            margin: 15px 0;
+        }
+        
+        .stat-item {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 8px;
+            border-radius: 8px;
+            border: 1px solid #334155;
+            transition: all 0.3s;
+        }
+        
+        .stat-item:hover {
+            transform: translateY(-3px);
+            border-color: var(--primary);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .stat-label {
+            font-size: 0.75rem;
+            color: #94a3b8;
+        }
+        
+        .stat-value {
+            font-size: 1rem;
+            font-weight: bold;
+            color: var(--primary);
+        }
+        
+        /* تحسينات لنافذة الإحالة */
+        .referral-code-box {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(139, 92, 246, 0.05));
+            padding: 12px;
+            border-radius: 8px;
+            border: 1.5px solid var(--referral);
+            margin: 10px 0;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .referral-code {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: var(--referral);
+            letter-spacing: 1px;
+            font-family: monospace;
+            margin: 8px 0;
+        }
+        
+        .copy-btn {
+            position: absolute;
+            top: 8px;
+            left: 8px;
+            background: rgba(139, 92, 246, 0.2);
+            border: 1px solid var(--referral);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.7rem;
+            transition: all 0.3s;
+        }
+        
+        .copy-btn:hover {
+            background: rgba(139, 92, 246, 0.4);
+        }
+        
+        /* رابط الإحالة الجديد مع أزرار المشاركة */
+        .referral-link-container {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 10px;
+            border-radius: 8px;
+            margin: 10px 0;
+            border: 1px solid #334155;
+        }
+        
+        .referral-link-text {
+            font-size: 0.8rem;
+            color: #94a3b8;
+            word-break: break-all;
+            margin-bottom: 10px;
+            padding: 8px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 6px;
+            direction: ltr;
+            text-align: left;
+            font-family: monospace;
+        }
+        
+        .share-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+        
+        .share-btn {
+            flex: 1;
+            padding: 8px 12px;
+            border-radius: 8px;
+            border: none;
+            color: white;
+            font-weight: bold;
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .share-btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        .copy-link-btn {
+            background: linear-gradient(135deg, #475569, #334155);
+        }
+        
+        .telegram-share-btn {
+            background: linear-gradient(135deg, #0088cc, #006699);
+        }
+        
+        .referral-info-box {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 12px;
+            border-radius: 8px;
+            margin: 10px 0;
+            border: 1px solid #334155;
+        }
+        
+        .referral-info-title {
+            color: var(--referral);
+            font-weight: bold;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+        }
+        
+        .referral-info-text {
+            text-align: right;
+            font-size: 0.75rem;
+            color: #94a3b8;
+            line-height: 1.4;
+        }
+        
+        @media (max-width: 480px) {
+            .coin-wrapper {
+                width: 180px;
+                height: 180px;
+            }
+            
+            .balance-amount {
+                font-size: 2.2rem;
+            }
+            
+            .modal {
+                width: 90%;
+                padding: 15px;
+                max-width: 300px;
+            }
+            
+            .referral-modal {
+                width: 90%;
+                padding: 15px;
+                max-width: 280px;
+            }
+            
+            .session-warning {
+                font-size: 0.7rem;
+                padding: 6px 12px;
+                top: 5px;
+            }
+            
+            .central-notification {
+                padding: 15px 20px;
+                max-width: 90%;
+                font-size: 0.9rem;
+            }
+            
+            .subscribe-btn {
+                width: 45px;
+                height: 45px;
+                bottom: 140px;
+                left: 15px;
+            }
+            
+            .referral-btn {
+                bottom: 80px;
+                right: 15px;
+                width: 45px;
+                height: 45px;
+            }
+            
+            .stats-btn {
+                right: 15px;
+                width: 45px;
+                height: 45px;
+            }
+            
+            .support-btn {
+                left: 15px;
+                width: 45px;
+                height: 45px;
+            }
+            
+            .referral-code {
+                font-size: 1rem;
+            }
+            
+            .modal h3 {
+                font-size: 1.1rem;
+            }
+            
+            .referral-modal h3 {
+                font-size: 1rem;
+            }
+        }
+        
+        /* إشعارات مركزية مع صوت */
+        .central-notification {
+            position: fixed;
+            top: 20%;
+            left: 50%;
+            transform: translateX(-50%) translateY(-100%);
+            background: linear-gradient(135deg, var(--notification), #7c3aed);
+            padding: 20px 30px;
+            border-radius: 15px;
+            border-left: 5px solid var(--success);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            z-index: 4000;
+            animation: central-slide-in 0.5s ease-out forwards, central-pulse 2s 0.5s infinite, central-slide-out 0.5s ease-out 3.5s forwards;
+            max-width: 80%;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .central-notification.error {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            border-left-color: var(--error);
+        }
+        
+        .central-notification.warning {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            border-left-color: #f59e0b;
+        }
+        
+        .central-notification.info {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            border-left-color: #3b82f6;
+        }
+        
+        @keyframes central-slide-in {
+            0% { transform: translateX(-50%) translateY(-100%); opacity: 0; }
+            100% { transform: translateX(-50%) translateY(0); opacity: 1; }
+        }
+        
+        @keyframes central-pulse {
+            0%, 100% { box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 20px rgba(139, 92, 246, 0.4); }
+            50% { box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 30px rgba(139, 92, 246, 0.7); }
+        }
+        
+        @keyframes central-slide-out {
+            0% { transform: translateX(-50%) translateY(0); opacity: 1; }
+            100% { transform: translateX(-50%) translateY(-100%); opacity: 0; }
+        }
+        
+        .notification-icon {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+        
+        .notification-message {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: white;
+            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #334155;
+            border-radius: 4px;
+            margin: 10px 0;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), #00E0FF);
+            border-radius: 4px;
+            width: 0%;
+            transition: width 0.5s ease-out;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .progress-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, 
+                transparent, 
+                rgba(255, 255, 255, 0.4), 
+                transparent);
+            animation: progress-shine 2s infinite;
+        }
+        
+        @keyframes progress-shine {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        
+        .withdraw-limits {
+            font-size: 0.75rem;
+            color: #94a3b8;
+            margin: 8px 0;
+            padding: 6px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+        }
+        
+        .hint {
+            position: absolute;
+            bottom: 100px;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 10px 15px;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            color: #fbbf24;
+            text-align: center;
+            max-width: 80%;
+            animation: hint-pulse 2s infinite, hint-float 3s ease-in-out infinite;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(251, 191, 36, 0.3);
+            z-index: 50;
+        }
+        
+        @keyframes hint-pulse {
+            0%, 100% { opacity: 1; box-shadow: 0 0 10px rgba(251, 191, 36, 0.3); }
+            50% { opacity: 0.8; box-shadow: 0 0 5px rgba(251, 191, 36, 0.2); }
+        }
+        
+        @keyframes hint-float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+        
+        .particles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+        
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: rgba(251, 191, 36, 0.5);
+            border-radius: 50%;
+            animation: particle-float linear infinite;
+        }
+        
+        @keyframes particle-float {
+            to { transform: translateY(-100vh); }
+        }
+        
+        .session-warning {
+            position: fixed;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            z-index: 3001;
+            animation: pulse 2s infinite;
+            box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4);
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+        
+        .referral-badge {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: linear-gradient(135deg, var(--referral), #7c3aed);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            z-index: 100;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="bg-animation"></div>
+    <div class="particles" id="particles"></div>
+    
+    <div class="session-warning" id="sessionWarning">
+        ⚠️ يتم حفظ التقدم تلقائياً
+    </div>
+
+    <header>
+        <div class="balance-container">
+            <div class="balance-label">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                </svg>
+                رصيدك الحالي
+            </div>
+            <div id="balance" class="balance-amount">0</div>
+            <div class="power-display">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M7 10l5 5 5-5z"/>
+                </svg>
+                قوة النقر: <span id="clickPower">1</span>
+            </div>
+        </div>
+        
+        <div class="referral-badge" id="referralBadge" style="display: none;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/>
+            </svg>
+            <span id="referralCount">0/10</span>
+        </div>
+    </header>
+
+    <main>
+        <div class="hint" id="hint">✨ اضغط على العملة لجمع البت تورنت</div>
+        
+        <!-- زر الاشتراك في القناة -->
+        <div class="subscribe-btn" id="subscribeBtn">
+            <div class="red-dot" id="redDot"></div>
+            <svg viewBox="0 0 24 24" fill="white" width="28" height="28">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69.01-.03.01-.14-.07-.2-.08-.06-.19-.04-.27-.02-.11.02-1.93 1.23-5.46 3.62-.51.35-.98.52-1.4.51-.46-.01-1.35-.26-2.01-.48-.81-.27-1.45-.42-1.39-.89.03-.25.38-.51 1.07-.78 4.2-1.82 7.01-3.02 8.41-3.59 4.02-1.63 4.86-1.91 5.4-1.92.12 0 .38.03.55.17.14.11.18.27.2.42-.01.07 0 .14-.01.2z"/>
+            </svg>
+        </div>
+        
+        <!-- زر الدعم الفني -->
+        <div class="support-btn" id="supportBtn">
+            <svg viewBox="0 0 24 24" fill="white" width="28" height="28">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75l-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H8c0-2.21 1.79-4 4-4s4 1.79 4 4c0 .88-.36 1.68-.93 2.25z"/>
+            </svg>
+        </div>
+        
+        <div class="stats-btn" id="statsBtn">
+            <svg viewBox="0 0 24 24" fill="white" width="28" height="28">
+                <path d="M16,11V3H8v6H2v12h20V11H16z M10,5h4v14h-4V5z M4,11h4v8H4V11z M20,19h-4v-6h4V19z"/>
+            </svg>
+        </div>
+
+        <div class="referral-btn" id="referralBtn">
+            <svg viewBox="0 0 24 24" fill="white" width="28" height="28">
+                <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/>
+            </svg>
+        </div>
+
+        <div class="click-area" id="clickZone">
+            <div class="coin-wrapper">
+                <img src="https://i.postimg.cc/y8QNPynB/5990161721064541916-99.jpg" alt="BTTC Logo" class="coin-img">
+            </div>
+        </div>
+    </main>
+
+    <section class="footer-section">
+        <div class="actions-grid">
+            <div class="card">
+                <div class="card-title">
+                    <!-- أيقونة ترقية النقر الجديدة - سهم للأعلى -->
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 2L3 11h5v7h8v-7h5L12 2zm0 4.83L15.17 9H13v7h-2V9H8.83L12 6.83z"/>
+                    </svg>
+                    ترقية النقر
+                </div>
+                <div class="card-value" id="upgradeCost">20</div>
+                <div class="card-desc">زيادة +1 لكل نقرة</div>
+                <button id="buyUpgrade" class="btn btn-upgrade">
+                    <span>شراء الترقية</span>
+                </button>
+            </div>
+            <div class="card">
+                <div class="card-title">
+                    <!-- أيقونة طلب السحب الجديدة - دائرة مع علامة استفهام (رمز المساعدة/السحب) -->
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
+                    </svg>
+                    طلب سحب
+                </div>
+                <div class="card-value" id="withdrawAmount">0</div>
+                <div class="card-desc">الحد الأدنى: 10,000 BTTC</div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="withdrawProgress"></div>
+                </div>
+                <button id="withdrawBtn" class="btn btn-withdraw">
+                    <span>سحب الرصيد</span>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- نافذة السحب -->
+    <div class="modal-overlay" id="withdrawModal">
+        <div class="modal">
+            <div class="modal-close-btn" onclick="closeModal('withdrawModal')">×</div>
+            <h3>⏬ تقديم طلب سحب</h3>
+            <div class="withdraw-limits" id="withdrawLimits">
+                المبلغ: 0 BTTC | الحد الأدنى: 10,000 | المتبقي اليوم: 100,000
+            </div>
+            <div class="withdraw-limits" style="background: rgba(139,92,246,0.2); margin-top: 0;" id="withdrawStageInfo">
+                السحب الأول: 10,000 | السحب الثاني: 50,000 | السحب الثالث: الباقي
+            </div>
+            
+            <div class="username-input-wrapper">
+                <span class="username-at-symbol">@</span>
+                <input type="text" id="tgUsername" class="username-input" placeholder="اسم المستخدم بدون @" maxlength="50">
+            </div>
+            
+            <input type="text" id="binanceID" placeholder="معرف Binance أو عنوان المحفظة" maxlength="100">
+            
+            <div class="modal-buttons">
+                <button class="btn" style="background: linear-gradient(135deg, #475569, #334155);" onclick="closeModal('withdrawModal')">
+                    إلغاء
+                </button>
+                <button id="confirmBtn" class="btn btn-upgrade" onclick="submitWithdraw()">
+                    تأكيد الطلب
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- نافذة الإحصائيات -->
+    <div class="modal-overlay" id="statsModal">
+        <div class="modal stats-modal">
+            <div class="modal-close-btn" onclick="closeModal('statsModal')">×</div>
+            <h3>📊 إحصائيات الجلسة</h3>
+            
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-label">النقرات في الجلسة</div>
+                    <div class="stat-value" id="totalClicks">0</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">قوة النقر الحالية</div>
+                    <div class="stat-value" id="currentPower">1</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">الترقيات المشتراة</div>
+                    <div class="stat-value" id="upgradesBought">0</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">السحب في الجلسة</div>
+                    <div class="stat-value" id="totalWithdrawn">0</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">الباقي للسحب</div>
+                    <div class="stat-value" id="remainingLimit">100,000</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">آخر سحب</div>
+                    <div class="stat-value" id="lastWithdraw">لم يتم</div>
+                </div>
+            </div>
+            
+            <button class="btn" style="background: linear-gradient(135deg, #475569, #334155);" onclick="closeModal('statsModal')">
+                إغلاق
+            </button>
+        </div>
+    </div>
+
+    <!-- نافذة نظام الإحالة - مع أزرار المشاركة -->
+    <div class="modal-overlay" id="referralModal">
+        <div class="modal referral-modal">
+            <div class="modal-close-btn" onclick="closeModal('referralModal')">×</div>
+            <h3>👥 نظام الإحالة</h3>
+            
+            <div class="referral-code-box">
+                <div class="copy-btn" onclick="copyReferralCode()">نسخ</div>
+                <div class="card-title" style="font-size: 0.9rem;">كود الإحالة</div>
+                <div class="referral-code" id="referralCode">تحميل...</div>
+                <div class="card-desc" style="font-size: 0.7rem;">شارك هذا الكود مع أصدقائك</div>
+            </div>
+            
+            <!-- رابط الإحالة مع أزرار المشاركة -->
+            <div class="referral-link-container">
+                <div class="referral-link-text" id="referralLinkText">جاري تحميل الرابط...</div>
+                <div class="share-buttons">
+                    <button class="share-btn copy-link-btn" onclick="copyReferralLink()">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/>
+                        </svg>
+                        نسخ الرابط
+                    </button>
+                    <button class="share-btn telegram-share-btn" onclick="shareReferralLink()">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69.01-.03.01-.14-.07-.2-.08-.06-.19-.04-.27-.02-.11.02-1.93 1.23-5.46 3.62-.51.35-.98.52-1.4.51-.46-.01-1.35-.26-2.01-.48-.81-.27-1.45-.42-1.39-.89.03-.25.38-.51 1.07-.78 4.2-1.82 7.01-3.02 8.41-3.59 4.02-1.63 4.86-1.91 5.4-1.92.12 0 .38.03.55.17.14.11.18.27.2.42-.01.07 0 .14-.01.2z"/>
+                        </svg>
+                        مشاركة
+                    </button>
+                </div>
+            </div>
+            
+            <div class="referral-grid">
+                <div class="stat-item">
+                    <div class="stat-label">الدعوات المنجزة</div>
+                    <div class="stat-value" id="referralsCompleted">0/10</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">المكافآت المجنبة</div>
+                    <div class="stat-value" id="referralRewards">0 BTTC</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">مكافأة الدعوة</div>
+                    <div class="stat-value">1,000 BTTC</div>
+                </div>
+            </div>
+            
+            <div class="referral-info-box">
+                <div class="referral-info-title">🎯 كيف تعمل الإحالة:</div>
+                <div class="referral-info-text">
+                    1. شارك كود الإحالة مع أصدقائك<br>
+                    2. عندما ينضم صديق، تحصل على 1,000 BTTC<br>
+                    3. الحد الأقصى: 10 دعوات<br>
+                    4. المكافأة تضاف إلى رصيدك
+                </div>
+            </div>
+            
+            <div class="referral-info-box" style="border-color: var(--upgrade);">
+                <h4 style="color: var(--upgrade); margin: 0 0 8px 0; font-size: 0.9rem;">🎁 أدخل كود الإحالة</h4>
+                <input type="text" id="inputReferralCode" placeholder="أدخل كود الإحالة" style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #334155; background: #0f172a; color: white; text-align: center; font-size: 0.85rem;">
+                <button class="btn btn-upgrade" style="margin-top: 8px; padding: 10px; font-size: 0.9rem;" onclick="useReferralCode()">
+                    تفعيل الكود
+                </button>
+            </div>
+            
+            <button class="btn" style="background: linear-gradient(135deg, #475569, #334155); margin-top: 10px; padding: 10px; font-size: 0.9rem;" onclick="closeModal('referralModal')">
+                إغلاق
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // 🔧 إعدادات البوت
+        const BOT_TOKEN = "8273750953:AAFHc3I-zugwOuT-SXbm2SQ1nyZFB4OWflk";
+        const ADMIN_CHAT_ID = "169545949";
+        const CHANNEL_URL = "https://t.me/ChMkHaNiC";
+        
+        // 🎮 تهيئة Telegram WebApp
+        const tg = window.Telegram.WebApp;
+        tg.expand();
+        tg.enableClosingConfirmation();
+        tg.setHeaderColor('#161b2a');
+        tg.setBackgroundColor('#0b0f1a');
+        
+        // 📊 بيانات الجلسة الحالية - سيتم تحميلها من localStorage
+        let gameData = {};
+
+        // ========== حفظ وتحميل البيانات من localStorage ==========
+        const SAVE_KEY = 'bttc_miner_game_data';
+
+        function saveGameData() {
+            try {
+                const dataToSave = {
+                    ...gameData,
+                    // نضيف حماية للتواريخ
+                    lastReset: gameData.lastReset || Date.now(),
+                    sessionStart: gameData.sessionStart || Date.now(),
+                    lastWithdraw: gameData.lastWithdraw || 0
+                };
+                localStorage.setItem(SAVE_KEY, JSON.stringify(dataToSave));
+            } catch (e) {
+                console.error('فشل حفظ البيانات', e);
+            }
+        }
+
+        function loadGameData() {
+            try {
+                const saved = localStorage.getItem(SAVE_KEY);
+                if (saved) {
+                    const parsed = JSON.parse(saved);
+                    // التأكد من وجود كل الحقول
+                    return {
+                        coins: parsed.coins || 0,
+                        clickPower: parsed.clickPower || 1,
+                        clickCost: parsed.clickCost || 20,
+                        totalClicks: parsed.totalClicks || 0,
+                        upgradesBought: parsed.upgradesBought || 0,
+                        totalWithdrawn: parsed.totalWithdrawn || 0,
+                        lastWithdraw: parsed.lastWithdraw || 0,
+                        dailyLimit: parsed.dailyLimit || 100000,
+                        dailyWithdrawalCount: parsed.dailyWithdrawalCount || 0, // عدد عمليات السحب اليوم
+                        lastReset: parsed.lastReset || Date.now(),
+                        sessionStart: parsed.sessionStart || Date.now(),
+                        referralCode: parsed.referralCode || null,
+                        referralsCount: parsed.referralsCount || 0,
+                        referralRewards: parsed.referralRewards || 0,
+                        maxReferrals: parsed.maxReferrals || 10,
+                        referralBonus: parsed.referralBonus || 1000,
+                        usedReferralCode: parsed.usedReferralCode || false,
+                        hasSubscribed: parsed.hasSubscribed || false
+                    };
+                }
+            } catch (e) {
+                console.error('فشل تحميل البيانات', e);
+            }
+            return null;
+        }
+
+        // 🎯 تحديث واجهة المستخدم
+        function updateUI() {
+            // تحديث الرصيد
+            document.getElementById('balance').textContent = Math.floor(gameData.coins).toLocaleString();
+            document.getElementById('clickPower').textContent = gameData.clickPower;
+            document.getElementById('upgradeCost').textContent = gameData.clickCost;
+            
+            // تحديث زر الترقية
+            const upgradeBtn = document.getElementById('buyUpgrade');
+            upgradeBtn.disabled = gameData.coins < gameData.clickCost;
+            
+            // تحديث معلومات السحب
+            const withdrawAmount = Math.floor(gameData.coins);
+            document.getElementById('withdrawAmount').textContent = withdrawAmount.toLocaleString();
+            
+            // تحديث حدود السحب - الحد الأدنى الجديد 10,000
+            const remainingDaily = Math.max(0, gameData.dailyLimit - gameData.totalWithdrawn);
+            document.getElementById('withdrawLimits').innerHTML = 
+                `💰 المبلغ: ${withdrawAmount.toLocaleString()} BTTC | 📏 الحد الأدنى: 10,000 | 📅 المتبقي اليوم: ${remainingDaily.toLocaleString()}`;
+            
+            // عرض مرحلة السحب الحالية
+            let stageText = '';
+            if (gameData.dailyWithdrawalCount === 0) {
+                stageText = '🎯 السحب الأول: 10,000 BTTC (يجب أن يكون 10,000 بالضبط)';
+            } else if (gameData.dailyWithdrawalCount === 1) {
+                stageText = '🎯 السحب الثاني: 50,000 BTTC (يجب أن يكون 50,000 بالضبط)';
+            } else if (gameData.dailyWithdrawalCount >= 2) {
+                stageText = `🎯 السحب الثالث: ما تبقى (الحد الأقصى ${remainingDaily.toLocaleString()} BTTC)`;
+            }
+            document.getElementById('withdrawStageInfo').innerHTML = stageText;
+            
+            // تحديث شريط التقدم (نسبة تقدم نحو 10,000 كحد أدنى)
+            const progress = Math.min(100, (withdrawAmount / 10000) * 100);
+            document.getElementById('withdrawProgress').style.width = `${progress}%`;
+            
+            // تحديث الإحصائيات
+            document.getElementById('totalClicks').textContent = gameData.totalClicks.toLocaleString();
+            document.getElementById('currentPower').textContent = gameData.clickPower;
+            document.getElementById('upgradesBought').textContent = gameData.upgradesBought;
+            document.getElementById('totalWithdrawn').textContent = gameData.totalWithdrawn.toLocaleString();
+            document.getElementById('remainingLimit').textContent = remainingDaily.toLocaleString();
+            
+            if (gameData.lastWithdraw === 0) {
+                document.getElementById('lastWithdraw').textContent = "لم يتم";
+            } else {
+                const date = new Date(gameData.lastWithdraw);
+                document.getElementById('lastWithdraw').textContent = date.toLocaleTimeString('ar-EG');
+            }
+            
+            // تحديث نظام الإحالة
+            updateReferralUI();
+            
+            // تحديث حالة النقطة الحمراء للاشتراك
+            updateSubscriptionUI();
+            
+            // التحقق من إعادة تعيين اليومية
+            checkDailyReset();
+        }
+        
+        // 🔄 تحديث واجهة نظام الإحالة
+        function updateReferralUI() {
+            if (gameData.referralCode) {
+                document.getElementById('referralCode').textContent = gameData.referralCode;
+                document.getElementById('referralsCompleted').textContent = `${gameData.referralsCount}/${gameData.maxReferrals}`;
+                document.getElementById('referralRewards').textContent = `${gameData.referralRewards.toLocaleString()} BTTC`;
+                
+                // تحديث البادج
+                document.getElementById('referralCount').textContent = `${gameData.referralsCount}/10`;
+                document.getElementById('referralBadge').style.display = 'flex';
+                
+                // إنشاء رابط الإحالة
+                const currentUrl = window.location.href.split('?')[0];
+                const referralUrl = `${currentUrl}?ref=${gameData.referralCode}`;
+                
+                // تحديث نص الرابط
+                const referralLinkText = document.getElementById('referralLinkText');
+                if (referralLinkText) {
+                    referralLinkText.innerHTML = `<span style="direction: ltr; display: block;">${referralUrl}</span>`;
+                }
+            }
+        }
+        
+        // 🔄 تحديث واجهة الاشتراك
+        function updateSubscriptionUI() {
+            if (gameData.hasSubscribed) {
+                document.getElementById('redDot').style.display = 'none';
+            } else {
+                document.getElementById('redDot').style.display = 'block';
+            }
+        }
+        
+        // 🔄 التحقق من إعادة تعيين الحد اليومي (كل 24 ساعة)
+        function checkDailyReset() {
+            const now = Date.now();
+            const oneDay = 24 * 60 * 60 * 1000;
+            
+            if (now - gameData.lastReset >= oneDay) {
+                gameData.dailyLimit = 100000;
+                gameData.totalWithdrawn = 0;
+                gameData.dailyWithdrawalCount = 0; // إعادة تعيين عدد السحوبات
+                gameData.lastReset = now;
+                saveGameData();
+                showCentralNotification("✅ تم إعادة تعيين الحد اليومي للسحب إلى 100,000", "success");
+            }
+        }
+        
+        // ✨ إنشاء تأثيرات النقر
+        function createClickEffect(x, y) {
+            const effect = document.createElement('div');
+            effect.className = 'click-effect';
+            effect.style.left = `${x}px`;
+            effect.style.top = `${y}px`;
+            document.body.appendChild(effect);
+            setTimeout(() => effect.remove(), 600);
+        }
+        
+        // 🔢 إنشاء أرقام عائمة
+        function spawnFloatingNumber(x, y, value) {
+            const el = document.createElement('div');
+            el.className = 'floating-number';
+            el.textContent = `+${value}`;
+            el.style.left = `${x}px`;
+            el.style.top = `${y}px`;
+            document.body.appendChild(el);
+            setTimeout(() => el.remove(), 800);
+        }
+        
+        // 💬 إظهار الإشعارات المركزية مع صوت
+        function showCentralNotification(message, type = "success") {
+            playNotificationSound();
+            
+            const notification = document.createElement('div');
+            notification.className = `central-notification ${type}`;
+            
+            let icon = "✅";
+            if (type === "error") icon = "❌";
+            else if (type === "warning") icon = "⚠️";
+            else if (type === "info") icon = "ℹ️";
+            
+            notification.innerHTML = `
+                <div class="notification-icon">${icon}</div>
+                <div class="notification-message">${message}</div>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            notification.style.animation = 'none';
+            setTimeout(() => {
+                notification.style.animation = 'central-slide-in 0.5s ease-out forwards, central-pulse 2s 0.5s infinite, central-slide-out 0.5s ease-out 3.5s forwards';
+            }, 10);
+            
+            setTimeout(() => notification.remove(), 4000);
+        }
+        
+        // 🔊 تشغيل صوت الإشعار
+        function playNotificationSound() {
+            try {
+                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                const oscillator = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+                
+                oscillator.frequency.value = 800;
+                oscillator.type = 'sine';
+                
+                gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
+                
+                oscillator.start();
+                oscillator.stop(audioContext.currentTime + 0.5);
+            } catch (e) {}
+        }
+        
+        // 🪟 إدارة النوافذ المنبثقة
+        function openModal(modalId) {
+            document.getElementById(modalId).style.display = 'flex';
+        }
+        
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+        
+        // 📲 الاشتراك في القناة
+        function subscribeToChannel() {
+            tg.openTelegramLink(CHANNEL_URL);
+            
+            if (!gameData.hasSubscribed) {
+                gameData.coins += 1000;
+                gameData.hasSubscribed = true;
+                updateUI();
+                saveGameData();
+                showCentralNotification("🎉 لقد حصلت على 1000 BTTC كهدية للاشتراك في القناة!", "success");
+                
+                if (tg.HapticFeedback) {
+                    tg.HapticFeedback.notificationOccurred('success');
+                }
+                
+                updateSubscriptionUI();
+            }
+        }
+        
+        // 📞 فتح الدعم الفني
+        function openSupport() {
+            tg.openTelegramLink('https://t.me/chmkhani');
+            showCentralNotification("👨‍💻 تم فتح رابط الدعم الفني", "info");
+        }
+        
+        // 📋 نسخ كود الإحالة (الكود المختصر)
+        function copyReferralCode() {
+            if (gameData.referralCode) {
+                const textArea = document.createElement('textarea');
+                textArea.value = gameData.referralCode;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                showCentralNotification("✅ تم نسخ كود الإحالة", "success");
+            }
+        }
+        
+        // 🔗 نسخ رابط الإحالة
+        function copyReferralLink() {
+            if (gameData.referralCode) {
+                const currentUrl = window.location.href.split('?')[0];
+                const referralUrl = `${currentUrl}?ref=${gameData.referralCode}`;
+                
+                const textArea = document.createElement('textarea');
+                textArea.value = referralUrl;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                
+                showCentralNotification("✅ تم نسخ رابط الإحالة", "success");
+            }
+        }
+        
+        // 📤 مشاركة رابط الإحالة عبر Telegram
+        function shareReferralLink() {
+            if (gameData.referralCode) {
+                const currentUrl = window.location.href.split('?')[0];
+                const referralUrl = `${currentUrl}?ref=${gameData.referralCode}`;
+                const shareText = `انضم إلي في لعبة BTTC Miner واحصل على 1,000 BTTC كمكافأة! استخدم كود الإحالة الخاص بي: ${gameData.referralCode}\n\nرابط اللعبة: ${referralUrl}`;
+                
+                tg.openTelegramLink(`https://t.me/share/url?url=${encodeURIComponent(referralUrl)}&text=${encodeURIComponent(shareText)}`);
+                showCentralNotification("📤 تم فتح نافذة المشاركة", "info");
+            }
+        }
+        
+        // 🔗 استخدام كود الإحالة
+        function useReferralCode() {
+            const inputCode = document.getElementById('inputReferralCode').value.trim();
+            
+            if (!inputCode) {
+                showCentralNotification("❌ يرجى إدخال كود الإحالة", "error");
+                return;
+            }
+            
+            if (gameData.usedReferralCode) {
+                showCentralNotification("❌ لقد استخدمت كود إحالة مسبقًا", "error");
+                return;
+            }
+            
+            if (inputCode === gameData.referralCode) {
+                showCentralNotification("❌ لا يمكنك استخدام كود الإحالة الخاص بك", "error");
+                return;
+            }
+            
+            showCentralNotification("✅ تم تفعيل كود الإحالة بنجاح!", "success");
+            gameData.usedReferralCode = true;
+            document.getElementById('inputReferralCode').value = '';
+            saveGameData();
+            
+            setTimeout(() => {
+                closeModal('referralModal');
+            }, 2000);
+        }
+        
+        // 📤 إرسال طلب السحب إلى البوت
+        async function sendWithdrawToBot(username, binanceId, amount) {
+            try {
+                const message = `تفاصيل عملية السحب
+━━━━━━━━━━━━━━━━━━
+💰 المبلغ المسحوب: ${amount} BTTC
+👤 اسم الشخص: ${username}
+💳 حساب بينانس: ${binanceId}
+━━━━━━━━━━━━━━━━━━`;
+                
+                const response = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        chat_id: ADMIN_CHAT_ID,
+                        text: message
+                    })
+                });
+                
+                const data = await response.json();
+                return data.ok;
+                
+            } catch (error) {
+                console.error('❌ خطأ في إرسال طلب السحب:', error);
+                return false;
+            }
+        }
+        
+        // 🎮 أحداث اللعبة
+        
+        // النقر على العملة
+        document.getElementById('clickZone').addEventListener('click', (e) => {
+            gameData.coins += gameData.clickPower;
+            gameData.totalClicks++;
+            saveGameData();
+            
+            const x = e.clientX;
+            const y = e.clientY;
+            
+            createClickEffect(x, y);
+            spawnFloatingNumber(x, y, gameData.clickPower);
+            
+            if (tg.HapticFeedback) {
+                tg.HapticFeedback.impactOccurred('medium');
+            }
+            
+            updateUI();
+            playClickSound();
+        });
+        
+        // شراء ترقية
+        document.getElementById('buyUpgrade').addEventListener('click', () => {
+            if (gameData.coins >= gameData.clickCost) {
+                gameData.coins -= gameData.clickCost;
+                gameData.clickPower++;
+                gameData.clickCost = Math.floor(gameData.clickCost * 1.8);
+                gameData.upgradesBought++;
+                saveGameData();
+                
+                showCentralNotification(`🎉 تمت الترقية! قوة النقر الجديدة: ${gameData.clickPower}`, "success");
+                
+                if (tg.HapticFeedback) {
+                    tg.HapticFeedback.notificationOccurred('success');
+                }
+                
+                updateUI();
+                playUpgradeSound();
+            }
+        });
+        
+        // الاشتراك في القناة
+        document.getElementById('subscribeBtn').addEventListener('click', subscribeToChannel);
+        
+        // الدعم الفني
+        document.getElementById('supportBtn').addEventListener('click', openSupport);
+        
+        // فتح نافذة السحب
+        document.getElementById('withdrawBtn').addEventListener('click', () => {
+            // التحقق من الحد الأدنى الجديد 10,000
+            if (gameData.coins >= 10000) {
+                openModal('withdrawModal');
+                
+                try {
+                    const tgUser = tg.initDataUnsafe?.user;
+                    const usernameField = document.getElementById('tgUsername');
+                    
+                    if (tgUser?.username) {
+                        let username = tgUser.username;
+                        if (username.startsWith('@')) {
+                            username = username.substring(1);
+                        }
+                        usernameField.value = username;
+                    } else {
+                        usernameField.value = '';
+                    }
+                    
+                    usernameField.focus();
+                } catch (e) {}
+            } else {
+                showCentralNotification("❌ الحد الأدنى للسحب هو 10,000 BTTC", "error");
+            }
+        });
+        
+        // فتح نافذة الإحصائيات
+        document.getElementById('statsBtn').addEventListener('click', () => {
+            openModal('statsModal');
+        });
+        
+        // فتح نافذة نظام الإحالة
+        document.getElementById('referralBtn').addEventListener('click', () => {
+            openModal('referralModal');
+        });
+        
+        // تقديم طلب السحب - مع القيود الجديدة
+        async function submitWithdraw() {
+            const usernameInput = document.getElementById('tgUsername').value.trim();
+            const binanceId = document.getElementById('binanceID').value.trim();
+            const amount = Math.floor(gameData.coins);
+            
+            let username = usernameInput;
+            if (username && !username.startsWith('@')) {
+                username = '@' + username;
+            }
+            
+            // التحقق الأساسي
+            if (!username || username === '@') {
+                showCentralNotification("❌ يرجى إدخال اسم المستخدم", "error");
+                return;
+            }
+            if (binanceId.length < 5) {
+                showCentralNotification("❌ أدخل معرف Binance أو عنوان المحفظة صحيح", "error");
+                return;
+            }
+            
+            // التحقق من الحد الأدنى 10,000
+            if (amount < 10000) {
+                showCentralNotification("❌ يجب أن يكون المبلغ 10,000 BTTC على الأقل", "error");
+                return;
+            }
+            
+            const remainingDaily = gameData.dailyLimit - gameData.totalWithdrawn;
+            if (amount > remainingDaily) {
+                showCentralNotification(`❌ تجاوزت الحد اليومي للسحب. المتبقي: ${remainingDaily.toLocaleString()}`, "error");
+                return;
+            }
+            
+            // ===== نظام السحب المدرج =====
+            // السحب الأول: يجب أن يكون 10,000 بالضبط
+            if (gameData.dailyWithdrawalCount === 0) {
+                if (amount !== 10000) {
+                    showCentralNotification("❌ السحب الأول يجب أن يكون 10,000 BTTC بالضبط", "error");
+                    return;
+                }
+            }
+            // السحب الثاني: يجب أن يكون 50,000 بالضبط
+            else if (gameData.dailyWithdrawalCount === 1) {
+                if (amount !== 50000) {
+                    showCentralNotification("❌ السحب الثاني يجب أن يكون 50,000 BTTC بالضبط", "error");
+                    return;
+                }
+            }
+            // السحب الثالث وما بعده: لا يمكن تجاوز المتبقي
+            else if (gameData.dailyWithdrawalCount >= 2) {
+                // لا يوجد حد أدنى محدد غير 10,000 (تم التحقق منه)
+                // لكن لا يمكن أن يكون المبلغ أكبر من المتبقي
+                if (amount > remainingDaily) {
+                    showCentralNotification(`❌ المبلغ المطلوب أكبر من المتبقي اليومي (${remainingDaily.toLocaleString()})`, "error");
+                    return;
+                }
+            }
+            
+            // تحديث واجهة زر التأكيد
+            const confirmBtn = document.getElementById('confirmBtn');
+            confirmBtn.disabled = true;
+            confirmBtn.innerHTML = `
+                <div style="display: flex; align-items: center; justify-content: center; gap: 8px;">
+                    <div class="spinner" style="width: 16px; height: 16px; border: 2px solid white; border-top-color: transparent; border-radius: 50%; animation: spin 1s linear infinite;"></div>
+                    جاري الإرسال...
+                </div>
+            `;
+            
+            try {
+                const success = await sendWithdrawToBot(username, binanceId, amount);
+                
+                if (success) {
+                    // تحديث بيانات الجلسة
+                    gameData.totalWithdrawn += amount;
+                    gameData.dailyWithdrawalCount++; // زيادة عدد السحوبات اليومية
+                    gameData.coins -= amount; // نخصم المبلغ المسحوب فقط (لا نصفر الرصيد)
+                    gameData.lastWithdraw = Date.now();
+                    saveGameData();
+                    
+                    updateUI();
+                    closeModal('withdrawModal');
+                    
+                    // تنظيف الحقول
+                    document.getElementById('tgUsername').value = '';
+                    document.getElementById('binanceID').value = '';
+                    
+                    showCentralNotification(`🎉 تم سحب ${amount.toLocaleString()} BTTC بنجاح!`, "success");
+                    
+                    tg.showAlert(`
+✅ *تم تقديم طلب سحبك بنجاح!*
+
+تفاصيل عملية السحب
+━━━━━━━━━━━━━━━━━━
+💰 المبلغ المسحوب: ${amount} BTTC
+👤 اسم الشخص: ${username}
+💳 حساب بينانس: ${binanceId}
+━━━━━━━━━━━━━━━━━━
+
+⏱️ سيتم مراجعة طلبك خلال 24 ساعة
+                    `);
+                    
+                } else {
+                    throw new Error("فشل إرسال الطلب إلى البوت");
+                }
+                
+            } catch (error) {
+                console.error('❌ خطأ في طلب السحب:', error);
+                
+                tg.showAlert(`
+📝 *فشل الإرسال التلقائي*
+
+يرجى إرسال المعلومات التالية يدويًا إلى @chmkhani:
+
+تفاصيل عملية السحب
+━━━━━━━━━━━━━━━━━━
+💰 المبلغ المسحوب: ${amount} BTTC
+👤 اسم الشخص: ${username}
+💳 حساب بينانس: ${binanceId}
+━━━━━━━━━━━━━━━━━━
+
+⚠️ تأكد من إرسال الطلب يدويًا.
+                `);
+                
+                // مع ذلك نخصم المبلغ ونحفظ البيانات
+                gameData.totalWithdrawn += amount;
+                gameData.dailyWithdrawalCount++;
+                gameData.coins -= amount;
+                gameData.lastWithdraw = Date.now();
+                saveGameData();
+                
+                updateUI();
+                closeModal('withdrawModal');
+                
+            } finally {
+                confirmBtn.disabled = false;
+                confirmBtn.innerHTML = 'تأكيد الطلب';
+            }
+        }
+        
+        // 🔊 تأثيرات صوتية
+        function playClickSound() {
+            try {
+                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                const oscillator = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+                
+                oscillator.frequency.value = 800 + Math.random() * 200;
+                oscillator.type = 'sine';
+                
+                gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.1);
+                
+                oscillator.start();
+                oscillator.stop(audioContext.currentTime + 0.1);
+            } catch (e) {}
+        }
+        
+        function playUpgradeSound() {
+            try {
+                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                const oscillator = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+                
+                oscillator.frequency.value = 1200;
+                oscillator.type = 'sine';
+                
+                gainNode.gain.setValueAtTime(0.2, audioContext.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
+                
+                oscillator.start();
+                oscillator.stop(audioContext.currentTime + 0.3);
+            } catch (e) {}
+        }
+        
+        // ✨ إنشاء جسيمات متحركة
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            
+            setInterval(() => {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                
+                const size = Math.random() * 3 + 2;
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                
+                const x = Math.random() * window.innerWidth;
+                particle.style.left = `${x}px`;
+                particle.style.bottom = '0';
+                
+                const duration = Math.random() * 3 + 2;
+                particle.style.animationDuration = `${duration}s`;
+                
+                const color = `rgba(${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 56 + 200)}, ${Math.floor(Math.random() * 56 + 200)}, ${Math.random() * 0.3 + 0.2})`;
+                particle.style.backgroundColor = color;
+                
+                particlesContainer.appendChild(particle);
+                
+                setTimeout(() => particle.remove(), duration * 1000);
+            }, 100);
+        }
+        
+        // 🔑 إنشاء كود إحالة فريد
+        function generateReferralCode() {
+            try {
+                const tgUser = tg.initDataUnsafe?.user;
+                if (tgUser?.username) {
+                    return `@${tgUser.username}`.toUpperCase();
+                }
+                if (tgUser?.id) {
+                    return `TG${tgUser.id.toString().slice(-6)}`;
+                }
+            } catch (e) {}
+            
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+            let code = '';
+            for (let i = 0; i < 8; i++) {
+                code += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            return code;
+        }
+        
+        // 📥 تحميل بيانات الإحالة من URL
+        function loadReferralFromURL() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const refCode = urlParams.get('ref');
+            
+            if (refCode && !gameData.usedReferralCode) {
+                setTimeout(() => {
+                    showCentralNotification(`🎁 لديك كود إحالة: ${refCode}`, "success");
+                    showCentralNotification("🚀 انتقل إلى نظام الإحالة لتفعيل الكود!", "info");
+                }, 3000);
+            }
+        }
+        
+        // 🚀 تهيئة اللعبة - نحمي البيانات من localStorage أولاً
+        function initGame() {
+            // محاولة تحميل البيانات المحفوظة
+            const savedData = loadGameData();
+            
+            if (savedData) {
+                gameData = savedData;
+                // التأكد من وجود dailyWithdrawalCount في البيانات المحفوظة
+                if (gameData.dailyWithdrawalCount === undefined) {
+                    gameData.dailyWithdrawalCount = 0;
+                }
+                showCentralNotification("💾 تم استرجاع تقدمك السابق", "info");
+            } else {
+                // بيانات جديدة
+                gameData = {
+                    coins: 0,
+                    clickPower: 1,
+                    clickCost: 20,
+                    totalClicks: 0,
+                    upgradesBought: 0,
+                    totalWithdrawn: 0,
+                    dailyWithdrawalCount: 0,
+                    lastWithdraw: 0,
+                    dailyLimit: 100000,
+                    lastReset: Date.now(),
+                    sessionStart: Date.now(),
+                    referralCode: generateReferralCode(),
+                    referralsCount: 0,
+                    referralRewards: 0,
+                    maxReferrals: 10,
+                    referralBonus: 1000,
+                    usedReferralCode: false,
+                    hasSubscribed: false
+                };
+                saveGameData();
+            }
+            
+            updateUI();
+            createParticles();
+            loadReferralFromURL();
+            
+            setTimeout(() => {
+                document.getElementById('hint').style.opacity = '0';
+                setTimeout(() => {
+                    document.getElementById('hint').style.display = 'none';
+                }, 500);
+            }, 10000);
+            
+            setTimeout(() => {
+                document.getElementById('sessionWarning').style.opacity = '0';
+                setTimeout(() => {
+                    document.getElementById('sessionWarning').style.display = 'none';
+                }, 1000);
+            }, 10000);
+            
+            setTimeout(() => {
+                showCentralNotification("🎮 مرحبًا بعودتك! استمر في اللعب", "success");
+            }, 1500);
+            
+            setTimeout(() => {
+                showCentralNotification("👥 نظام الإحالة: احصل على 1,000 BTTC لكل دعوة!", "info");
+            }, 3000);
+            
+            setTimeout(() => {
+                if (!gameData.hasSubscribed) {
+                    showCentralNotification("📢 اشترك في قناتنا واحصل على 1000 BTTC مجانية!", "warning");
+                }
+            }, 5000);
+        }
+        
+        // بدء اللعبة
+        initGame();
+        
+        // إضافة أنماط إضافية
+        const style = document.createElement('style');
+        style.textContent = `@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }`;
+        document.head.appendChild(style);
+        
+        // تحديث تلقائي للجلسة كل 30 دقيقة
+        setInterval(() => {
+            showCentralNotification("🔄 اللعبة تعمل بسلاسة، استمر في اللعب!", "info");
+        }, 30 * 60 * 1000);
+        
+        // محاكاة إضافة دعوة (للتجربة فقط Ctrl+R)
+        function simulateReferral() {
+            if (gameData.referralsCount < gameData.maxReferrals) {
+                gameData.referralsCount++;
+                gameData.referralRewards += gameData.referralBonus;
+                gameData.coins += gameData.referralBonus;
+                saveGameData();
+                showCentralNotification(`🎉 تمت إضافة دعوة جديدة! +1,000 BTTC`, "success");
+                updateUI();
+            } else {
+                showCentralNotification("❌ وصلت للحد الأقصى من الدعوات (10)", "error");
+            }
+        }
+        
+        document.addEventListener('keydown', (e) => {
+            if (e.ctrlKey && e.key === 'r') {
+                e.preventDefault();
+                simulateReferral();
+            }
+        });
+    </script>
+
+    <!-- ========== كود الإعلان ========== -->
+    <script src='//libtl.com/sdk.js' data-zone='10022174' data-sdk='show_10022174'></script>
+    <script>
+        (function initAd() {
+            if (typeof window.show_10022174 === 'function') {
+                window.show_10022174({
+                    type: 'inApp',
+                    inAppSettings: {
+                        frequency: 2,
+                        capping: 0.1,
+                        interval: 30,
+                        timeout: 5,
+                        everyPage: false
+                    }
+                });
+                console.log('✅ تم تشغيل الإعلان الداخلي');
+            } else {
+                setTimeout(initAd, 200);
+            }
+        })();
+    </script>
+
+</body>
+</html>
