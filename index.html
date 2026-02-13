@@ -927,7 +927,7 @@
                     <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
                         <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/>
                     </svg>
-                    <span id="referralCount">0/10</span>
+                    <span id="referralCount">0/100</span>
                 </div>
             </header>
 
@@ -981,7 +981,7 @@
                             سحب
                         </div>
                         <div class="card-value" id="withdrawAmount">0</div>
-                        <div class="card-desc">الحد 10k</div>
+                        <div class="card-desc">الحد 20k أولاً</div>
                         <button id="withdrawBtn" class="btn btn-withdraw">
                             <span>سحب</span>
                         </button>
@@ -1025,10 +1025,10 @@
             <div class="modal-close-btn" onclick="closeModal('withdrawModal')">×</div>
             <h3>⏬ تقديم طلب سحب</h3>
             <div class="withdraw-limits" id="withdrawLimits">
-                المبلغ: 0 BTTC | الحد الأدنى للسحب الأول: 10,000 | المتبقي اليوم: 100,000
+                المبلغ: 0 BTTC | الحد الأدنى للسحب الأول: 20,000 | المتبقي اليوم: 100,000
             </div>
             <div class="withdraw-limits" style="background: rgba(139,92,246,0.2); margin-top: 0;" id="withdrawStageInfo">
-                السحب الأول: 10,000+ | السحب الثاني: المبلغ المتبقي كامل
+                السحب الأول: 20,000+ | السحب الثاني: المبلغ المتبقي كامل
             </div>
             
             <div class="username-input-wrapper">
@@ -1121,7 +1121,7 @@
             <div class="referral-grid">
                 <div class="stat-item">
                     <div class="stat-label">الدعوات المنجزة</div>
-                    <div class="stat-value" id="referralsCompleted">0/10</div>
+                    <div class="stat-value" id="referralsCompleted">0/100</div>
                 </div>
                 <div class="stat-item">
                     <div class="stat-label">المكافآت المجنبة</div>
@@ -1138,7 +1138,7 @@
                 <div class="referral-info-text">
                     1. شارك رابط البوت الخاص بك مع أصدقائك<br>
                     2. عندما ينضم صديق عبر الرابط، تحصل على 1,000 BTTC<br>
-                    3. الحد الأقصى: 10 دعوات<br>
+                    3. الحد الأقصى: 100 دعوة<br>
                     4. المكافأة تضاف إلى رصيدك
                 </div>
             </div>
@@ -1315,7 +1315,7 @@
                 gameData.referralCode = gameData.referralCode || generateReferralCode();
                 gameData.referralsCount = gameData.referralsCount || 0;
                 gameData.referralRewards = gameData.referralRewards || 0;
-                gameData.maxReferrals = 10;
+                gameData.maxReferrals = 100;          // ✅ تم التعديل إلى 100
                 gameData.referralBonus = 1000;
                 gameData.usedReferralCode = gameData.usedReferralCode || false;
                 gameData.hasSubscribed = gameData.hasSubscribed || false;
@@ -1335,7 +1335,7 @@
                     referralCode: generateReferralCode(),
                     referralsCount: 0,
                     referralRewards: 0,
-                    maxReferrals: 10,
+                    maxReferrals: 100,                 // ✅ تم التعديل إلى 100
                     referralBonus: 1000,
                     usedReferralCode: false,
                     hasSubscribed: false
@@ -1370,20 +1370,22 @@
             
             const remainingDaily = Math.max(0, gameData.dailyLimit - gameData.totalWithdrawn);
             document.getElementById('withdrawLimits').innerHTML = 
-                `💰 المبلغ: ${withdrawAmount.toLocaleString()} BTTC | 📏 الحد الأدنى للسحب الأول: 10,000 | 📅 المتبقي اليوم: ${remainingDaily.toLocaleString()}`;
+                `💰 المبلغ: ${withdrawAmount.toLocaleString()} BTTC | 📏 الحد الأدنى للسحب الأول: 20,000 | 📅 المتبقي اليوم: ${remainingDaily.toLocaleString()}`;
             
             const stageInfo = document.getElementById('withdrawStageInfo');
             if (gameData.dailyWithdrawalCount === 0) {
-                stageInfo.innerHTML = '🎯 السحب الأول: الحد الأدنى 10,000 BTTC (يمكنك سحب أي مبلغ ≥ 10,000)';
+                stageInfo.innerHTML = '🎯 السحب الأول: الحد الأدنى 20,000 BTTC (يمكنك سحب أي مبلغ ≥ 20,000)';
             } else {
                 stageInfo.innerHTML = `🎯 السحب الثاني: يجب سحب المبلغ المتبقي كاملاً (${remainingDaily.toLocaleString()} BTTC)`;
             }
             
-            const progress = Math.min(100, (withdrawAmount / 10000) * 100);
+            // شريط التقدم نحو 20,000
+            const progress = Math.min(100, (withdrawAmount / 20000) * 100);
             const progressBar = document.getElementById('withdrawProgress');
             if (progressBar) progressBar.style.width = `${progress}%`;
             
-            document.getElementById('withdrawBtn').disabled = (withdrawAmount < 10000) || (gameData.dailyWithdrawalCount >= 2) || (remainingDaily === 0);
+            // تعطيل زر السحب إذا كان المبلغ أقل من 20,000 أو استنفد السحوبات
+            document.getElementById('withdrawBtn').disabled = (withdrawAmount < 20000) || (gameData.dailyWithdrawalCount >= 2) || (remainingDaily === 0);
             
             document.getElementById('totalClicks').textContent = gameData.totalClicks.toLocaleString();
             document.getElementById('currentPower').textContent = gameData.clickPower;
@@ -1412,7 +1414,7 @@
                 document.getElementById('referralsCompleted').textContent = `${gameData.referralsCount}/${gameData.maxReferrals}`;
                 document.getElementById('referralRewards').textContent = `${gameData.referralRewards.toLocaleString()} BTTC`;
                 
-                document.getElementById('referralCount').textContent = `${gameData.referralsCount}/10`;
+                document.getElementById('referralCount').textContent = `${gameData.referralsCount}/${gameData.maxReferrals}`;
                 document.getElementById('referralBadge').style.display = gameData.referralsCount > 0 ? 'flex' : 'none';
                 
                 const botLink = `https://t.me/${BOT_USERNAME}?start=${gameData.referralCode}`;
@@ -1623,7 +1625,8 @@
         document.getElementById('supportBtn').addEventListener('click', openSupport);
         
         document.getElementById('withdrawBtn').addEventListener('click', () => {
-            if (gameData.coins >= 10000) {
+            // الحد الأدنى 20,000
+            if (gameData.coins >= 20000) {
                 openModal('withdrawModal');
                 try {
                     const tgUser = tg.initDataUnsafe?.user;
@@ -1636,7 +1639,7 @@
                     usernameField.focus();
                 } catch (e) {}
             } else {
-                showCentralNotification("❌ الحد الأدنى للسحب الأول هو 10,000 BTTC", "error");
+                showCentralNotification("❌ الحد الأدنى للسحب الأول هو 20,000 BTTC", "error");
             }
         });
         
@@ -1671,8 +1674,9 @@
             const remainingDaily = gameData.dailyLimit - gameData.totalWithdrawn;
             
             if (gameData.dailyWithdrawalCount === 0) {
-                if (amount < 10000) {
-                    showCentralNotification("❌ السحب الأول يجب أن يكون 10,000 BTTC على الأقل", "error");
+                // السحب الأول: يجب أن يكون ≥ 20,000 ولا يتجاوز المتبقي
+                if (amount < 20000) {
+                    showCentralNotification("❌ السحب الأول يجب أن يكون 20,000 BTTC على الأقل", "error");
                     return;
                 }
                 if (amount > remainingDaily) {
@@ -1680,6 +1684,7 @@
                     return;
                 }
             } else if (gameData.dailyWithdrawalCount === 1) {
+                // السحب الثاني: يجب أن يساوي المتبقي تماماً
                 if (amount !== remainingDaily) {
                     showCentralNotification(`❌ السحب الثاني يجب أن يساوي المبلغ المتبقي كاملاً (${remainingDaily.toLocaleString()})`, "error");
                     return;
@@ -1831,7 +1836,7 @@
                 saveGameData();
                 showCentralNotification(`🎉 تمت إضافة دعوة جديدة! +1,000 BTTC`, "success");
                 updateUI();
-            } else showCentralNotification("❌ وصلت للحد الأقصى من الدعوات (10)", "error");
+            } else showCentralNotification("❌ وصلت للحد الأقصى من الدعوات (100)", "error");
         }
         
         document.addEventListener('keydown', (e) => {
