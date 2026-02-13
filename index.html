@@ -47,6 +47,7 @@
             min-height: 100vh;
         }
         
+        /* حاوية بنسبة 9:16 */
         .game-container {
             aspect-ratio: 9 / 16;
             max-width: 100%;
@@ -73,6 +74,7 @@
             z-index: 2;
         }
         
+        /* فقاعات على شكل عملة BTTC */
         .bubbles {
             position: absolute;
             width: 100%;
@@ -94,18 +96,18 @@
             border-radius: 50%;
             box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
             animation: bubble-float linear infinite;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 12px;
+            text-shadow: 0 0 5px black;
         }
         
-        .bubble::after {
+        .bubble::before {
             content: "₿";
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            color: white;
-            font-size: 12px;
-            font-weight: bold;
-            text-shadow: 0 0 5px black;
+            font-size: inherit;
         }
         
         @keyframes bubble-float {
@@ -113,6 +115,7 @@
             100% { transform: translateY(-100vh) scale(0.5); opacity: 0; }
         }
         
+        /* هيدر مصغر */
         header { 
             width: 100%; 
             padding: 8px 16px; 
@@ -174,6 +177,7 @@
             z-index: 5;
         }
         
+        /* عملة أكبر حجماً */
         .coin-wrapper { 
             width: 220px; 
             height: 220px; 
@@ -239,6 +243,7 @@
             100% { transform: translateY(-150px) scale(0.5); opacity: 0; }
         }
 
+        /* الأزرار الجانبية */
         .subscribe-btn {
             position: absolute;
             bottom: 70px;
@@ -304,6 +309,7 @@
             transform: scale(0.9);
         }
 
+        /* الفوتر – 4 أزرار في سطر واحد */
         .footer-section { 
             width: 100%; 
             background: var(--card); 
@@ -419,6 +425,7 @@
             box-shadow: none !important;
         }
 
+        /* النوافذ المنبثقة */
         .modal-overlay { 
             position: fixed; 
             top: 0; 
@@ -891,11 +898,12 @@
 </head>
 <body>
     <div class="game-container">
+        <!-- فقاعات على شكل عملة BTTC -->
         <div class="bubbles" id="bubblesContainer"></div>
         
         <div class="game-content">
             <div class="session-warning" id="sessionWarning">
-                ⚠️ يتم حفظ تقدمك تلقائياً
+                ⚠️ يتم حفظ التقدم تلقائياً
             </div>
 
             <header>
@@ -926,6 +934,7 @@
             <main>
                 <div class="hint" id="hint">✨ اضغط على العملة لجمع البت تورنت</div>
                 
+                <!-- الأزرار الجانبية -->
                 <div class="subscribe-btn" id="subscribeBtn">
                     <div class="red-dot" id="redDot"></div>
                     <svg viewBox="0 0 24 24" fill="white" width="24" height="24">
@@ -946,8 +955,10 @@
                 </div>
             </main>
 
+            <!-- الفوتر – 4 أزرار في سطر واحد -->
             <section class="footer-section">
                 <div class="actions-grid">
+                    <!-- تعزيز النقر -->
                     <div class="card">
                         <div class="card-title">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
@@ -961,6 +972,7 @@
                             <span>شراء</span>
                         </button>
                     </div>
+                    <!-- سحب -->
                     <div class="card">
                         <div class="card-title">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
@@ -974,6 +986,7 @@
                             <span>سحب</span>
                         </button>
                     </div>
+                    <!-- أصدقاء – يظهر فقط داخل تليجرام -->
                     <div class="card" id="friendsFooterCard">
                         <div class="card-title">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
@@ -987,6 +1000,7 @@
                             <span>دعوة</span>
                         </button>
                     </div>
+                    <!-- آخر (إحصائيات) -->
                     <div class="card">
                         <div class="card-title">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
@@ -1035,6 +1049,7 @@
         </div>
     </div>
 
+    <!-- نافذة الإحصائيات – مع خانة عدد المستخدمين الفريدين -->
     <div class="modal-overlay" id="statsModal">
         <div class="modal stats-modal">
             <div class="modal-close-btn" onclick="closeModal('statsModal')">×</div>
@@ -1065,6 +1080,7 @@
                     <div class="stat-label">آخر سحب</div>
                     <div class="stat-value" id="lastWithdraw">لم يتم</div>
                 </div>
+                <!-- عدد مستخدمي البوت الفريدين -->
                 <div class="stat-item">
                     <div class="stat-label">عدد مستخدمي البوت</div>
                     <div class="stat-value" id="totalUsers">0</div>
@@ -1077,6 +1093,7 @@
         </div>
     </div>
 
+    <!-- نافذة الإحالة – تعمل فقط داخل تليجرام -->
     <div class="modal-overlay" id="referralModal">
         <div class="modal referral-modal">
             <div class="modal-close-btn" onclick="closeModal('referralModal')">×</div>
@@ -1153,72 +1170,9 @@
         tg.setHeaderColor('#161b2a');
         tg.setBackgroundColor('#0b0f1a');
 
+        // ✅ التحقق من البيئة: هل نحن داخل تليجرام؟
         const isTelegram = window.Telegram?.WebApp?.initData !== '' && window.Telegram?.WebApp?.initData !== undefined;
         console.log('Telegram environment:', isTelegram);
-
-        // 🎮 بيانات اللعبة – تحميل من localStorage إذا وجدت
-        const SAVE_KEY = 'bttc_miner_game_data';
-
-        function loadGameData() {
-            try {
-                const saved = localStorage.getItem(SAVE_KEY);
-                if (saved) {
-                    const parsed = JSON.parse(saved);
-                    return {
-                        coins: parsed.coins || 0,
-                        clickPower: parsed.clickPower || 1,
-                        clickCost: parsed.clickCost || 20,
-                        totalClicks: parsed.totalClicks || 0,
-                        upgradesBought: parsed.upgradesBought || 0,
-                        totalWithdrawn: parsed.totalWithdrawn || 0,
-                        lastWithdraw: parsed.lastWithdraw || 0,
-                        dailyLimit: parsed.dailyLimit || 100000,
-                        dailyWithdrawalCount: parsed.dailyWithdrawalCount || 0,
-                        lastReset: parsed.lastReset || Date.now(),
-                        sessionStart: parsed.sessionStart || Date.now(),
-                        referralCode: parsed.referralCode || generateReferralCode(),
-                        referralsCount: parsed.referralsCount || 0,
-                        referralRewards: parsed.referralRewards || 0,
-                        maxReferrals: parsed.maxReferrals || 10,
-                        referralBonus: parsed.referralBonus || 1000,
-                        usedReferralCode: parsed.usedReferralCode || false,
-                        hasSubscribed: parsed.hasSubscribed || false
-                    };
-                }
-            } catch (e) {
-                console.error('فشل تحميل البيانات', e);
-            }
-            return null;
-        }
-
-        let gameData = loadGameData() || {
-            coins: 0,
-            clickPower: 1,
-            clickCost: 20,
-            totalClicks: 0,
-            upgradesBought: 0,
-            totalWithdrawn: 0,
-            lastWithdraw: 0,
-            dailyLimit: 100000,
-            dailyWithdrawalCount: 0,
-            lastReset: Date.now(),
-            sessionStart: Date.now(),
-            referralCode: generateReferralCode(),
-            referralsCount: 0,
-            referralRewards: 0,
-            maxReferrals: 10,
-            referralBonus: 1000,
-            usedReferralCode: false,
-            hasSubscribed: false
-        };
-
-        function saveGameData() {
-            try {
-                localStorage.setItem(SAVE_KEY, JSON.stringify(gameData));
-            } catch (e) {
-                console.error('فشل حفظ البيانات', e);
-            }
-        }
 
         // ===== عداد المستخدمين الفريدين (يبدأ من 0) =====
         let totalUniqueUsers = 0;
@@ -1246,15 +1200,20 @@
         }
 
         function updateUniqueUsersCounter() {
-            if (!isTelegram) return;
+            if (!isTelegram) return; // فقط داخل تليجرام
+            
             const tgUser = tg.initDataUnsafe?.user;
             if (!tgUser || !tgUser.id) return;
+            
             const userId = String(tgUser.id);
+            
             if (!seenUsers.includes(userId)) {
                 seenUsers.push(userId);
                 totalUniqueUsers++;
+                
                 localStorage.setItem('bttc_unique_users_count', totalUniqueUsers.toString());
                 localStorage.setItem('bttc_unique_users_set', JSON.stringify(seenUsers));
+                
                 updateTotalUsersDisplay();
             }
         }
@@ -1266,36 +1225,125 @@
             }
         }
 
-        // ===== فقاعات =====
+        // ===== فقاعات على شكل عملة BTTC =====
         function createBubbles() {
             const container = document.getElementById('bubblesContainer');
             if (!container) return;
+            
             setInterval(() => {
                 const bubble = document.createElement('div');
                 bubble.className = 'bubble';
+                
                 const size = Math.random() * 30 + 15;
                 bubble.style.width = `${size}px`;
                 bubble.style.height = `${size}px`;
+                bubble.style.fontSize = `${size * 0.4}px`;
+                
                 const x = Math.random() * window.innerWidth;
                 bubble.style.left = `${x}px`;
+                
                 const duration = Math.random() * 10 + 8;
                 bubble.style.animationDuration = `${duration}s`;
-                const span = document.createElement('span');
-                span.style.position = 'absolute';
-                span.style.top = '50%';
-                span.style.left = '50%';
-                span.style.transform = 'translate(-50%, -50%)';
-                span.style.color = 'white';
-                span.style.fontSize = `${size * 0.4}px`;
-                span.style.fontWeight = 'bold';
-                span.style.textShadow = '0 0 5px black';
-                span.textContent = '₿';
-                bubble.appendChild(span);
+                
                 container.appendChild(bubble);
+                
                 setTimeout(() => bubble.remove(), duration * 1000);
             }, 400);
         }
 
+        // ===== نظام حفظ البيانات لكل مستخدم =====
+        function getStorageKey() {
+            if (isTelegram) {
+                const tgUser = tg.initDataUnsafe?.user;
+                if (tgUser?.id) return `bttc_game_data_${tgUser.id}`;
+                if (tgUser?.username) return `bttc_game_data_${tgUser.username}`;
+            }
+            return 'bttc_game_data_guest'; // للمتصفحات العادية
+        }
+
+        function saveGameData() {
+            const key = getStorageKey();
+            const data = {
+                coins: gameData.coins,
+                clickPower: gameData.clickPower,
+                clickCost: gameData.clickCost,
+                totalClicks: gameData.totalClicks,
+                upgradesBought: gameData.upgradesBought,
+                totalWithdrawn: gameData.totalWithdrawn,
+                lastWithdraw: gameData.lastWithdraw,
+                dailyWithdrawalCount: gameData.dailyWithdrawalCount,
+                lastReset: gameData.lastReset,
+                referralCode: gameData.referralCode,
+                referralsCount: gameData.referralsCount,
+                referralRewards: gameData.referralRewards,
+                usedReferralCode: gameData.usedReferralCode,
+                hasSubscribed: gameData.hasSubscribed
+            };
+            localStorage.setItem(key, JSON.stringify(data));
+        }
+
+        function loadGameData() {
+            const key = getStorageKey();
+            const saved = localStorage.getItem(key);
+            if (saved) {
+                try {
+                    return JSON.parse(saved);
+                } catch (e) {
+                    return null;
+                }
+            }
+            return null;
+        }
+
+        // بيانات اللعبة
+        let gameData = {};
+
+        function initGameData() {
+            const saved = loadGameData();
+            if (saved) {
+                gameData = saved;
+                // التأكد من وجود كل الحقول
+                gameData.coins = gameData.coins || 0;
+                gameData.clickPower = gameData.clickPower || 1;
+                gameData.clickCost = gameData.clickCost || 20;
+                gameData.totalClicks = gameData.totalClicks || 0;
+                gameData.upgradesBought = gameData.upgradesBought || 0;
+                gameData.totalWithdrawn = gameData.totalWithdrawn || 0;
+                gameData.lastWithdraw = gameData.lastWithdraw || 0;
+                gameData.dailyWithdrawalCount = gameData.dailyWithdrawalCount || 0;
+                gameData.lastReset = gameData.lastReset || Date.now();
+                gameData.referralCode = gameData.referralCode || generateReferralCode();
+                gameData.referralsCount = gameData.referralsCount || 0;
+                gameData.referralRewards = gameData.referralRewards || 0;
+                gameData.maxReferrals = 10;
+                gameData.referralBonus = 1000;
+                gameData.usedReferralCode = gameData.usedReferralCode || false;
+                gameData.hasSubscribed = gameData.hasSubscribed || false;
+                gameData.dailyLimit = 100000; // ثابت
+            } else {
+                gameData = {
+                    coins: 0,
+                    clickPower: 1,
+                    clickCost: 20,
+                    totalClicks: 0,
+                    upgradesBought: 0,
+                    totalWithdrawn: 0,
+                    lastWithdraw: 0,
+                    dailyLimit: 100000,
+                    dailyWithdrawalCount: 0,
+                    lastReset: Date.now(),
+                    referralCode: generateReferralCode(),
+                    referralsCount: 0,
+                    referralRewards: 0,
+                    maxReferrals: 10,
+                    referralBonus: 1000,
+                    usedReferralCode: false,
+                    hasSubscribed: false
+                };
+            }
+        }
+
+        // 🔑 إنشاء كود إحالة فريد
         function generateReferralCode() {
             try {
                 if (isTelegram) {
@@ -1308,6 +1356,7 @@
             return `tg_${randomNum}`;
         }
 
+        // 🎯 تحديث واجهة المستخدم
         function updateUI() {
             document.getElementById('balance').textContent = Math.floor(gameData.coins).toLocaleString();
             document.getElementById('clickPower').textContent = gameData.clickPower;
@@ -1362,6 +1411,7 @@
                 document.getElementById('referralCode').textContent = gameData.referralCode;
                 document.getElementById('referralsCompleted').textContent = `${gameData.referralsCount}/${gameData.maxReferrals}`;
                 document.getElementById('referralRewards').textContent = `${gameData.referralRewards.toLocaleString()} BTTC`;
+                
                 document.getElementById('referralCount').textContent = `${gameData.referralsCount}/10`;
                 document.getElementById('referralBadge').style.display = gameData.referralsCount > 0 ? 'flex' : 'none';
                 
@@ -1394,6 +1444,7 @@
             }
         }
         
+        // تأثيرات النقر
         function createClickEffect(x, y) {
             const effect = document.createElement('div');
             effect.className = 'click-effect';
@@ -1598,6 +1649,7 @@
         });
         document.getElementById('moreFooterBtn').addEventListener('click', () => openModal('statsModal'));
         
+        // ربط زر المشاركة
         document.getElementById('shareReferralBtn').addEventListener('click', shareReferralLink);
         
         async function submitWithdraw() {
@@ -1693,6 +1745,7 @@
             }
         }
 
+        // 📥 تحميل كود الإحالة من الرابط وتفعيله (فقط داخل تليجرام)
         function loadReferralFromURL() {
             if (!isTelegram) return;
             const urlParams = new URLSearchParams(window.location.search);
@@ -1712,6 +1765,7 @@
             }
         }
 
+        // 🚀 تعطيل نظام الإحالة في المتصفحات العادية
         function disableReferralOnBrowser() {
             if (!isTelegram) {
                 const friendsCard = document.getElementById('friendsFooterCard');
@@ -1721,14 +1775,17 @@
             }
         }
 
+        // بدء اللعبة
         function initGame() {
             initUniqueUsersCounter();
-            updateUniqueUsersCounter();
+            initGameData(); // يحمل البيانات حسب المستخدم
+            updateUniqueUsersCounter(); // يحتسب المستخدم الحالي (إذا كان داخل تليجرام)
             updateUI();
             createBubbles();
             loadReferralFromURL();
             disableReferralOnBrowser();
             
+            // إخفاء التلميحات
             setTimeout(() => {
                 const hint = document.getElementById('hint');
                 if (hint) hint.style.opacity = '0';
@@ -1742,7 +1799,7 @@
                 }
             }, 10000);
             
-            setTimeout(() => showCentralNotification("🎮 أهلاً بك! استمر في اللعب", "success"), 1500);
+            setTimeout(() => showCentralNotification("🎮 مرحباً بك! ابدأ بالضغط على العملة", "success"), 1500);
             setTimeout(() => {
                 if (isTelegram) {
                     showCentralNotification("👥 نظام الإحالة: احصل على 1,000 BTTC لكل دعوة!", "info");
@@ -1761,6 +1818,7 @@
         
         setInterval(() => showCentralNotification("🔄 استمر في اللعب!", "info"), 30 * 60 * 1000);
         
+        // محاكاة دعوة للاختبار (Ctrl+R) – تعمل فقط في تليجرام
         function simulateReferral() {
             if (!isTelegram) {
                 showCentralNotification("❌ نظام الإحالة متاح فقط داخل تليجرام", "error");
@@ -1781,7 +1839,7 @@
         });
     </script>
 
-    <!-- تفعيل الإعلان الداخلي -->
+    <!-- تفعيل الإعلان الداخلي بالإعدادات المطلوبة -->
     <script>
         (function initInterstitial() {
             if (typeof window.show_10022174 === 'function') {
