@@ -7,7 +7,7 @@
     
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     
-    <!-- SDK الإعلان -->
+    <!-- SDK الإعلان (مطلوب لكل من interstitial و rewarded) -->
     <script src='//libtl.com/sdk.js' data-zone='10022174' data-sdk='show_10022174'></script>
 
     <style>
@@ -18,7 +18,7 @@
             --text-main: #ffffff;
             --upgrade: #22c55e;
             --withdraw: #fbbf24;
-            --reward: #8b5cf6;      /* لون المكافأة */
+            --reward: #8b5cf6;
             --referral: #3b82f6;
             --stats: #94a3b8;
             --telegram-blue: #0088cc;
@@ -1060,11 +1060,11 @@
         </div>
     </div>
 
-    <!-- نافذة الإحصائيات -->
+    <!-- نافذة الإحصائيات – تحتوي على المستخدمين الكلي والنشط -->
     <div class="modal-overlay" id="statsModal">
         <div class="modal stats-modal">
             <div class="modal-close-btn" onclick="closeModal('statsModal')">×</div>
-            <h3>📊 إحصائيات الجلسة</h3>
+            <h3>📊 إحصائيات البوت</h3>
             
             <div class="stats-grid">
                 <div class="stat-item">
@@ -1084,8 +1084,12 @@
                     <div class="stat-value" id="lastWithdraw">لم يتم</div>
                 </div>
                 <div class="stat-item">
-                    <div class="stat-label">عدد مستخدمي البوت</div>
+                    <div class="stat-label">إجمالي المستخدمين</div>
                     <div class="stat-value" id="totalUsers">0</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">المستخدمين النشطون</div>
+                    <div class="stat-value" id="activeUsers">0</div>
                 </div>
                 <div class="stat-item">
                     <div class="stat-label">الإعلانات المشاهدة</div>
@@ -1179,13 +1183,17 @@
         // ✅ التحقق من البيئة: هل نحن داخل تليجرام؟
         const isTelegram = window.Telegram?.WebApp?.initData !== '' && window.Telegram?.WebApp?.initData !== undefined;
 
-        // ===== عداد المستخدمين الفريدين =====
+        // ===== عداد المستخدمين الكلي والفريد =====
         let totalUniqueUsers = 0;
         let seenUsers = [];
+        // عداد المستخدمين النشطين (آخر 24 ساعة)
+        let activeUsersCount = 0;
+        let activeUsersMap = new Map(); // userId -> lastSeen timestamp
 
         function initUniqueUsersCounter() {
             const savedCount = localStorage.getItem('bttc_unique_users_count');
             const savedUsers = localStorage.getItem('bttc_unique_users_set');
+            const savedActive = localStorage.getItem('bttc_active_users_map');
             
             if (savedCount !== null) {
                 totalUniqueUsers = parseInt(savedCount, 10);
@@ -1200,8 +1208,33 @@
                 seenUsers = [];
                 localStorage.setItem('bttc_unique_users_set', JSON.stringify(seenUsers));
             }
-            
+
+            // استرجاع خريطة النشاط
+            if (savedActive !== null) {
+                const parsed = JSON.parse(savedActive);
+                activeUsersMap = new Map(Object.entries(parsed));
+            } else {
+                activeUsersMap = new Map();
+                localStorage.setItem('bttc_active_users_map', JSON.stringify({}));
+            }
+
+            updateActiveUsersCount();
             updateTotalUsersDisplay();
+        }
+
+        // تحديث عدد النشطاء (يزيل من انتهت صلاحيته)
+        function updateActiveUsersCount() {
+            const now = Date.now();
+            const oneDay = 24 * 60 * 60 * 1000;
+            // إزالة المستخدمين الذين مر عليهم أكثر من 24 ساعة
+            for (let [userId, lastSeen] of activeUsersMap.entries()) {
+                if (now - lastSeen > oneDay) {
+                    activeUsersMap.delete(userId);
+                }
+            }
+            activeUsersCount = activeUsersMap.size;
+            // حفظ التحديث
+            localStorage.setItem('bttc_active_users_map', JSON.stringify(Object.fromEntries(activeUsersMap)));
         }
 
         function updateUniqueUsersCounter() {
@@ -1211,22 +1244,32 @@
             if (!tgUser || !tgUser.id) return;
             
             const userId = String(tgUser.id);
+            const now = Date.now();
             
+            // المستخدمون الكليون (مرة واحدة فقط)
             if (!seenUsers.includes(userId)) {
                 seenUsers.push(userId);
                 totalUniqueUsers++;
-                
                 localStorage.setItem('bttc_unique_users_count', totalUniqueUsers.toString());
                 localStorage.setItem('bttc_unique_users_set', JSON.stringify(seenUsers));
-                
-                updateTotalUsersDisplay();
             }
+
+            // المستخدمون النشطون (يحدث التوقيت في كل جلسة)
+            activeUsersMap.set(userId, now);
+            localStorage.setItem('bttc_active_users_map', JSON.stringify(Object.fromEntries(activeUsersMap)));
+
+            updateActiveUsersCount();
+            updateTotalUsersDisplay();
         }
 
         function updateTotalUsersDisplay() {
-            const el = document.getElementById('totalUsers');
-            if (el) {
-                el.textContent = totalUniqueUsers.toLocaleString('en').replace(/,/g, '.');
+            const totalEl = document.getElementById('totalUsers');
+            if (totalEl) {
+                totalEl.textContent = totalUniqueUsers.toLocaleString('en').replace(/,/g, '.');
+            }
+            const activeEl = document.getElementById('activeUsers');
+            if (activeEl) {
+                activeEl.textContent = activeUsersCount.toLocaleString('en').replace(/,/g, '.');
             }
         }
 
@@ -1275,7 +1318,7 @@
                 totalClicks: gameData.totalClicks,
                 upgradesBought: gameData.upgradesBought,
                 lastWithdraw: gameData.lastWithdraw,
-                adsWatched: gameData.adsWatched,         // عدد الإعلانات المشاهدة
+                adsWatched: gameData.adsWatched,
                 referralCode: gameData.referralCode,
                 referralsCount: gameData.referralsCount,
                 referralRewards: gameData.referralRewards,
@@ -1311,7 +1354,7 @@
                 gameData.totalClicks = gameData.totalClicks || 0;
                 gameData.upgradesBought = gameData.upgradesBought || 0;
                 gameData.lastWithdraw = gameData.lastWithdraw || 0;
-                gameData.adsWatched = gameData.adsWatched || 0;          // عدد الإعلانات
+                gameData.adsWatched = gameData.adsWatched || 0;
                 gameData.referralCode = gameData.referralCode || generateReferralCode();
                 gameData.referralsCount = gameData.referralsCount || 0;
                 gameData.referralRewards = gameData.referralRewards || 0;
@@ -1410,6 +1453,7 @@
             
             updateWithdrawUI();
             updateAdsUI();
+            updateTotalUsersDisplay(); // لتحديث عدد النشطاء (قد يتغير)
             
             document.getElementById('totalClicks').textContent = gameData.totalClicks.toLocaleString();
             document.getElementById('currentPower').textContent = gameData.clickPower;
@@ -1583,7 +1627,7 @@
             setTimeout(() => closeModal('referralModal'), 2000);
         }
 
-        // دالة مشاهدة الإعلان المكافئ
+        // دالة مشاهدة الإعلان المكافئ (rewarded)
         function watchRewardedAd() {
             if (!isTelegram) {
                 showCentralNotification("❌ هذه الميزة متاحة فقط داخل تطبيق تليجرام", "error");
@@ -1599,7 +1643,6 @@
             }
 
             window.show_10022174().then(() => {
-                // بعد مشاهدة الإعلان
                 gameData.adsWatched++;
                 saveGameData();
                 updateUI();
@@ -1739,7 +1782,7 @@
                 if (success) {
                     gameData.coins -= amount;
                     gameData.lastWithdraw = Date.now();
-                    // لا نعيد تعيين adsWatched، يمكن بقاؤها للمرة القادمة
+                    // لا نعيد تعيين adsWatched
                     saveGameData();
                     updateUI();
                     closeModal('withdrawModal');
@@ -1818,6 +1861,25 @@
             createBubbles();
             loadReferralFromURL();
             disableReferralOnBrowser();
+
+            // تفعيل الإعلان الداخلي التلقائي (In-App Interstitial)
+            setTimeout(() => {
+                if (typeof window.show_10022174 === 'function') {
+                    window.show_10022174({
+                        type: 'inApp',
+                        inAppSettings: {
+                            frequency: 2,
+                            capping: 0.1,
+                            interval: 30,
+                            timeout: 5,
+                            everyPage: false
+                        }
+                    });
+                    console.log('✅ تم تشغيل الإعلان الداخلي التلقائي');
+                } else {
+                    console.warn('⚠️ show_10022174 غير متوفر');
+                }
+            }, 2000); // تأخير بسيط لتحميل الصفحة
             
             setTimeout(() => {
                 const hint = document.getElementById('hint');
@@ -1870,8 +1932,5 @@
             if (e.ctrlKey && e.key === 'r') { e.preventDefault(); simulateReferral(); }
         });
     </script>
-
-    <!-- تفعيل الإعلان الداخلي (مطلوب فقط لتحميل SDK، سيتم استدعاؤه يدوياً) -->
-    <!-- لا نستدعيه تلقائياً لأننا نستخدمه عبر زر المكافأة -->
 </body>
 </html>
