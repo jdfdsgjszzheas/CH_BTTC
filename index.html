@@ -881,19 +881,7 @@
             text-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
         }
         
-        .session-warning {
-            position: fixed;
-            top: 10px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: linear-gradient(135deg, #f59e0b, #d97706);
-            color: white;
-            padding: 6px 14px;
-            border-radius: 20px;
-            font-size: 0.7rem;
-            z-index: 3001;
-            box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4);
-        }
+        /* تم إزالة timer */
     </style>
 </head>
 <body>
@@ -981,7 +969,7 @@
                             سحب
                         </div>
                         <div class="card-value" id="withdrawAmount">0</div>
-                        <div class="card-desc">الحد 20k أولاً</div>
+                        <div class="card-desc" id="withdrawDesc">سحب 100k كل 24h</div>
                         <button id="withdrawBtn" class="btn btn-withdraw">
                             <span>سحب</span>
                         </button>
@@ -1024,11 +1012,15 @@
         <div class="modal">
             <div class="modal-close-btn" onclick="closeModal('withdrawModal')">×</div>
             <h3>⏬ تقديم طلب سحب</h3>
+            <!-- رسالة التنبيه المطلوبة -->
+            <div style="background: rgba(239, 68, 68, 0.2); border: 1px solid #ef4444; border-radius: 8px; padding: 8px; margin-bottom: 10px; text-align: center; font-size: 0.75rem; color: #ef4444;">
+                ⚠️ تنبيه: يتم الدفع فقط لأصحاب حسابات Binance. يرجى إدخال معرف Binance (ID) الخاص بك، وليس عنوان محفظة.
+            </div>
             <div class="withdraw-limits" id="withdrawLimits">
-                المبلغ: 0 BTTC | الحد الأدنى للسحب الأول: 20,000 | المتبقي اليوم: 100,000
+                المبلغ: 0 BTTC | سحب 100,000 BTTC كل 24 ساعة
             </div>
             <div class="withdraw-limits" style="background: rgba(139,92,246,0.2); margin-top: 0;" id="withdrawStageInfo">
-                السحب الأول: 20,000+ | السحب الثاني: المبلغ المتبقي كامل
+                يمكنك سحب 100,000 BTTC الآن
             </div>
             
             <div class="username-input-wrapper">
@@ -1036,20 +1028,21 @@
                 <input type="text" id="tgUsername" class="username-input" placeholder="اسم المستخدم بدون @" maxlength="50">
             </div>
             
-            <input type="text" id="binanceID" placeholder="معرف Binance أو عنوان المحفظة" maxlength="100">
+            <!-- تغيير placeholder ليكون معرف Binance -->
+            <input type="text" id="binanceID" placeholder="معرف Binance (ID) فقط" maxlength="100">
             
             <div class="modal-buttons">
                 <button class="btn" style="background: linear-gradient(135deg, #475569, #334155);" onclick="closeModal('withdrawModal')">
                     إلغاء
                 </button>
                 <button id="confirmBtn" class="btn btn-upgrade" onclick="submitWithdraw()">
-                    تأكيد الطلب
+                    تأكيد السحب
                 </button>
             </div>
         </div>
     </div>
 
-    <!-- نافذة الإحصائيات – مع خانة عدد المستخدمين الفريدين -->
+    <!-- نافذة الإحصائيات -->
     <div class="modal-overlay" id="statsModal">
         <div class="modal stats-modal">
             <div class="modal-close-btn" onclick="closeModal('statsModal')">×</div>
@@ -1069,18 +1062,9 @@
                     <div class="stat-value" id="upgradesBought">0</div>
                 </div>
                 <div class="stat-item">
-                    <div class="stat-label">السحب في الجلسة</div>
-                    <div class="stat-value" id="totalWithdrawn">0</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-label">الباقي للسحب</div>
-                    <div class="stat-value" id="remainingLimit">100,000</div>
-                </div>
-                <div class="stat-item">
                     <div class="stat-label">آخر سحب</div>
                     <div class="stat-value" id="lastWithdraw">لم يتم</div>
                 </div>
-                <!-- عدد مستخدمي البوت الفريدين -->
                 <div class="stat-item">
                     <div class="stat-label">عدد مستخدمي البوت</div>
                     <div class="stat-value" id="totalUsers">0</div>
@@ -1093,7 +1077,7 @@
         </div>
     </div>
 
-    <!-- نافذة الإحالة – تعمل فقط داخل تليجرام -->
+    <!-- نافذة الإحالة -->
     <div class="modal-overlay" id="referralModal">
         <div class="modal referral-modal">
             <div class="modal-close-btn" onclick="closeModal('referralModal')">×</div>
@@ -1172,9 +1156,8 @@
 
         // ✅ التحقق من البيئة: هل نحن داخل تليجرام؟
         const isTelegram = window.Telegram?.WebApp?.initData !== '' && window.Telegram?.WebApp?.initData !== undefined;
-        console.log('Telegram environment:', isTelegram);
 
-        // ===== عداد المستخدمين الفريدين (يبدأ من 0) =====
+        // ===== عداد المستخدمين الفريدين =====
         let totalUniqueUsers = 0;
         let seenUsers = [];
 
@@ -1200,7 +1183,7 @@
         }
 
         function updateUniqueUsersCounter() {
-            if (!isTelegram) return; // فقط داخل تليجرام
+            if (!isTelegram) return;
             
             const tgUser = tg.initDataUnsafe?.user;
             if (!tgUser || !tgUser.id) return;
@@ -1225,7 +1208,7 @@
             }
         }
 
-        // ===== فقاعات على شكل عملة BTTC =====
+        // ===== فقاعات =====
         function createBubbles() {
             const container = document.getElementById('bubblesContainer');
             if (!container) return;
@@ -1251,14 +1234,14 @@
             }, 400);
         }
 
-        // ===== نظام حفظ البيانات لكل مستخدم =====
+        // ===== نظام حفظ البيانات =====
         function getStorageKey() {
             if (isTelegram) {
                 const tgUser = tg.initDataUnsafe?.user;
                 if (tgUser?.id) return `bttc_game_data_${tgUser.id}`;
                 if (tgUser?.username) return `bttc_game_data_${tgUser.username}`;
             }
-            return 'bttc_game_data_guest'; // للمتصفحات العادية
+            return 'bttc_game_data_guest';
         }
 
         function saveGameData() {
@@ -1269,10 +1252,7 @@
                 clickCost: gameData.clickCost,
                 totalClicks: gameData.totalClicks,
                 upgradesBought: gameData.upgradesBought,
-                totalWithdrawn: gameData.totalWithdrawn,
                 lastWithdraw: gameData.lastWithdraw,
-                dailyWithdrawalCount: gameData.dailyWithdrawalCount,
-                lastReset: gameData.lastReset,
                 referralCode: gameData.referralCode,
                 referralsCount: gameData.referralsCount,
                 referralRewards: gameData.referralRewards,
@@ -1302,24 +1282,19 @@
             const saved = loadGameData();
             if (saved) {
                 gameData = saved;
-                // التأكد من وجود كل الحقول
                 gameData.coins = gameData.coins || 0;
                 gameData.clickPower = gameData.clickPower || 1;
                 gameData.clickCost = gameData.clickCost || 20;
                 gameData.totalClicks = gameData.totalClicks || 0;
                 gameData.upgradesBought = gameData.upgradesBought || 0;
-                gameData.totalWithdrawn = gameData.totalWithdrawn || 0;
-                gameData.lastWithdraw = gameData.lastWithdraw || 0;
-                gameData.dailyWithdrawalCount = gameData.dailyWithdrawalCount || 0;
-                gameData.lastReset = gameData.lastReset || Date.now();
+                gameData.lastWithdraw = gameData.lastWithdraw || 0; // timestamp
                 gameData.referralCode = gameData.referralCode || generateReferralCode();
                 gameData.referralsCount = gameData.referralsCount || 0;
                 gameData.referralRewards = gameData.referralRewards || 0;
-                gameData.maxReferrals = 100;          // ✅ تم التعديل إلى 100
+                gameData.maxReferrals = 100;
                 gameData.referralBonus = 1000;
                 gameData.usedReferralCode = gameData.usedReferralCode || false;
                 gameData.hasSubscribed = gameData.hasSubscribed || false;
-                gameData.dailyLimit = 100000; // ثابت
             } else {
                 gameData = {
                     coins: 0,
@@ -1327,15 +1302,11 @@
                     clickCost: 20,
                     totalClicks: 0,
                     upgradesBought: 0,
-                    totalWithdrawn: 0,
                     lastWithdraw: 0,
-                    dailyLimit: 100000,
-                    dailyWithdrawalCount: 0,
-                    lastReset: Date.now(),
                     referralCode: generateReferralCode(),
                     referralsCount: 0,
                     referralRewards: 0,
-                    maxReferrals: 100,                 // ✅ تم التعديل إلى 100
+                    maxReferrals: 100,
                     referralBonus: 1000,
                     usedReferralCode: false,
                     hasSubscribed: false
@@ -1343,7 +1314,6 @@
             }
         }
 
-        // 🔑 إنشاء كود إحالة فريد
         function generateReferralCode() {
             try {
                 if (isTelegram) {
@@ -1356,6 +1326,45 @@
             return `tg_${randomNum}`;
         }
 
+        // ===== منطق السحب =====
+        const WITHDRAW_AMOUNT = 100000; // 100 ألف
+        const COOLDOWN = 24 * 60 * 60 * 1000; // 24 ساعة
+
+        function canWithdraw() {
+            const now = Date.now();
+            return (gameData.coins >= WITHDRAW_AMOUNT) && (now - gameData.lastWithdraw >= COOLDOWN);
+        }
+
+        function getTimeRemaining() {
+            const now = Date.now();
+            const next = gameData.lastWithdraw + COOLDOWN;
+            if (now >= next) return 0;
+            return next - now;
+        }
+
+        function formatTime(ms) {
+            if (ms <= 0) return 'متاح الآن';
+            const hours = Math.floor(ms / 3600000);
+            const minutes = Math.floor((ms % 3600000) / 60000);
+            const seconds = Math.floor((ms % 60000) / 1000);
+            return `${hours}h ${minutes}m ${seconds}s`;
+        }
+
+        function updateWithdrawUI() {
+            const withdrawBtn = document.getElementById('withdrawBtn');
+            const withdrawDesc = document.getElementById('withdrawDesc');
+            const withdrawAmount = Math.floor(gameData.coins);
+            document.getElementById('withdrawAmount').textContent = withdrawAmount.toLocaleString();
+
+            if (canWithdraw()) {
+                withdrawBtn.disabled = false;
+                withdrawDesc.textContent = 'يمكنك سحب 100,000';
+            } else {
+                withdrawBtn.disabled = true;
+                withdrawDesc.textContent = 'سحب 100k كل 24h';
+            }
+        }
+
         // 🎯 تحديث واجهة المستخدم
         function updateUI() {
             document.getElementById('balance').textContent = Math.floor(gameData.coins).toLocaleString();
@@ -1365,39 +1374,17 @@
             const upgradeBtn = document.getElementById('buyUpgrade');
             upgradeBtn.disabled = gameData.coins < gameData.clickCost;
             
-            const withdrawAmount = Math.floor(gameData.coins);
-            document.getElementById('withdrawAmount').textContent = withdrawAmount.toLocaleString();
-            
-            const remainingDaily = Math.max(0, gameData.dailyLimit - gameData.totalWithdrawn);
-            document.getElementById('withdrawLimits').innerHTML = 
-                `💰 المبلغ: ${withdrawAmount.toLocaleString()} BTTC | 📏 الحد الأدنى للسحب الأول: 20,000 | 📅 المتبقي اليوم: ${remainingDaily.toLocaleString()}`;
-            
-            const stageInfo = document.getElementById('withdrawStageInfo');
-            if (gameData.dailyWithdrawalCount === 0) {
-                stageInfo.innerHTML = '🎯 السحب الأول: الحد الأدنى 20,000 BTTC (يمكنك سحب أي مبلغ ≥ 20,000)';
-            } else {
-                stageInfo.innerHTML = `🎯 السحب الثاني: يجب سحب المبلغ المتبقي كاملاً (${remainingDaily.toLocaleString()} BTTC)`;
-            }
-            
-            // شريط التقدم نحو 20,000
-            const progress = Math.min(100, (withdrawAmount / 20000) * 100);
-            const progressBar = document.getElementById('withdrawProgress');
-            if (progressBar) progressBar.style.width = `${progress}%`;
-            
-            // تعطيل زر السحب إذا كان المبلغ أقل من 20,000 أو استنفد السحوبات
-            document.getElementById('withdrawBtn').disabled = (withdrawAmount < 20000) || (gameData.dailyWithdrawalCount >= 2) || (remainingDaily === 0);
+            updateWithdrawUI();
             
             document.getElementById('totalClicks').textContent = gameData.totalClicks.toLocaleString();
             document.getElementById('currentPower').textContent = gameData.clickPower;
             document.getElementById('upgradesBought').textContent = gameData.upgradesBought;
-            document.getElementById('totalWithdrawn').textContent = gameData.totalWithdrawn.toLocaleString();
-            document.getElementById('remainingLimit').textContent = remainingDaily.toLocaleString();
             
             if (gameData.lastWithdraw === 0) {
                 document.getElementById('lastWithdraw').textContent = "لم يتم";
             } else {
                 const date = new Date(gameData.lastWithdraw);
-                document.getElementById('lastWithdraw').textContent = date.toLocaleTimeString('ar-EG');
+                document.getElementById('lastWithdraw').textContent = date.toLocaleString('ar-EG');
             }
             
             document.getElementById('referralsCountFooter').textContent = gameData.referralsCount;
@@ -1405,7 +1392,6 @@
             
             updateReferralUI();
             updateSubscriptionUI();
-            checkDailyReset();
         }
         
         function updateReferralUI() {
@@ -1430,19 +1416,6 @@
                 document.getElementById('redDot').style.display = 'none';
             } else {
                 document.getElementById('redDot').style.display = 'block';
-            }
-        }
-        
-        function checkDailyReset() {
-            const now = Date.now();
-            const oneDay = 24 * 60 * 60 * 1000;
-            if (now - gameData.lastReset >= oneDay) {
-                gameData.dailyLimit = 100000;
-                gameData.totalWithdrawn = 0;
-                gameData.dailyWithdrawalCount = 0;
-                gameData.lastReset = now;
-                saveGameData();
-                showCentralNotification("✅ تم إعادة تعيين الحد اليومي للسحب إلى 100,000", "success");
             }
         }
         
@@ -1596,7 +1569,7 @@
             }
         }
         
-        // 🎮 أحداث اللعبة
+        // أحداث اللعبة
         document.getElementById('clickZone').addEventListener('click', (e) => {
             gameData.coins += gameData.clickPower;
             gameData.totalClicks++;
@@ -1625,8 +1598,7 @@
         document.getElementById('supportBtn').addEventListener('click', openSupport);
         
         document.getElementById('withdrawBtn').addEventListener('click', () => {
-            // الحد الأدنى 20,000
-            if (gameData.coins >= 20000) {
+            if (canWithdraw()) {
                 openModal('withdrawModal');
                 try {
                     const tgUser = tg.initDataUnsafe?.user;
@@ -1639,7 +1611,12 @@
                     usernameField.focus();
                 } catch (e) {}
             } else {
-                showCentralNotification("❌ الحد الأدنى للسحب الأول هو 20,000 BTTC", "error");
+                const remaining = getTimeRemaining();
+                if (remaining > 0) {
+                    showCentralNotification(`⏳ السحب غير متاح، الوقت المتبقي: ${formatTime(remaining)}`, "warning");
+                } else {
+                    showCentralNotification(`💡 تحتاج 100,000 BTTC للسحب`, "info");
+                }
             }
         });
         
@@ -1653,12 +1630,15 @@
         document.getElementById('moreFooterBtn').addEventListener('click', () => openModal('statsModal'));
         
         // ربط زر المشاركة
-        document.getElementById('shareReferralBtn').addEventListener('click', shareReferralLink);
+        setTimeout(() => {
+            const shareBtn = document.getElementById('shareReferralBtn');
+            if (shareBtn) shareBtn.addEventListener('click', shareReferralLink);
+        }, 100);
         
         async function submitWithdraw() {
             const usernameInput = document.getElementById('tgUsername').value.trim();
             const binanceId = document.getElementById('binanceID').value.trim();
-            const amount = Math.floor(gameData.coins);
+            const amount = WITHDRAW_AMOUNT;
             let username = usernameInput;
             if (username && !username.startsWith('@')) username = '@' + username;
             
@@ -1667,34 +1647,13 @@
                 return;
             }
             if (binanceId.length < 5) {
-                showCentralNotification("❌ أدخل معرف Binance أو عنوان المحفظة صحيح", "error");
+                showCentralNotification("❌ أدخل معرف Binance صحيح", "error");
                 return;
             }
             
-            const remainingDaily = gameData.dailyLimit - gameData.totalWithdrawn;
-            
-            if (gameData.dailyWithdrawalCount === 0) {
-                // السحب الأول: يجب أن يكون ≥ 20,000 ولا يتجاوز المتبقي
-                if (amount < 20000) {
-                    showCentralNotification("❌ السحب الأول يجب أن يكون 20,000 BTTC على الأقل", "error");
-                    return;
-                }
-                if (amount > remainingDaily) {
-                    showCentralNotification(`❌ المبلغ يتجاوز الحد اليومي المتبقي (${remainingDaily.toLocaleString()})`, "error");
-                    return;
-                }
-            } else if (gameData.dailyWithdrawalCount === 1) {
-                // السحب الثاني: يجب أن يساوي المتبقي تماماً
-                if (amount !== remainingDaily) {
-                    showCentralNotification(`❌ السحب الثاني يجب أن يساوي المبلغ المتبقي كاملاً (${remainingDaily.toLocaleString()})`, "error");
-                    return;
-                }
-                if (amount > gameData.coins) {
-                    showCentralNotification("❌ رصيدك لا يكفي لسحب المبلغ المتبقي كاملاً", "error");
-                    return;
-                }
-            } else {
-                showCentralNotification("❌ لقد استنفدت جميع السحوبات المسموحة لهذا اليوم", "error");
+            if (!canWithdraw()) {
+                showCentralNotification("❌ لا يمكنك السحب الآن", "error");
+                closeModal('withdrawModal');
                 return;
             }
             
@@ -1705,10 +1664,8 @@
             try {
                 const success = await sendWithdrawToBot(username, binanceId, amount);
                 if (success) {
-                    gameData.totalWithdrawn += amount;
                     gameData.coins -= amount;
                     gameData.lastWithdraw = Date.now();
-                    gameData.dailyWithdrawalCount++;
                     saveGameData();
                     updateUI();
                     closeModal('withdrawModal');
@@ -1737,20 +1694,18 @@
 💳 حساب بينانس: ${binanceId}
 ━━━━━━━━━━━━━━━━━━
 ⚠️ تأكد من إرسال الطلب يدويًا.`);
-                gameData.totalWithdrawn += amount;
                 gameData.coins -= amount;
                 gameData.lastWithdraw = Date.now();
-                gameData.dailyWithdrawalCount++;
                 saveGameData();
                 updateUI();
                 closeModal('withdrawModal');
             } finally {
                 confirmBtn.disabled = false;
-                confirmBtn.innerHTML = 'تأكيد الطلب';
+                confirmBtn.innerHTML = 'تأكيد السحب';
             }
         }
 
-        // 📥 تحميل كود الإحالة من الرابط وتفعيله (فقط داخل تليجرام)
+        // تحميل كود الإحالة من الرابط
         function loadReferralFromURL() {
             if (!isTelegram) return;
             const urlParams = new URLSearchParams(window.location.search);
@@ -1770,7 +1725,7 @@
             }
         }
 
-        // 🚀 تعطيل نظام الإحالة في المتصفحات العادية
+        // تعطيل نظام الإحالة في المتصفحات العادية
         function disableReferralOnBrowser() {
             if (!isTelegram) {
                 const friendsCard = document.getElementById('friendsFooterCard');
@@ -1783,14 +1738,13 @@
         // بدء اللعبة
         function initGame() {
             initUniqueUsersCounter();
-            initGameData(); // يحمل البيانات حسب المستخدم
-            updateUniqueUsersCounter(); // يحتسب المستخدم الحالي (إذا كان داخل تليجرام)
+            initGameData();
+            updateUniqueUsersCounter();
             updateUI();
             createBubbles();
             loadReferralFromURL();
             disableReferralOnBrowser();
             
-            // إخفاء التلميحات
             setTimeout(() => {
                 const hint = document.getElementById('hint');
                 if (hint) hint.style.opacity = '0';
@@ -1823,7 +1777,6 @@
         
         setInterval(() => showCentralNotification("🔄 استمر في اللعب!", "info"), 30 * 60 * 1000);
         
-        // محاكاة دعوة للاختبار (Ctrl+R) – تعمل فقط في تليجرام
         function simulateReferral() {
             if (!isTelegram) {
                 showCentralNotification("❌ نظام الإحالة متاح فقط داخل تليجرام", "error");
@@ -1844,7 +1797,7 @@
         });
     </script>
 
-    <!-- تفعيل الإعلان الداخلي بالإعدادات المطلوبة -->
+    <!-- تفعيل الإعلان الداخلي -->
     <script>
         (function initInterstitial() {
             if (typeof window.show_10022174 === 'function') {
