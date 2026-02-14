@@ -18,16 +18,17 @@
             --text-main: #ffffff;
             --upgrade: #22c55e;
             --withdraw: #fbbf24;
+            --reward: #8b5cf6;      /* لون المكافأة */
+            --referral: #3b82f6;
+            --stats: #94a3b8;
             --telegram-blue: #0088cc;
             --error: #ef4444;
             --success: #10b981;
-            --referral: #8b5cf6;
             --subscribe: #0088cc;
             --red-dot: #ef4444;
             --notification: #8b5cf6;
             --support: #3b82f6;
             --boost: #FFD700;
-            --more: #94a3b8;
         }
 
         * { 
@@ -309,11 +310,11 @@
             transform: scale(0.9);
         }
 
-        /* الفوتر – 4 أزرار في سطر واحد */
+        /* الفوتر – 5 أزرار في سطر واحد */
         .footer-section { 
             width: 100%; 
             background: var(--card); 
-            padding: 12px 12px;
+            padding: 10px 8px;
             border-radius: 20px 20px 0 0; 
             padding-bottom: env(safe-area-inset-bottom, 16px);
             box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.3);
@@ -324,14 +325,14 @@
         
         .actions-grid { 
             display: grid; 
-            grid-template-columns: repeat(4, 1fr);
-            gap: 8px; 
+            grid-template-columns: repeat(5, 1fr);
+            gap: 6px; 
         }
         
         .card { 
             background: linear-gradient(135deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02));
-            padding: 10px 6px; 
-            border-radius: 12px; 
+            padding: 8px 4px; 
+            border-radius: 10px; 
             border: 1px solid #334155; 
             text-align: center;
             transition: all 0.3s;
@@ -350,28 +351,28 @@
         
         .card-title {
             font-weight: bold;
-            margin-bottom: 3px;
+            margin-bottom: 2px;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 4px;
-            font-size: 0.8rem;
+            gap: 3px;
+            font-size: 0.7rem;
         }
         
         .card-title svg {
-            width: 16px;
-            height: 16px;
+            width: 14px;
+            height: 14px;
         }
         
         .card-value {
-            font-size: 0.9rem;
+            font-size: 0.8rem;
             margin: 2px 0;
             color: var(--primary);
             font-weight: bold;
         }
         
         .card-desc {
-            font-size: 0.6rem; 
+            font-size: 0.55rem; 
             color: #94a3b8;
             margin: 2px 0;
         }
@@ -379,14 +380,14 @@
         .btn { 
             color: white; 
             border: none; 
-            padding: 6px 8px; 
-            border-radius: 8px; 
+            padding: 4px 6px; 
+            border-radius: 6px; 
             width: 100%; 
             font-weight: bold; 
-            margin-top: 5px; 
+            margin-top: 4px; 
             cursor: pointer; 
             transition: all 0.3s;
-            font-size: 0.75rem;
+            font-size: 0.65rem;
             position: relative;
             overflow: hidden;
             z-index: 1;
@@ -410,11 +411,15 @@
             color: #000; 
         }
         
+        .btn-reward {
+            background: linear-gradient(135deg, var(--reward), #6b21a5);
+        }
+        
         .btn-referral {
-            background: linear-gradient(135deg, var(--referral), #7c3aed);
+            background: linear-gradient(135deg, var(--referral), #1d4ed8);
         }
 
-        .btn-more {
+        .btn-stats {
             background: linear-gradient(135deg, #64748b, #475569);
         }
         
@@ -943,13 +948,13 @@
                 </div>
             </main>
 
-            <!-- الفوتر – 4 أزرار في سطر واحد -->
+            <!-- الفوتر – 5 أزرار في سطر واحد (تمت إضافة زر المكافأة) -->
             <section class="footer-section">
                 <div class="actions-grid">
-                    <!-- تعزيز النقر -->
+                    <!-- 1. تعزيز النقر -->
                     <div class="card">
                         <div class="card-title">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
                                 <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 13c-2.33 0-4.31-1.46-5.11-3.5h10.22c-.8 2.04-2.78 3.5-5.11 3.5z"/>
                             </svg>
                             تعزيز
@@ -960,24 +965,38 @@
                             <span>شراء</span>
                         </button>
                     </div>
-                    <!-- سحب -->
+                    <!-- 2. سحب -->
                     <div class="card">
                         <div class="card-title">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
                                 <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
                             </svg>
                             سحب
                         </div>
                         <div class="card-value" id="withdrawAmount">0</div>
-                        <div class="card-desc" id="withdrawDesc">سحب 100k كل 24h</div>
+                        <div class="card-desc" id="withdrawDesc">100k كل 24h</div>
                         <button id="withdrawBtn" class="btn btn-withdraw">
                             <span>سحب</span>
                         </button>
                     </div>
-                    <!-- أصدقاء – يظهر فقط داخل تليجرام -->
+                    <!-- 3. مكافأة (إعلانات) -->
+                    <div class="card">
+                        <div class="card-title">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 13c-2.33 0-4.31-1.46-5.11-3.5h10.22c-.8 2.04-2.78 3.5-5.11 3.5z"/>
+                            </svg>
+                            مكافأة
+                        </div>
+                        <div class="card-value" id="adsWatchedDisplay">0/25</div>
+                        <div class="card-desc">شاهد إعلان</div>
+                        <button id="rewardBtn" class="btn btn-reward">
+                            <span>شاهد</span>
+                        </button>
+                    </div>
+                    <!-- 4. أصدقاء (إحالة) -->
                     <div class="card" id="friendsFooterCard">
                         <div class="card-title">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
                                 <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/>
                             </svg>
                             أصدقاء
@@ -988,17 +1007,17 @@
                             <span>دعوة</span>
                         </button>
                     </div>
-                    <!-- آخر (إحصائيات) -->
+                    <!-- 5. آخر (إحصائيات) -->
                     <div class="card">
                         <div class="card-title">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
                                 <path d="M16,11V3H8v6H2v12h20V11H16z M10,5h4v14h-4V5z M4,11h4v8H4V11z M20,19h-4v-6h4V19z"/>
                             </svg>
                             آخر
                         </div>
                         <div class="card-value" id="moreValue">📊</div>
                         <div class="card-desc">إحصائيات</div>
-                        <button id="moreFooterBtn" class="btn btn-more">
+                        <button id="moreFooterBtn" class="btn btn-stats">
                             <span>عرض</span>
                         </button>
                     </div>
@@ -1012,7 +1031,7 @@
         <div class="modal">
             <div class="modal-close-btn" onclick="closeModal('withdrawModal')">×</div>
             <h3>⏬ تقديم طلب سحب</h3>
-            <!-- رسالة التنبيه المطلوبة -->
+            <!-- رسالة التنبيه -->
             <div style="background: rgba(239, 68, 68, 0.2); border: 1px solid #ef4444; border-radius: 8px; padding: 8px; margin-bottom: 10px; text-align: center; font-size: 0.75rem; color: #ef4444;">
                 ⚠️ تنبيه: يتم الدفع فقط لأصحاب حسابات Binance. يرجى إدخال معرف Binance (ID) الخاص بك، وليس عنوان محفظة.
             </div>
@@ -1028,7 +1047,6 @@
                 <input type="text" id="tgUsername" class="username-input" placeholder="اسم المستخدم بدون @" maxlength="50">
             </div>
             
-            <!-- تغيير placeholder ليكون معرف Binance -->
             <input type="text" id="binanceID" placeholder="معرف Binance (ID) فقط" maxlength="100">
             
             <div class="modal-buttons">
@@ -1068,6 +1086,10 @@
                 <div class="stat-item">
                     <div class="stat-label">عدد مستخدمي البوت</div>
                     <div class="stat-value" id="totalUsers">0</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">الإعلانات المشاهدة</div>
+                    <div class="stat-value" id="adsWatchedStat">0/25</div>
                 </div>
             </div>
             
@@ -1253,6 +1275,7 @@
                 totalClicks: gameData.totalClicks,
                 upgradesBought: gameData.upgradesBought,
                 lastWithdraw: gameData.lastWithdraw,
+                adsWatched: gameData.adsWatched,         // عدد الإعلانات المشاهدة
                 referralCode: gameData.referralCode,
                 referralsCount: gameData.referralsCount,
                 referralRewards: gameData.referralRewards,
@@ -1287,7 +1310,8 @@
                 gameData.clickCost = gameData.clickCost || 20;
                 gameData.totalClicks = gameData.totalClicks || 0;
                 gameData.upgradesBought = gameData.upgradesBought || 0;
-                gameData.lastWithdraw = gameData.lastWithdraw || 0; // timestamp
+                gameData.lastWithdraw = gameData.lastWithdraw || 0;
+                gameData.adsWatched = gameData.adsWatched || 0;          // عدد الإعلانات
                 gameData.referralCode = gameData.referralCode || generateReferralCode();
                 gameData.referralsCount = gameData.referralsCount || 0;
                 gameData.referralRewards = gameData.referralRewards || 0;
@@ -1303,6 +1327,7 @@
                     totalClicks: 0,
                     upgradesBought: 0,
                     lastWithdraw: 0,
+                    adsWatched: 0,
                     referralCode: generateReferralCode(),
                     referralsCount: 0,
                     referralRewards: 0,
@@ -1326,13 +1351,14 @@
             return `tg_${randomNum}`;
         }
 
-        // ===== منطق السحب =====
-        const WITHDRAW_AMOUNT = 100000; // 100 ألف
-        const COOLDOWN = 24 * 60 * 60 * 1000; // 24 ساعة
+        // ===== منطق السحب والإعلانات =====
+        const WITHDRAW_AMOUNT = 100000;
+        const COOLDOWN = 24 * 60 * 60 * 1000;
+        const MAX_ADS = 25;
 
         function canWithdraw() {
             const now = Date.now();
-            return (gameData.coins >= WITHDRAW_AMOUNT) && (now - gameData.lastWithdraw >= COOLDOWN);
+            return (gameData.coins >= WITHDRAW_AMOUNT) && (now - gameData.lastWithdraw >= COOLDOWN) && (gameData.adsWatched >= MAX_ADS);
         }
 
         function getTimeRemaining() {
@@ -1365,6 +1391,14 @@
             }
         }
 
+        // تحديث عرض الإعلانات
+        function updateAdsUI() {
+            const adsDisplay = document.getElementById('adsWatchedDisplay');
+            const adsStat = document.getElementById('adsWatchedStat');
+            if (adsDisplay) adsDisplay.textContent = `${gameData.adsWatched}/${MAX_ADS}`;
+            if (adsStat) adsStat.textContent = `${gameData.adsWatched}/${MAX_ADS}`;
+        }
+
         // 🎯 تحديث واجهة المستخدم
         function updateUI() {
             document.getElementById('balance').textContent = Math.floor(gameData.coins).toLocaleString();
@@ -1375,6 +1409,7 @@
             upgradeBtn.disabled = gameData.coins < gameData.clickCost;
             
             updateWithdrawUI();
+            updateAdsUI();
             
             document.getElementById('totalClicks').textContent = gameData.totalClicks.toLocaleString();
             document.getElementById('currentPower').textContent = gameData.clickPower;
@@ -1547,6 +1582,36 @@
             document.getElementById('inputReferralCode').value = '';
             setTimeout(() => closeModal('referralModal'), 2000);
         }
+
+        // دالة مشاهدة الإعلان المكافئ
+        function watchRewardedAd() {
+            if (!isTelegram) {
+                showCentralNotification("❌ هذه الميزة متاحة فقط داخل تطبيق تليجرام", "error");
+                return;
+            }
+            if (gameData.adsWatched >= MAX_ADS) {
+                showCentralNotification("✅ لقد شاهدت جميع الإعلانات المطلوبة!", "info");
+                return;
+            }
+            if (typeof window.show_10022174 !== 'function') {
+                showCentralNotification("❌ الإعلان غير متاح حالياً", "error");
+                return;
+            }
+
+            window.show_10022174().then(() => {
+                // بعد مشاهدة الإعلان
+                gameData.adsWatched++;
+                saveGameData();
+                updateUI();
+                showCentralNotification(`🎉 شكراً لمشاهدة الإعلان! (${gameData.adsWatched}/${MAX_ADS})`, "success");
+                if (gameData.adsWatched >= MAX_ADS) {
+                    showCentralNotification("✅ الآن يمكنك السحب!", "success");
+                }
+            }).catch((error) => {
+                console.error('فشل عرض الإعلان:', error);
+                showCentralNotification("⚠️ تعذر عرض الإعلان، حاول لاحقاً", "warning");
+            });
+        }
         
         async function sendWithdrawToBot(username, binanceId, amount) {
             try {
@@ -1597,6 +1662,7 @@
         document.getElementById('subscribeBtn').addEventListener('click', subscribeToChannel);
         document.getElementById('supportBtn').addEventListener('click', openSupport);
         
+        // زر السحب
         document.getElementById('withdrawBtn').addEventListener('click', () => {
             if (canWithdraw()) {
                 openModal('withdrawModal');
@@ -1611,14 +1677,21 @@
                     usernameField.focus();
                 } catch (e) {}
             } else {
-                const remaining = getTimeRemaining();
-                if (remaining > 0) {
-                    showCentralNotification(`⏳ السحب غير متاح، الوقت المتبقي: ${formatTime(remaining)}`, "warning");
+                if (gameData.adsWatched < MAX_ADS) {
+                    showCentralNotification(`💡 يجب مشاهدة ${MAX_ADS} إعلان أولاً (${gameData.adsWatched}/${MAX_ADS})`, "info");
                 } else {
-                    showCentralNotification(`💡 تحتاج 100,000 BTTC للسحب`, "info");
+                    const remaining = getTimeRemaining();
+                    if (remaining > 0) {
+                        showCentralNotification(`⏳ السحب غير متاح، الوقت المتبقي: ${formatTime(remaining)}`, "warning");
+                    } else {
+                        showCentralNotification(`💡 تحتاج 100,000 BTTC للسحب`, "info");
+                    }
                 }
             }
         });
+        
+        // زر المكافأة (الإعلانات)
+        document.getElementById('rewardBtn').addEventListener('click', watchRewardedAd);
         
         document.getElementById('friendsFooterBtn').addEventListener('click', () => {
             if (!isTelegram) {
@@ -1666,6 +1739,7 @@
                 if (success) {
                     gameData.coins -= amount;
                     gameData.lastWithdraw = Date.now();
+                    // لا نعيد تعيين adsWatched، يمكن بقاؤها للمرة القادمة
                     saveGameData();
                     updateUI();
                     closeModal('withdrawModal');
@@ -1797,25 +1871,7 @@
         });
     </script>
 
-    <!-- تفعيل الإعلان الداخلي -->
-    <script>
-        (function initInterstitial() {
-            if (typeof window.show_10022174 === 'function') {
-                window.show_10022174({
-                    type: 'inApp',
-                    inAppSettings: {
-                        frequency: 2,
-                        capping: 0.1,
-                        interval: 30,
-                        timeout: 5,
-                        everyPage: false
-                    }
-                });
-                console.log('✅ تم تشغيل الإعلان الداخلي');
-            } else {
-                setTimeout(initInterstitial, 200);
-            }
-        })();
-    </script>
+    <!-- تفعيل الإعلان الداخلي (مطلوب فقط لتحميل SDK، سيتم استدعاؤه يدوياً) -->
+    <!-- لا نستدعيه تلقائياً لأننا نستخدمه عبر زر المكافأة -->
 </body>
 </html>
