@@ -6,8 +6,63 @@
     <title>BTTC Miner - Al-Shamkhani</title>
     
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
+
+    <!-- Firebase SDK (module) مع إضافة Realtime Database -->
+    <script type="module">
+        // Import the functions you need from the SDKs
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-analytics.js";
+        import { getDatabase, ref, runTransaction, get, child } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-database.js";
+
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyCynXoZp9_v4I-YC1I1RWstjsW1h94JHTA",
+            authDomain: "bttc-miner-f85ce.firebaseapp.com",
+            projectId: "bttc-miner-f85ce",
+            storageBucket: "bttc-miner-f85ce.firebasestorage.app",
+            messagingSenderId: "421014482539",
+            appId: "1:421014482539:web:1c437acebd25c835ad0b2e",
+            measurementId: "G-X1WS22G8FL"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
+        const database = getDatabase(app);
+
+        // دالة لزيادة عدد المستخدمين الفريدين باستخدام userId
+        async function incrementUserCounter(userId) {
+            if (!userId) return;
+            const counterRef = ref(database, 'uniqueUsers/' + userId);
+            // نستخدم transaction للتأكد من عدم وجود سباق
+            await runTransaction(counterRef, (currentValue) => {
+                if (currentValue === null) {
+                    // مستخدم جديد – نزيد العداد الكلي
+                    const totalRef = ref(database, 'totalUsers');
+                    runTransaction(totalRef, (total) => {
+                        return (total || 0) + 1;
+                    });
+                    return true; // قيمة للمستخدم (يمكن تخزين أي شيء)
+                }
+                return currentValue; // لا تغيير
+            });
+        }
+
+        // دالة لجلب العدد الإجمالي للمستخدمين
+        async function getTotalUsersCount() {
+            const totalRef = ref(database, 'totalUsers');
+            const snapshot = await get(totalRef);
+            return snapshot.val() || 0;
+        }
+
+        // تعريض الدوال على window لاستخدامها في الكود العادي
+        window.firebaseIncrementUser = incrementUserCounter;
+        window.firebaseGetTotalUsers = getTotalUsersCount;
+        
+        console.log('✅ Firebase initialized with Realtime Database');
+    </script>
     
-    <!-- SDK الإعلان -->
+    <!-- SDK الإعلان (libtl) -->
     <script src='//libtl.com/sdk.js' data-zone='10022174' data-sdk='show_10022174'></script>
 
     <style>
@@ -1080,7 +1135,7 @@
         </div>
     </div>
 
-    <!-- نافذة الإحصائيات -->
+    <!-- نافذة الإحصائيات (تم تعديلها لعرض عداد Firebase) -->
     <div class="modal-overlay" id="statsModal">
         <div class="modal stats-modal">
             <div class="modal-close-btn" onclick="closeModal('statsModal')">×</div>
@@ -1104,11 +1159,11 @@
                     <div class="stat-value" id="lastWithdraw">لم يتم</div>
                 </div>
                 <div class="stat-item">
-                    <div class="stat-label">إجمالي المستخدمين</div>
-                    <div class="stat-value" id="totalUsers">0</div>
+                    <div class="stat-label">إجمالي المستخدمين (Firebase)</div>
+                    <div class="stat-value" id="totalUsersFirebase">0</div>
                 </div>
                 <div class="stat-item">
-                    <div class="stat-label">المستخدمين النشطون</div>
+                    <div class="stat-label">المستخدمين النشطون (محلي)</div>
                     <div class="stat-value" id="activeUsers">0</div>
                 </div>
                 <div class="stat-item">
@@ -1207,9 +1262,12 @@
         // ✅ التحقق من البيئة: هل نحن داخل تليجرام؟
         const isTelegram = window.Telegram?.WebApp?.initData !== '' && window.Telegram?.WebApp?.initData !== undefined;
 
-        // ===== عداد المستخدمين الكلي والفريد =====
-        let totalUniqueUsers = 0;
-        let seenUsers = [];
+        // ===== Firebase للعداد العام (تم تهيئته في module) =====
+        // الدوال المتاحة: window.firebaseIncrementUser(userId), window.firebaseGetTotalUsers()
+
+        // ===== عداد المستخدمين المحلي (للنشاط) =====
+        let totalUniqueUsersLocal = 0;
+        let seenUsersLocal = [];
         let activeUsersMap = new Map();
 
         function initUniqueUsersCounter() {
@@ -1218,17 +1276,17 @@
             const savedActive = localStorage.getItem('bttc_active_users_map');
             
             if (savedCount !== null) {
-                totalUniqueUsers = parseInt(savedCount, 10);
+                totalUniqueUsersLocal = parseInt(savedCount, 10);
             } else {
-                totalUniqueUsers = 0;
+                totalUniqueUsersLocal = 0;
                 localStorage.setItem('bttc_unique_users_count', '0');
             }
             
             if (savedUsers !== null) {
-                seenUsers = JSON.parse(savedUsers);
+                seenUsersLocal = JSON.parse(savedUsers);
             } else {
-                seenUsers = [];
-                localStorage.setItem('bttc_unique_users_set', JSON.stringify(seenUsers));
+                seenUsersLocal = [];
+                localStorage.setItem('bttc_unique_users_set', JSON.stringify(seenUsersLocal));
             }
 
             if (savedActive !== null) {
@@ -1263,11 +1321,12 @@
             const userId = String(tgUser.id);
             const now = Date.now();
             
-            if (!seenUsers.includes(userId)) {
-                seenUsers.push(userId);
-                totalUniqueUsers++;
-                localStorage.setItem('bttc_unique_users_count', totalUniqueUsers.toString());
-                localStorage.setItem('bttc_unique_users_set', JSON.stringify(seenUsers));
+            // تحديث العداد المحلي للنشاط
+            if (!seenUsersLocal.includes(userId)) {
+                seenUsersLocal.push(userId);
+                totalUniqueUsersLocal++;
+                localStorage.setItem('bttc_unique_users_count', totalUniqueUsersLocal.toString());
+                localStorage.setItem('bttc_unique_users_set', JSON.stringify(seenUsersLocal));
             }
 
             activeUsersMap.set(userId, now);
@@ -1275,16 +1334,30 @@
 
             updateActiveUsersCount();
             updateTotalUsersDisplay();
+
+            // 🔥 تحديث عداد Firebase (مرة واحدة لكل مستخدم)
+            if (typeof window.firebaseIncrementUser === 'function') {
+                window.firebaseIncrementUser(userId).catch(e => console.warn('Firebase error:', e));
+            }
         }
 
-        function updateTotalUsersDisplay() {
-            const totalEl = document.getElementById('totalUsers');
-            if (totalEl) {
-                totalEl.textContent = totalUniqueUsers.toLocaleString('en').replace(/,/g, '.');
-            }
+        async function updateTotalUsersDisplay() {
+            // عرض العداد المحلي للنشاط
             const activeEl = document.getElementById('activeUsers');
             if (activeEl) {
                 activeEl.textContent = activeUsersMap.size.toLocaleString('en').replace(/,/g, '.');
+            }
+
+            // جلب وعرض عداد Firebase
+            const firebaseEl = document.getElementById('totalUsersFirebase');
+            if (firebaseEl && typeof window.firebaseGetTotalUsers === 'function') {
+                try {
+                    const count = await window.firebaseGetTotalUsers();
+                    firebaseEl.textContent = count.toLocaleString('en').replace(/,/g, '.');
+                } catch (e) {
+                    console.warn('فشل جلب عدد المستخدمين من Firebase', e);
+                    firebaseEl.textContent = '?';
+                }
             }
         }
 
@@ -1314,7 +1387,7 @@
             }, 400);
         }
 
-        // ===== نظام حفظ البيانات =====
+        // ===== نظام حفظ البيانات المحلية =====
         function getStorageKey() {
             if (isTelegram) {
                 const tgUser = tg.initDataUnsafe?.user;
@@ -1484,7 +1557,6 @@
             if (boostsUsedStat) boostsUsedStat.textContent = `${gameData.dailyBoostCount}/${MAX_DAILY_BOOST}`;
             
             const upgradeBtn = document.getElementById('buyUpgrade');
-            // بالإضافة إلى شرط العملات، نضيف شرط عدد التعزيزات اليومي
             if (gameData.dailyBoostCount >= MAX_DAILY_BOOST) {
                 upgradeBtn.disabled = true;
             } else {
@@ -1497,18 +1569,13 @@
             const coinWrapper = document.querySelector('.coin-wrapper');
             const timerMsg = document.getElementById('timerMessage');
             if (gameData.coins >= WITHDRAW_AMOUNT) {
-                // تجميد النقر
                 coinWrapper.style.pointerEvents = 'none';
                 coinWrapper.style.opacity = '0.6';
-                // حساب الوقت المتبقي حتى يمكن السحب (ليس فقط السحب، لكن المؤقت يعرض الوقت حتى السحب التالي)
                 const remaining = getTimeRemaining();
                 if (remaining > 0) {
                     timerMsg.style.display = 'block';
                     timerMsg.innerHTML = `⏳ تم جمع 100,000. السحب متاح بعد: ${formatTime(remaining)}`;
                 } else {
-                    // إذا كان الوقت قد انتهى ولكن لم يسحب بعد (أي أن lastWithdraw مضى عليه أكثر من 24 ساعة)
-                    // لكننا هنا وصلنا إلى 100,000 والوقت يسمح بالسحب، يجب أن يكون السحب ممكناً إذا اكتملت الإعلانات أيضاً.
-                    // لكن حتى لو لم تكتمل الإعلانات، نظهر رسالة مختلفة.
                     if (gameData.adsWatched < MAX_ADS) {
                         timerMsg.style.display = 'block';
                         timerMsg.innerHTML = `📢 تحتاج مشاهدة ${MAX_ADS-gameData.adsWatched} إعلان لتتمكن من السحب`;
@@ -1535,7 +1602,7 @@
             updateAdsUI();
             updateBoostUI();
             updateClickAbility();
-            updateTotalUsersDisplay();
+            updateTotalUsersDisplay(); // هذا غير متزامن، لكنه لا يؤثر على التدفق
             
             document.getElementById('totalClicks').textContent = gameData.totalClicks.toLocaleString();
             document.getElementById('currentPower').textContent = gameData.clickPower;
@@ -1761,7 +1828,6 @@
         
         // أحداث اللعبة
         document.getElementById('clickZone').addEventListener('click', (e) => {
-            // منع النقر إذا كان الرصيد 100,000 أو أكثر (التجميد)
             if (gameData.coins >= WITHDRAW_AMOUNT) return;
             gameData.coins += gameData.clickPower;
             gameData.totalClicks++;
@@ -1869,7 +1935,6 @@
                 if (success) {
                     gameData.coins -= amount;
                     gameData.lastWithdraw = Date.now();
-                    // لا نعيد تعيين adsWatched
                     saveGameData();
                     updateUI();
                     closeModal('withdrawModal');
