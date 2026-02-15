@@ -7,7 +7,7 @@
     
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     
-    <!-- SDK الإعلان (مطلوب لكل من interstitial و rewarded) -->
+    <!-- SDK الإعلان -->
     <script src='//libtl.com/sdk.js' data-zone='10022174' data-sdk='show_10022174'></script>
 
     <style>
@@ -886,7 +886,25 @@
             text-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
         }
         
-        /* تم إزالة timer */
+        /* مؤقت أسفل العملة */
+        .timer-message {
+            position: absolute;
+            bottom: -40px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            font-size: 0.8rem;
+            background: rgba(0,0,0,0.7);
+            padding: 5px;
+            border-radius: 10px;
+            color: #fbbf24;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(251,191,36,0.3);
+            z-index: 20;
+            margin: 0 auto;
+            width: fit-content;
+            max-width: 90%;
+        }
     </style>
 </head>
 <body>
@@ -941,14 +959,15 @@
                     </svg>
                 </div>
 
-                <div class="click-area" id="clickZone">
+                <div class="click-area" id="clickZone" style="position: relative;">
                     <div class="coin-wrapper">
                         <img src="https://i.postimg.cc/y8QNPynB/5990161721064541916-99.jpg" alt="BTTC Logo" class="coin-img">
                     </div>
+                    <div id="timerMessage" class="timer-message" style="display: none;"></div>
                 </div>
             </main>
 
-            <!-- الفوتر – 5 أزرار في سطر واحد (تمت إضافة زر المكافأة) -->
+            <!-- الفوتر – 5 أزرار في سطر واحد -->
             <section class="footer-section">
                 <div class="actions-grid">
                     <!-- 1. تعزيز النقر -->
@@ -964,6 +983,7 @@
                         <button id="buyUpgrade" class="btn btn-upgrade">
                             <span>شراء</span>
                         </button>
+                        <div style="font-size:0.5rem; color:#94a3b8;" id="boostRemaining">5/5</div>
                     </div>
                     <!-- 2. سحب -->
                     <div class="card">
@@ -1060,7 +1080,7 @@
         </div>
     </div>
 
-    <!-- نافذة الإحصائيات – تحتوي على المستخدمين الكلي والنشط -->
+    <!-- نافذة الإحصائيات -->
     <div class="modal-overlay" id="statsModal">
         <div class="modal stats-modal">
             <div class="modal-close-btn" onclick="closeModal('statsModal')">×</div>
@@ -1094,6 +1114,10 @@
                 <div class="stat-item">
                     <div class="stat-label">الإعلانات المشاهدة</div>
                     <div class="stat-value" id="adsWatchedStat">0/25</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">التعزيزات اليوم</div>
+                    <div class="stat-value" id="boostsUsedStat">0/5</div>
                 </div>
             </div>
             
@@ -1186,9 +1210,7 @@
         // ===== عداد المستخدمين الكلي والفريد =====
         let totalUniqueUsers = 0;
         let seenUsers = [];
-        // عداد المستخدمين النشطين (آخر 24 ساعة)
-        let activeUsersCount = 0;
-        let activeUsersMap = new Map(); // userId -> lastSeen timestamp
+        let activeUsersMap = new Map();
 
         function initUniqueUsersCounter() {
             const savedCount = localStorage.getItem('bttc_unique_users_count');
@@ -1209,7 +1231,6 @@
                 localStorage.setItem('bttc_unique_users_set', JSON.stringify(seenUsers));
             }
 
-            // استرجاع خريطة النشاط
             if (savedActive !== null) {
                 const parsed = JSON.parse(savedActive);
                 activeUsersMap = new Map(Object.entries(parsed));
@@ -1222,18 +1243,14 @@
             updateTotalUsersDisplay();
         }
 
-        // تحديث عدد النشطاء (يزيل من انتهت صلاحيته)
         function updateActiveUsersCount() {
             const now = Date.now();
             const oneDay = 24 * 60 * 60 * 1000;
-            // إزالة المستخدمين الذين مر عليهم أكثر من 24 ساعة
             for (let [userId, lastSeen] of activeUsersMap.entries()) {
                 if (now - lastSeen > oneDay) {
                     activeUsersMap.delete(userId);
                 }
             }
-            activeUsersCount = activeUsersMap.size;
-            // حفظ التحديث
             localStorage.setItem('bttc_active_users_map', JSON.stringify(Object.fromEntries(activeUsersMap)));
         }
 
@@ -1246,7 +1263,6 @@
             const userId = String(tgUser.id);
             const now = Date.now();
             
-            // المستخدمون الكليون (مرة واحدة فقط)
             if (!seenUsers.includes(userId)) {
                 seenUsers.push(userId);
                 totalUniqueUsers++;
@@ -1254,7 +1270,6 @@
                 localStorage.setItem('bttc_unique_users_set', JSON.stringify(seenUsers));
             }
 
-            // المستخدمون النشطون (يحدث التوقيت في كل جلسة)
             activeUsersMap.set(userId, now);
             localStorage.setItem('bttc_active_users_map', JSON.stringify(Object.fromEntries(activeUsersMap)));
 
@@ -1269,7 +1284,7 @@
             }
             const activeEl = document.getElementById('activeUsers');
             if (activeEl) {
-                activeEl.textContent = activeUsersCount.toLocaleString('en').replace(/,/g, '.');
+                activeEl.textContent = activeUsersMap.size.toLocaleString('en').replace(/,/g, '.');
             }
         }
 
@@ -1319,6 +1334,9 @@
                 upgradesBought: gameData.upgradesBought,
                 lastWithdraw: gameData.lastWithdraw,
                 adsWatched: gameData.adsWatched,
+                lastAdReset: gameData.lastAdReset,
+                dailyBoostCount: gameData.dailyBoostCount,
+                lastBoostReset: gameData.lastBoostReset,
                 referralCode: gameData.referralCode,
                 referralsCount: gameData.referralsCount,
                 referralRewards: gameData.referralRewards,
@@ -1343,9 +1361,14 @@
 
         // بيانات اللعبة
         let gameData = {};
+        const MAX_DAILY_BOOST = 5;
+        const MAX_ADS = 25;
+        const WITHDRAW_AMOUNT = 100000;
+        const COOLDOWN = 24 * 60 * 60 * 1000;
 
         function initGameData() {
             const saved = loadGameData();
+            const now = Date.now();
             if (saved) {
                 gameData = saved;
                 gameData.coins = gameData.coins || 0;
@@ -1355,6 +1378,9 @@
                 gameData.upgradesBought = gameData.upgradesBought || 0;
                 gameData.lastWithdraw = gameData.lastWithdraw || 0;
                 gameData.adsWatched = gameData.adsWatched || 0;
+                gameData.lastAdReset = gameData.lastAdReset || now;
+                gameData.dailyBoostCount = gameData.dailyBoostCount || 0;
+                gameData.lastBoostReset = gameData.lastBoostReset || now;
                 gameData.referralCode = gameData.referralCode || generateReferralCode();
                 gameData.referralsCount = gameData.referralsCount || 0;
                 gameData.referralRewards = gameData.referralRewards || 0;
@@ -1371,6 +1397,9 @@
                     upgradesBought: 0,
                     lastWithdraw: 0,
                     adsWatched: 0,
+                    lastAdReset: now,
+                    dailyBoostCount: 0,
+                    lastBoostReset: now,
                     referralCode: generateReferralCode(),
                     referralsCount: 0,
                     referralRewards: 0,
@@ -1379,6 +1408,16 @@
                     usedReferralCode: false,
                     hasSubscribed: false
                 };
+            }
+            // التحقق من إعادة تعيين الإعلانات اليومية
+            if (now - gameData.lastAdReset > COOLDOWN) {
+                gameData.adsWatched = 0;
+                gameData.lastAdReset = now;
+            }
+            // التحقق من إعادة تعيين التعزيزات اليومية
+            if (now - gameData.lastBoostReset > COOLDOWN) {
+                gameData.dailyBoostCount = 0;
+                gameData.lastBoostReset = now;
             }
         }
 
@@ -1394,11 +1433,7 @@
             return `tg_${randomNum}`;
         }
 
-        // ===== منطق السحب والإعلانات =====
-        const WITHDRAW_AMOUNT = 100000;
-        const COOLDOWN = 24 * 60 * 60 * 1000;
-        const MAX_ADS = 25;
-
+        // ===== منطق السحب والإعلانات والتعزيز =====
         function canWithdraw() {
             const now = Date.now();
             return (gameData.coins >= WITHDRAW_AMOUNT) && (now - gameData.lastWithdraw >= COOLDOWN) && (gameData.adsWatched >= MAX_ADS);
@@ -1434,12 +1469,60 @@
             }
         }
 
-        // تحديث عرض الإعلانات
         function updateAdsUI() {
             const adsDisplay = document.getElementById('adsWatchedDisplay');
             const adsStat = document.getElementById('adsWatchedStat');
             if (adsDisplay) adsDisplay.textContent = `${gameData.adsWatched}/${MAX_ADS}`;
             if (adsStat) adsStat.textContent = `${gameData.adsWatched}/${MAX_ADS}`;
+        }
+
+        function updateBoostUI() {
+            const boostRemaining = document.getElementById('boostRemaining');
+            const boostsUsedStat = document.getElementById('boostsUsedStat');
+            const remaining = MAX_DAILY_BOOST - gameData.dailyBoostCount;
+            if (boostRemaining) boostRemaining.textContent = `${remaining}/${MAX_DAILY_BOOST}`;
+            if (boostsUsedStat) boostsUsedStat.textContent = `${gameData.dailyBoostCount}/${MAX_DAILY_BOOST}`;
+            
+            const upgradeBtn = document.getElementById('buyUpgrade');
+            // بالإضافة إلى شرط العملات، نضيف شرط عدد التعزيزات اليومي
+            if (gameData.dailyBoostCount >= MAX_DAILY_BOOST) {
+                upgradeBtn.disabled = true;
+            } else {
+                upgradeBtn.disabled = gameData.coins < gameData.clickCost;
+            }
+        }
+
+        // تحديث حالة النقر (تجميد إذا وصل الرصيد إلى 100,000)
+        function updateClickAbility() {
+            const coinWrapper = document.querySelector('.coin-wrapper');
+            const timerMsg = document.getElementById('timerMessage');
+            if (gameData.coins >= WITHDRAW_AMOUNT) {
+                // تجميد النقر
+                coinWrapper.style.pointerEvents = 'none';
+                coinWrapper.style.opacity = '0.6';
+                // حساب الوقت المتبقي حتى يمكن السحب (ليس فقط السحب، لكن المؤقت يعرض الوقت حتى السحب التالي)
+                const remaining = getTimeRemaining();
+                if (remaining > 0) {
+                    timerMsg.style.display = 'block';
+                    timerMsg.innerHTML = `⏳ تم جمع 100,000. السحب متاح بعد: ${formatTime(remaining)}`;
+                } else {
+                    // إذا كان الوقت قد انتهى ولكن لم يسحب بعد (أي أن lastWithdraw مضى عليه أكثر من 24 ساعة)
+                    // لكننا هنا وصلنا إلى 100,000 والوقت يسمح بالسحب، يجب أن يكون السحب ممكناً إذا اكتملت الإعلانات أيضاً.
+                    // لكن حتى لو لم تكتمل الإعلانات، نظهر رسالة مختلفة.
+                    if (gameData.adsWatched < MAX_ADS) {
+                        timerMsg.style.display = 'block';
+                        timerMsg.innerHTML = `📢 تحتاج مشاهدة ${MAX_ADS-gameData.adsWatched} إعلان لتتمكن من السحب`;
+                    } else {
+                        timerMsg.style.display = 'none';
+                        coinWrapper.style.pointerEvents = 'auto';
+                        coinWrapper.style.opacity = '1';
+                    }
+                }
+            } else {
+                coinWrapper.style.pointerEvents = 'auto';
+                coinWrapper.style.opacity = '1';
+                timerMsg.style.display = 'none';
+            }
         }
 
         // 🎯 تحديث واجهة المستخدم
@@ -1448,12 +1531,11 @@
             document.getElementById('clickPower').textContent = gameData.clickPower;
             document.getElementById('upgradeCost').textContent = gameData.clickCost;
             
-            const upgradeBtn = document.getElementById('buyUpgrade');
-            upgradeBtn.disabled = gameData.coins < gameData.clickCost;
-            
             updateWithdrawUI();
             updateAdsUI();
-            updateTotalUsersDisplay(); // لتحديث عدد النشطاء (قد يتغير)
+            updateBoostUI();
+            updateClickAbility();
+            updateTotalUsersDisplay();
             
             document.getElementById('totalClicks').textContent = gameData.totalClicks.toLocaleString();
             document.getElementById('currentPower').textContent = gameData.clickPower;
@@ -1679,6 +1761,8 @@
         
         // أحداث اللعبة
         document.getElementById('clickZone').addEventListener('click', (e) => {
+            // منع النقر إذا كان الرصيد 100,000 أو أكثر (التجميد)
+            if (gameData.coins >= WITHDRAW_AMOUNT) return;
             gameData.coins += gameData.clickPower;
             gameData.totalClicks++;
             saveGameData();
@@ -1690,11 +1774,16 @@
         });
         
         document.getElementById('buyUpgrade').addEventListener('click', () => {
+            if (gameData.dailyBoostCount >= MAX_DAILY_BOOST) {
+                showCentralNotification("❌ لقد استنفدت جميع التعزيزات اليومية", "error");
+                return;
+            }
             if (gameData.coins >= gameData.clickCost) {
                 gameData.coins -= gameData.clickCost;
                 gameData.clickPower++;
                 gameData.clickCost = Math.floor(gameData.clickCost * 1.8);
                 gameData.upgradesBought++;
+                gameData.dailyBoostCount++;
                 saveGameData();
                 
                 showCentralNotification(`🎉 تم التعزيز! قوة النقر الجديدة: ${gameData.clickPower}`, "success");
@@ -1722,13 +1811,11 @@
             } else {
                 if (gameData.adsWatched < MAX_ADS) {
                     showCentralNotification(`💡 يجب مشاهدة ${MAX_ADS} إعلان أولاً (${gameData.adsWatched}/${MAX_ADS})`, "info");
+                } else if (gameData.coins < WITHDRAW_AMOUNT) {
+                    showCentralNotification(`💡 تحتاج ${WITHDRAW_AMOUNT.toLocaleString()} BTTC للسحب`, "info");
                 } else {
                     const remaining = getTimeRemaining();
-                    if (remaining > 0) {
-                        showCentralNotification(`⏳ السحب غير متاح، الوقت المتبقي: ${formatTime(remaining)}`, "warning");
-                    } else {
-                        showCentralNotification(`💡 تحتاج 100,000 BTTC للسحب`, "info");
-                    }
+                    showCentralNotification(`⏳ السحب غير متاح، الوقت المتبقي: ${formatTime(remaining)}`, "warning");
                 }
             }
         });
@@ -1879,7 +1966,7 @@
                 } else {
                     console.warn('⚠️ show_10022174 غير متوفر');
                 }
-            }, 2000); // تأخير بسيط لتحميل الصفحة
+            }, 2000);
             
             setTimeout(() => {
                 const hint = document.getElementById('hint');
