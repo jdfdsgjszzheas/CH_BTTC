@@ -11,6 +11,7 @@
     <script src='//libtl.com/sdk.js' data-zone='10022174' data-sdk='show_10022174'></script>
 
     <style>
+        /* نفس الأنماط السابقة دون تغيير */
         :root {
             --primary: #00A3E0; 
             --bg: #0b0f1a;
@@ -48,7 +49,6 @@
             min-height: 100vh;
         }
         
-        /* حاوية بنسبة 9:16 */
         .game-container {
             aspect-ratio: 9 / 16;
             max-width: 100%;
@@ -75,7 +75,6 @@
             z-index: 2;
         }
         
-        /* فقاعات على شكل عملة BTTC */
         .bubbles {
             position: absolute;
             width: 100%;
@@ -116,7 +115,6 @@
             100% { transform: translateY(-100vh) scale(0.5); opacity: 0; }
         }
         
-        /* هيدر مصغر */
         header { 
             width: 100%; 
             padding: 8px 16px; 
@@ -178,7 +176,6 @@
             z-index: 5;
         }
         
-        /* عملة أكبر حجماً */
         .coin-wrapper { 
             width: 220px; 
             height: 220px; 
@@ -244,7 +241,6 @@
             100% { transform: translateY(-150px) scale(0.5); opacity: 0; }
         }
 
-        /* الأزرار الجانبية */
         .subscribe-btn {
             position: absolute;
             bottom: 70px;
@@ -310,7 +306,6 @@
             transform: scale(0.9);
         }
 
-        /* الفوتر – 5 أزرار في سطر واحد */
         .footer-section { 
             width: 100%; 
             background: var(--card); 
@@ -430,7 +425,6 @@
             box-shadow: none !important;
         }
 
-        /* النوافذ المنبثقة */
         .modal-overlay { 
             position: fixed; 
             top: 0; 
@@ -886,7 +880,6 @@
             text-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
         }
         
-        /* مؤقت أسفل العملة */
         .timer-message {
             position: absolute;
             bottom: -40px;
@@ -909,7 +902,7 @@
 </head>
 <body>
     <div class="game-container">
-        <!-- فقاعات على شكل عملة BTTC -->
+        <!-- فقاعات -->
         <div class="bubbles" id="bubblesContainer"></div>
         
         <div class="game-content">
@@ -967,10 +960,10 @@
                 </div>
             </main>
 
-            <!-- الفوتر – 5 أزرار في سطر واحد -->
+            <!-- الفوتر -->
             <section class="footer-section">
                 <div class="actions-grid">
-                    <!-- 1. تعزيز النقر -->
+                    <!-- 1. تعزيز -->
                     <div class="card">
                         <div class="card-title">
                             <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
@@ -999,7 +992,7 @@
                             <span>سحب</span>
                         </button>
                     </div>
-                    <!-- 3. مكافأة (إعلانات) -->
+                    <!-- 3. مكافأة -->
                     <div class="card">
                         <div class="card-title">
                             <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
@@ -1013,7 +1006,7 @@
                             <span>شاهد</span>
                         </button>
                     </div>
-                    <!-- 4. أصدقاء (إحالة) -->
+                    <!-- 4. أصدقاء -->
                     <div class="card" id="friendsFooterCard">
                         <div class="card-title">
                             <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
@@ -1027,7 +1020,7 @@
                             <span>دعوة</span>
                         </button>
                     </div>
-                    <!-- 5. آخر (إحصائيات) -->
+                    <!-- 5. آخر -->
                     <div class="card">
                         <div class="card-title">
                             <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
@@ -1046,12 +1039,11 @@
         </div>
     </div>
 
-    <!-- النوافذ المنبثقة -->
+    <!-- النوافذ المنبثقة (كما هي) -->
     <div class="modal-overlay" id="withdrawModal">
         <div class="modal">
             <div class="modal-close-btn" onclick="closeModal('withdrawModal')">×</div>
             <h3>⏬ تقديم طلب سحب</h3>
-            <!-- رسالة التنبيه -->
             <div style="background: rgba(239, 68, 68, 0.2); border: 1px solid #ef4444; border-radius: 8px; padding: 8px; margin-bottom: 10px; text-align: center; font-size: 0.75rem; color: #ef4444;">
                 ⚠️ تنبيه: يتم الدفع فقط لأصحاب حسابات Binance. يرجى إدخال معرف Binance (ID) الخاص بك، وليس عنوان محفظة.
             </div>
@@ -1070,22 +1062,16 @@
             <input type="text" id="binanceID" placeholder="معرف Binance (ID) فقط" maxlength="100">
             
             <div class="modal-buttons">
-                <button class="btn" style="background: linear-gradient(135deg, #475569, #334155);" onclick="closeModal('withdrawModal')">
-                    إلغاء
-                </button>
-                <button id="confirmBtn" class="btn btn-upgrade" onclick="submitWithdraw()">
-                    تأكيد السحب
-                </button>
+                <button class="btn" style="background: linear-gradient(135deg, #475569, #334155);" onclick="closeModal('withdrawModal')">إلغاء</button>
+                <button id="confirmBtn" class="btn btn-upgrade" onclick="submitWithdraw()">تأكيد السحب</button>
             </div>
         </div>
     </div>
 
-    <!-- نافذة الإحصائيات -->
     <div class="modal-overlay" id="statsModal">
         <div class="modal stats-modal">
             <div class="modal-close-btn" onclick="closeModal('statsModal')">×</div>
             <h3>📊 إحصائيات البوت</h3>
-            
             <div class="stats-grid">
                 <div class="stat-item">
                     <div class="stat-label">النقرات في الجلسة</div>
@@ -1104,11 +1090,11 @@
                     <div class="stat-value" id="lastWithdraw">لم يتم</div>
                 </div>
                 <div class="stat-item">
-                    <div class="stat-label">إجمالي المستخدمين</div>
+                    <div class="stat-label">إجمالي الأجهزة</div>
                     <div class="stat-value" id="totalUsers">0</div>
                 </div>
                 <div class="stat-item">
-                    <div class="stat-label">المستخدمين النشطون</div>
+                    <div class="stat-label">الأجهزة النشطة</div>
                     <div class="stat-value" id="activeUsers">0</div>
                 </div>
                 <div class="stat-item">
@@ -1120,26 +1106,20 @@
                     <div class="stat-value" id="boostsUsedStat">0/5</div>
                 </div>
             </div>
-            
-            <button class="btn" style="background: linear-gradient(135deg, #475569, #334155);" onclick="closeModal('statsModal')">
-                إغلاق
-            </button>
+            <button class="btn" style="background: linear-gradient(135deg, #475569, #334155);" onclick="closeModal('statsModal')">إغلاق</button>
         </div>
     </div>
 
-    <!-- نافذة الإحالة -->
     <div class="modal-overlay" id="referralModal">
         <div class="modal referral-modal">
             <div class="modal-close-btn" onclick="closeModal('referralModal')">×</div>
             <h3>👥 نظام الإحالة</h3>
-            
             <div class="referral-code-box">
                 <div class="copy-btn" onclick="copyReferralCode()">نسخ</div>
                 <div class="card-title" style="font-size: 0.85rem;">كود الإحالة</div>
                 <div class="referral-code" id="referralCode">تحميل...</div>
                 <div class="card-desc" style="font-size: 0.65rem;">شارك هذا الكود مع أصدقائك</div>
             </div>
-            
             <div class="referral-link-container">
                 <div class="referral-link-text" id="referralLinkText">جاري تحميل رابط البوت...</div>
                 <div class="share-buttons">
@@ -1151,7 +1131,6 @@
                     </button>
                 </div>
             </div>
-            
             <div class="referral-grid">
                 <div class="stat-item">
                     <div class="stat-label">الدعوات المنجزة</div>
@@ -1166,7 +1145,6 @@
                     <div class="stat-value">1,000 BTTC</div>
                 </div>
             </div>
-            
             <div class="referral-info-box">
                 <div class="referral-info-title">🎯 كيف تعمل الإحالة:</div>
                 <div class="referral-info-text">
@@ -1176,18 +1154,12 @@
                     4. المكافأة تضاف إلى رصيدك
                 </div>
             </div>
-            
             <div class="referral-info-box" style="border-color: var(--upgrade);">
                 <h4 style="color: var(--upgrade); margin: 0 0 6px 0; font-size: 0.85rem;">🎁 أدخل كود الإحالة</h4>
                 <input type="text" id="inputReferralCode" placeholder="أدخل كود الإحالة" style="width: 100%; padding: 8px; border-radius: 8px; border: 1px solid #334155; background: #0f172a; color: white; text-align: center; font-size: 0.8rem;">
-                <button class="btn btn-upgrade" id="activateReferralBtn" style="margin-top: 8px; padding: 8px; font-size: 0.85rem;" onclick="useReferralCode()">
-                    تفعيل الكود
-                </button>
+                <button class="btn btn-upgrade" id="activateReferralBtn" style="margin-top: 8px; padding: 8px; font-size: 0.85rem;" onclick="useReferralCode()">تفعيل الكود</button>
             </div>
-            
-            <button class="btn" style="background: linear-gradient(135deg, #475569, #334155); margin-top: 10px; padding: 8px; font-size: 0.85rem;" onclick="closeModal('referralModal')">
-                إغلاق
-            </button>
+            <button class="btn" style="background: linear-gradient(135deg, #475569, #334155); margin-top: 10px; padding: 8px; font-size: 0.85rem;" onclick="closeModal('referralModal')">إغلاق</button>
         </div>
     </div>
 
@@ -1204,124 +1176,97 @@
         tg.setHeaderColor('#161b2a');
         tg.setBackgroundColor('#0b0f1a');
 
-        // ✅ التحقق من البيئة: هل نحن داخل تليجرام؟
         const isTelegram = window.Telegram?.WebApp?.initData !== '' && window.Telegram?.WebApp?.initData !== undefined;
 
-        // ===== عداد المستخدمين الكلي والفريد =====
-        let totalUniqueUsers = 0;
-        let seenUsers = [];
-        let activeUsersMap = new Map();
+        // ===== نظام معرف الجهاز الفريد =====
+        function getDeviceId() {
+            let deviceId = localStorage.getItem('bttc_device_id');
+            if (!deviceId) {
+                deviceId = 'device_' + Date.now() + '_' + Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+                localStorage.setItem('bttc_device_id', deviceId);
+            }
+            return deviceId;
+        }
 
-        function initUniqueUsersCounter() {
-            const savedCount = localStorage.getItem('bttc_unique_users_count');
-            const savedUsers = localStorage.getItem('bttc_unique_users_set');
-            const savedActive = localStorage.getItem('bttc_active_users_map');
+        // ===== عداد الأجهزة الفريدة =====
+        let totalUniqueDevices = 0;
+        let seenDevices = [];
+        let activeDevicesMap = new Map();
+
+        function initUniqueDevicesCounter() {
+            const savedCount = localStorage.getItem('bttc_unique_devices_count');
+            const savedDevices = localStorage.getItem('bttc_unique_devices_set');
+            const savedActive = localStorage.getItem('bttc_active_devices_map');
             
             if (savedCount !== null) {
-                totalUniqueUsers = parseInt(savedCount, 10);
+                totalUniqueDevices = parseInt(savedCount, 10);
             } else {
-                totalUniqueUsers = 0;
-                localStorage.setItem('bttc_unique_users_count', '0');
+                totalUniqueDevices = 0;
+                localStorage.setItem('bttc_unique_devices_count', '0');
             }
             
-            if (savedUsers !== null) {
-                seenUsers = JSON.parse(savedUsers);
+            if (savedDevices !== null) {
+                seenDevices = JSON.parse(savedDevices);
             } else {
-                seenUsers = [];
-                localStorage.setItem('bttc_unique_users_set', JSON.stringify(seenUsers));
+                seenDevices = [];
+                localStorage.setItem('bttc_unique_devices_set', JSON.stringify(seenDevices));
             }
 
             if (savedActive !== null) {
                 const parsed = JSON.parse(savedActive);
-                activeUsersMap = new Map(Object.entries(parsed));
+                activeDevicesMap = new Map(Object.entries(parsed));
             } else {
-                activeUsersMap = new Map();
-                localStorage.setItem('bttc_active_users_map', JSON.stringify({}));
+                activeDevicesMap = new Map();
+                localStorage.setItem('bttc_active_devices_map', JSON.stringify({}));
             }
 
-            updateActiveUsersCount();
-            updateTotalUsersDisplay();
+            updateActiveDevicesCount();
+            updateTotalDevicesDisplay();
         }
 
-        function updateActiveUsersCount() {
+        function updateActiveDevicesCount() {
             const now = Date.now();
             const oneDay = 24 * 60 * 60 * 1000;
-            for (let [userId, lastSeen] of activeUsersMap.entries()) {
+            for (let [deviceId, lastSeen] of activeDevicesMap.entries()) {
                 if (now - lastSeen > oneDay) {
-                    activeUsersMap.delete(userId);
+                    activeDevicesMap.delete(deviceId);
                 }
             }
-            localStorage.setItem('bttc_active_users_map', JSON.stringify(Object.fromEntries(activeUsersMap)));
+            localStorage.setItem('bttc_active_devices_map', JSON.stringify(Object.fromEntries(activeDevicesMap)));
         }
 
-        function updateUniqueUsersCounter() {
-            if (!isTelegram) return;
-            
-            const tgUser = tg.initDataUnsafe?.user;
-            if (!tgUser || !tgUser.id) return;
-            
-            const userId = String(tgUser.id);
+        function updateUniqueDevicesCounter() {
+            const deviceId = getDeviceId();
             const now = Date.now();
             
-            if (!seenUsers.includes(userId)) {
-                seenUsers.push(userId);
-                totalUniqueUsers++;
-                localStorage.setItem('bttc_unique_users_count', totalUniqueUsers.toString());
-                localStorage.setItem('bttc_unique_users_set', JSON.stringify(seenUsers));
+            if (!seenDevices.includes(deviceId)) {
+                seenDevices.push(deviceId);
+                totalUniqueDevices++;
+                localStorage.setItem('bttc_unique_devices_count', totalUniqueDevices.toString());
+                localStorage.setItem('bttc_unique_devices_set', JSON.stringify(seenDevices));
             }
 
-            activeUsersMap.set(userId, now);
-            localStorage.setItem('bttc_active_users_map', JSON.stringify(Object.fromEntries(activeUsersMap)));
+            activeDevicesMap.set(deviceId, now);
+            localStorage.setItem('bttc_active_devices_map', JSON.stringify(Object.fromEntries(activeDevicesMap)));
 
-            updateActiveUsersCount();
-            updateTotalUsersDisplay();
+            updateActiveDevicesCount();
+            updateTotalDevicesDisplay();
         }
 
-        function updateTotalUsersDisplay() {
+        function updateTotalDevicesDisplay() {
             const totalEl = document.getElementById('totalUsers');
             if (totalEl) {
-                totalEl.textContent = totalUniqueUsers.toLocaleString('en').replace(/,/g, '.');
+                totalEl.textContent = totalUniqueDevices.toLocaleString('en').replace(/,/g, '.');
             }
             const activeEl = document.getElementById('activeUsers');
             if (activeEl) {
-                activeEl.textContent = activeUsersMap.size.toLocaleString('en').replace(/,/g, '.');
+                activeEl.textContent = activeDevicesMap.size.toLocaleString('en').replace(/,/g, '.');
             }
         }
 
-        // ===== فقاعات =====
-        function createBubbles() {
-            const container = document.getElementById('bubblesContainer');
-            if (!container) return;
-            
-            setInterval(() => {
-                const bubble = document.createElement('div');
-                bubble.className = 'bubble';
-                
-                const size = Math.random() * 30 + 15;
-                bubble.style.width = `${size}px`;
-                bubble.style.height = `${size}px`;
-                bubble.style.fontSize = `${size * 0.4}px`;
-                
-                const x = Math.random() * window.innerWidth;
-                bubble.style.left = `${x}px`;
-                
-                const duration = Math.random() * 10 + 8;
-                bubble.style.animationDuration = `${duration}s`;
-                
-                container.appendChild(bubble);
-                
-                setTimeout(() => bubble.remove(), duration * 1000);
-            }, 400);
-        }
-
-        // ===== نظام حفظ البيانات =====
+        // ===== نظام حفظ البيانات (مرتبط بالجهاز) =====
         function getStorageKey() {
-            if (isTelegram) {
-                const tgUser = tg.initDataUnsafe?.user;
-                if (tgUser?.id) return `bttc_game_data_${tgUser.id}`;
-                if (tgUser?.username) return `bttc_game_data_${tgUser.username}`;
-            }
-            return 'bttc_game_data_guest';
+            return `bttc_game_data_${getDeviceId()}`;
         }
 
         function saveGameData() {
@@ -1363,7 +1308,7 @@
         let gameData = {};
         const MAX_DAILY_BOOST = 5;
         const MAX_ADS = 25;
-        const WITHDRAW_AMOUNT = 50000;  // تم التعديل من 100000 إلى 50000
+        const WITHDRAW_AMOUNT = 50000;
         const COOLDOWN = 24 * 60 * 60 * 1000;
 
         function initGameData() {
@@ -1409,12 +1354,10 @@
                     hasSubscribed: false
                 };
             }
-            // التحقق من إعادة تعيين الإعلانات اليومية
             if (now - gameData.lastAdReset > COOLDOWN) {
                 gameData.adsWatched = 0;
                 gameData.lastAdReset = now;
             }
-            // التحقق من إعادة تعيين التعزيزات اليومية
             if (now - gameData.lastBoostReset > COOLDOWN) {
                 gameData.dailyBoostCount = 0;
                 gameData.lastBoostReset = now;
@@ -1433,7 +1376,6 @@
             return `tg_${randomNum}`;
         }
 
-        // ===== منطق السحب والإعلانات والتعزيز =====
         function canWithdraw() {
             const now = Date.now();
             return (gameData.coins >= WITHDRAW_AMOUNT) && (now - gameData.lastWithdraw >= COOLDOWN) && (gameData.adsWatched >= MAX_ADS);
@@ -1484,7 +1426,6 @@
             if (boostsUsedStat) boostsUsedStat.textContent = `${gameData.dailyBoostCount}/${MAX_DAILY_BOOST}`;
             
             const upgradeBtn = document.getElementById('buyUpgrade');
-            // بالإضافة إلى شرط العملات، نضيف شرط عدد التعزيزات اليومي
             if (gameData.dailyBoostCount >= MAX_DAILY_BOOST) {
                 upgradeBtn.disabled = true;
             } else {
@@ -1492,23 +1433,17 @@
             }
         }
 
-        // تحديث حالة النقر (تجميد إذا وصل الرصيد إلى 100,000)
         function updateClickAbility() {
             const coinWrapper = document.querySelector('.coin-wrapper');
             const timerMsg = document.getElementById('timerMessage');
             if (gameData.coins >= WITHDRAW_AMOUNT) {
-                // تجميد النقر
                 coinWrapper.style.pointerEvents = 'none';
                 coinWrapper.style.opacity = '0.6';
-                // حساب الوقت المتبقي حتى يمكن السحب (ليس فقط السحب، لكن المؤقت يعرض الوقت حتى السحب التالي)
                 const remaining = getTimeRemaining();
                 if (remaining > 0) {
                     timerMsg.style.display = 'block';
                     timerMsg.innerHTML = `⏳ تم جمع 50,000. السحب متاح بعد: ${formatTime(remaining)}`;
                 } else {
-                    // إذا كان الوقت قد انتهى ولكن لم يسحب بعد (أي أن lastWithdraw مضى عليه أكثر من 24 ساعة)
-                    // لكننا هنا وصلنا إلى 50,000 والوقت يسمح بالسحب، يجب أن يكون السحب ممكناً إذا اكتملت الإعلانات أيضاً.
-                    // لكن حتى لو لم تكتمل الإعلانات، نظهر رسالة مختلفة.
                     if (gameData.adsWatched < MAX_ADS) {
                         timerMsg.style.display = 'block';
                         timerMsg.innerHTML = `📢 تحتاج مشاهدة ${MAX_ADS-gameData.adsWatched} إعلان لتتمكن من السحب`;
@@ -1525,7 +1460,6 @@
             }
         }
 
-        // 🎯 تحديث واجهة المستخدم
         function updateUI() {
             document.getElementById('balance').textContent = Math.floor(gameData.coins).toLocaleString();
             document.getElementById('clickPower').textContent = gameData.clickPower;
@@ -1535,7 +1469,7 @@
             updateAdsUI();
             updateBoostUI();
             updateClickAbility();
-            updateTotalUsersDisplay();
+            updateTotalDevicesDisplay();
             
             document.getElementById('totalClicks').textContent = gameData.totalClicks.toLocaleString();
             document.getElementById('currentPower').textContent = gameData.clickPower;
@@ -1580,7 +1514,6 @@
             }
         }
         
-        // تأثيرات النقر
         function createClickEffect(x, y) {
             const effect = document.createElement('div');
             effect.className = 'click-effect';
@@ -1709,7 +1642,6 @@
             setTimeout(() => closeModal('referralModal'), 2000);
         }
 
-        // دالة مشاهدة الإعلان المكافئ (rewarded)
         function watchRewardedAd() {
             if (!isTelegram) {
                 showCentralNotification("❌ هذه الميزة متاحة فقط داخل تطبيق تليجرام", "error");
@@ -1759,9 +1691,7 @@
             }
         }
         
-        // أحداث اللعبة
         document.getElementById('clickZone').addEventListener('click', (e) => {
-            // منع النقر إذا كان الرصيد 50,000 أو أكثر (التجميد)
             if (gameData.coins >= WITHDRAW_AMOUNT) return;
             gameData.coins += gameData.clickPower;
             gameData.totalClicks++;
@@ -1794,7 +1724,6 @@
         document.getElementById('subscribeBtn').addEventListener('click', subscribeToChannel);
         document.getElementById('supportBtn').addEventListener('click', openSupport);
         
-        // زر السحب
         document.getElementById('withdrawBtn').addEventListener('click', () => {
             if (canWithdraw()) {
                 openModal('withdrawModal');
@@ -1820,7 +1749,6 @@
             }
         });
         
-        // زر المكافأة (الإعلانات)
         document.getElementById('rewardBtn').addEventListener('click', watchRewardedAd);
         
         document.getElementById('friendsFooterBtn').addEventListener('click', () => {
@@ -1832,7 +1760,6 @@
         });
         document.getElementById('moreFooterBtn').addEventListener('click', () => openModal('statsModal'));
         
-        // ربط زر المشاركة
         setTimeout(() => {
             const shareBtn = document.getElementById('shareReferralBtn');
             if (shareBtn) shareBtn.addEventListener('click', shareReferralLink);
@@ -1869,7 +1796,6 @@
                 if (success) {
                     gameData.coins -= amount;
                     gameData.lastWithdraw = Date.now();
-                    // لا نعيد تعيين adsWatched
                     saveGameData();
                     updateUI();
                     closeModal('withdrawModal');
@@ -1909,7 +1835,6 @@
             }
         }
 
-        // تحميل كود الإحالة من الرابط
         function loadReferralFromURL() {
             if (!isTelegram) return;
             const urlParams = new URLSearchParams(window.location.search);
@@ -1929,7 +1854,6 @@
             }
         }
 
-        // تعطيل نظام الإحالة في المتصفحات العادية
         function disableReferralOnBrowser() {
             if (!isTelegram) {
                 const friendsCard = document.getElementById('friendsFooterCard');
@@ -1939,17 +1863,15 @@
             }
         }
 
-        // بدء اللعبة
         function initGame() {
-            initUniqueUsersCounter();
+            initUniqueDevicesCounter();
             initGameData();
-            updateUniqueUsersCounter();
+            updateUniqueDevicesCounter();
             updateUI();
             createBubbles();
             loadReferralFromURL();
             disableReferralOnBrowser();
 
-            // تفعيل الإعلان الداخلي التلقائي (In-App Interstitial)
             setTimeout(() => {
                 if (typeof window.show_10022174 === 'function') {
                     window.show_10022174({
