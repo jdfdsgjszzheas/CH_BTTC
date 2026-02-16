@@ -11,7 +11,6 @@
     <script src='//libtl.com/sdk.js' data-zone='10022174' data-sdk='show_10022174'></script>
 
     <style>
-        /* نفس الأنماط السابقة دون تغيير */
         :root {
             --primary: #00A3E0; 
             --bg: #0b0f1a;
@@ -906,9 +905,7 @@
         <div class="bubbles" id="bubblesContainer"></div>
         
         <div class="game-content">
-            <div class="session-warning" id="sessionWarning">
-                ⚠️ يتم حفظ التقدم تلقائياً
-            </div>
+            <!-- تم إزالة رسالة "يتم حفظ التقدم تلقائياً" -->
 
             <header>
                 <div class="balance-container">
@@ -1872,6 +1869,7 @@
             loadReferralFromURL();
             disableReferralOnBrowser();
 
+            // تفعيل الإعلان الداخلي التلقائي بالإعدادات المطلوبة
             setTimeout(() => {
                 if (typeof window.show_10022174 === 'function') {
                     window.show_10022174({
@@ -1894,13 +1892,6 @@
                 const hint = document.getElementById('hint');
                 if (hint) hint.style.opacity = '0';
                 setTimeout(() => hint.style.display = 'none', 500);
-            }, 10000);
-            setTimeout(() => {
-                const warning = document.getElementById('sessionWarning');
-                if (warning) {
-                    warning.style.opacity = '0';
-                    setTimeout(() => warning.style.display = 'none', 1000);
-                }
             }, 10000);
             
             setTimeout(() => showCentralNotification("🎮 مرحباً بك! ابدأ بالضغط على العملة", "success"), 1500);
