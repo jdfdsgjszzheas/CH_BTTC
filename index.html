@@ -994,7 +994,7 @@
                             سحب
                         </div>
                         <div class="card-value" id="withdrawAmount">0</div>
-                        <div class="card-desc" id="withdrawDesc">100k كل 24h</div>
+                        <div class="card-desc" id="withdrawDesc">50k كل 24h</div>
                         <button id="withdrawBtn" class="btn btn-withdraw">
                             <span>سحب</span>
                         </button>
@@ -1056,10 +1056,10 @@
                 ⚠️ تنبيه: يتم الدفع فقط لأصحاب حسابات Binance. يرجى إدخال معرف Binance (ID) الخاص بك، وليس عنوان محفظة.
             </div>
             <div class="withdraw-limits" id="withdrawLimits">
-                المبلغ: 0 BTTC | سحب 100,000 BTTC كل 24 ساعة
+                المبلغ: 0 BTTC | سحب 50,000 BTTC كل 24 ساعة
             </div>
             <div class="withdraw-limits" style="background: rgba(139,92,246,0.2); margin-top: 0;" id="withdrawStageInfo">
-                يمكنك سحب 100,000 BTTC الآن
+                يمكنك سحب 50,000 BTTC الآن
             </div>
             
             <div class="username-input-wrapper">
@@ -1363,7 +1363,7 @@
         let gameData = {};
         const MAX_DAILY_BOOST = 5;
         const MAX_ADS = 25;
-        const WITHDRAW_AMOUNT = 100000;
+        const WITHDRAW_AMOUNT = 50000;  // تم التعديل من 100000 إلى 50000
         const COOLDOWN = 24 * 60 * 60 * 1000;
 
         function initGameData() {
@@ -1462,10 +1462,10 @@
 
             if (canWithdraw()) {
                 withdrawBtn.disabled = false;
-                withdrawDesc.textContent = 'يمكنك سحب 100,000';
+                withdrawDesc.textContent = 'يمكنك سحب 50,000';
             } else {
                 withdrawBtn.disabled = true;
-                withdrawDesc.textContent = 'سحب 100k كل 24h';
+                withdrawDesc.textContent = 'سحب 50k كل 24h';
             }
         }
 
@@ -1504,10 +1504,10 @@
                 const remaining = getTimeRemaining();
                 if (remaining > 0) {
                     timerMsg.style.display = 'block';
-                    timerMsg.innerHTML = `⏳ تم جمع 100,000. السحب متاح بعد: ${formatTime(remaining)}`;
+                    timerMsg.innerHTML = `⏳ تم جمع 50,000. السحب متاح بعد: ${formatTime(remaining)}`;
                 } else {
                     // إذا كان الوقت قد انتهى ولكن لم يسحب بعد (أي أن lastWithdraw مضى عليه أكثر من 24 ساعة)
-                    // لكننا هنا وصلنا إلى 100,000 والوقت يسمح بالسحب، يجب أن يكون السحب ممكناً إذا اكتملت الإعلانات أيضاً.
+                    // لكننا هنا وصلنا إلى 50,000 والوقت يسمح بالسحب، يجب أن يكون السحب ممكناً إذا اكتملت الإعلانات أيضاً.
                     // لكن حتى لو لم تكتمل الإعلانات، نظهر رسالة مختلفة.
                     if (gameData.adsWatched < MAX_ADS) {
                         timerMsg.style.display = 'block';
@@ -1761,7 +1761,7 @@
         
         // أحداث اللعبة
         document.getElementById('clickZone').addEventListener('click', (e) => {
-            // منع النقر إذا كان الرصيد 100,000 أو أكثر (التجميد)
+            // منع النقر إذا كان الرصيد 50,000 أو أكثر (التجميد)
             if (gameData.coins >= WITHDRAW_AMOUNT) return;
             gameData.coins += gameData.clickPower;
             gameData.totalClicks++;
