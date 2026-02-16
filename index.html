@@ -305,6 +305,7 @@
             transform: scale(0.9);
         }
 
+        /* الفوتر – 5 أزرار بالترتيب الجديد */
         .footer-section { 
             width: 100%; 
             background: var(--card); 
@@ -424,6 +425,7 @@
             box-shadow: none !important;
         }
 
+        /* النوافذ المنبثقة */
         .modal-overlay { 
             position: fixed; 
             top: 0; 
@@ -957,36 +959,35 @@
                 </div>
             </main>
 
-            <!-- الفوتر -->
+            <!-- الفوتر – 5 أزرار بالترتيب الجديد: إحصائيات، أصدقاء، مكافأة، سحب، تطوير -->
             <section class="footer-section">
                 <div class="actions-grid">
-                    <!-- 1. تعزيز -->
+                    <!-- 1. إحصائيات -->
                     <div class="card">
                         <div class="card-title">
                             <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 13c-2.33 0-4.31-1.46-5.11-3.5h10.22c-.8 2.04-2.78 3.5-5.11 3.5z"/>
+                                <path d="M16,11V3H8v6H2v12h20V11H16z M10,5h4v14h-4V5z M4,11h4v8H4V11z M20,19h-4v-6h4V19z"/>
                             </svg>
-                            تعزيز
+                            إحصائيات
                         </div>
-                        <div class="card-value" id="upgradeCost">20</div>
-                        <div class="card-desc">قوة النقر</div>
-                        <button id="buyUpgrade" class="btn btn-upgrade">
-                            <span>شراء</span>
+                        <div class="card-value" id="moreValue">📊</div>
+                        <div class="card-desc">إحصائيات</div>
+                        <button id="moreFooterBtn" class="btn btn-stats">
+                            <span>عرض</span>
                         </button>
-                        <div style="font-size:0.5rem; color:#94a3b8;" id="boostRemaining">5/5</div>
                     </div>
-                    <!-- 2. سحب -->
-                    <div class="card">
+                    <!-- 2. أصدقاء -->
+                    <div class="card" id="friendsFooterCard">
                         <div class="card-title">
                             <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
+                                <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/>
                             </svg>
-                            سحب
+                            أصدقاء
                         </div>
-                        <div class="card-value" id="withdrawAmount">0</div>
-                        <div class="card-desc" id="withdrawDesc">50k كل 24h</div>
-                        <button id="withdrawBtn" class="btn btn-withdraw">
-                            <span>سحب</span>
+                        <div class="card-value" id="referralsCountFooter">0</div>
+                        <div class="card-desc">+1000</div>
+                        <button id="friendsFooterBtn" class="btn btn-referral">
+                            <span>دعوة</span>
                         </button>
                     </div>
                     <!-- 3. مكافأة -->
@@ -1003,33 +1004,34 @@
                             <span>شاهد</span>
                         </button>
                     </div>
-                    <!-- 4. أصدقاء -->
-                    <div class="card" id="friendsFooterCard">
-                        <div class="card-title">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/>
-                            </svg>
-                            أصدقاء
-                        </div>
-                        <div class="card-value" id="referralsCountFooter">0</div>
-                        <div class="card-desc">+1000</div>
-                        <button id="friendsFooterBtn" class="btn btn-referral">
-                            <span>دعوة</span>
-                        </button>
-                    </div>
-                    <!-- 5. آخر -->
+                    <!-- 4. سحب -->
                     <div class="card">
                         <div class="card-title">
                             <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M16,11V3H8v6H2v12h20V11H16z M10,5h4v14h-4V5z M4,11h4v8H4V11z M20,19h-4v-6h4V19z"/>
+                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
                             </svg>
-                            آخر
+                            سحب
                         </div>
-                        <div class="card-value" id="moreValue">📊</div>
-                        <div class="card-desc">إحصائيات</div>
-                        <button id="moreFooterBtn" class="btn btn-stats">
-                            <span>عرض</span>
+                        <div class="card-value" id="withdrawAmount">0</div>
+                        <div class="card-desc" id="withdrawDesc">50k كل 24h</div>
+                        <button id="withdrawBtn" class="btn btn-withdraw">
+                            <span>سحب</span>
                         </button>
+                    </div>
+                    <!-- 5. تطوير -->
+                    <div class="card">
+                        <div class="card-title">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 13c-2.33 0-4.31-1.46-5.11-3.5h10.22c-.8 2.04-2.78 3.5-5.11 3.5z"/>
+                            </svg>
+                            تطوير
+                        </div>
+                        <div class="card-value" id="upgradeCost">20</div>
+                        <div class="card-desc">قوة النقر</div>
+                        <button id="buyUpgrade" class="btn btn-upgrade">
+                            <span>شراء</span>
+                        </button>
+                        <div style="font-size:0.5rem; color:#94a3b8;" id="boostRemaining">5/5</div>
                     </div>
                 </div>
             </section>
