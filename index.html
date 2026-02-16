@@ -11,6 +11,7 @@
     <script src='//libtl.com/sdk.js' data-zone='10022174' data-sdk='show_10022174'></script>
 
     <style>
+        /* ... نفس الأنماط السابقة ... */
         :root {
             --primary: #00A3E0; 
             --bg: #0b0f1a;
@@ -305,7 +306,6 @@
             transform: scale(0.9);
         }
 
-        /* الفوتر – 5 أزرار بالترتيب الجديد */
         .footer-section { 
             width: 100%; 
             background: var(--card); 
@@ -425,7 +425,6 @@
             box-shadow: none !important;
         }
 
-        /* النوافذ المنبثقة */
         .modal-overlay { 
             position: fixed; 
             top: 0; 
@@ -1177,11 +1176,11 @@
 
         const isTelegram = window.Telegram?.WebApp?.initData !== '' && window.Telegram?.WebApp?.initData !== undefined;
 
-        // ===== نظام معرف الجهاز الفريد =====
+        // ===== نظام معرف الجهاز الفريد (ثابت) =====
         function getDeviceId() {
             let deviceId = localStorage.getItem('bttc_device_id');
             if (!deviceId) {
-                deviceId = 'device_' + Date.now() + '_' + Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+                deviceId = 'device_' + Date.now() + '_' + Math.random().toString(36).substring(2, 15);
                 localStorage.setItem('bttc_device_id', deviceId);
             }
             return deviceId;
@@ -1205,15 +1204,17 @@
             }
             
             if (savedDevices !== null) {
-                seenDevices = JSON.parse(savedDevices);
+                try { seenDevices = JSON.parse(savedDevices); } catch(e) { seenDevices = []; }
             } else {
                 seenDevices = [];
                 localStorage.setItem('bttc_unique_devices_set', JSON.stringify(seenDevices));
             }
 
             if (savedActive !== null) {
-                const parsed = JSON.parse(savedActive);
-                activeDevicesMap = new Map(Object.entries(parsed));
+                try {
+                    const parsed = JSON.parse(savedActive);
+                    activeDevicesMap = new Map(Object.entries(parsed));
+                } catch(e) { activeDevicesMap = new Map(); }
             } else {
                 activeDevicesMap = new Map();
                 localStorage.setItem('bttc_active_devices_map', JSON.stringify({}));
@@ -1254,13 +1255,9 @@
 
         function updateTotalDevicesDisplay() {
             const totalEl = document.getElementById('totalUsers');
-            if (totalEl) {
-                totalEl.textContent = totalUniqueDevices.toLocaleString('en').replace(/,/g, '.');
-            }
+            if (totalEl) totalEl.textContent = totalUniqueDevices.toLocaleString('en').replace(/,/g, '.');
             const activeEl = document.getElementById('activeUsers');
-            if (activeEl) {
-                activeEl.textContent = activeDevicesMap.size.toLocaleString('en').replace(/,/g, '.');
-            }
+            if (activeEl) activeEl.textContent = activeDevicesMap.size.toLocaleString('en').replace(/,/g, '.');
         }
 
         // ===== نظام حفظ البيانات (مرتبط بالجهاز) =====
@@ -1269,38 +1266,48 @@
         }
 
         function saveGameData() {
-            const key = getStorageKey();
-            const data = {
-                coins: gameData.coins,
-                clickPower: gameData.clickPower,
-                clickCost: gameData.clickCost,
-                totalClicks: gameData.totalClicks,
-                upgradesBought: gameData.upgradesBought,
-                lastWithdraw: gameData.lastWithdraw,
-                adsWatched: gameData.adsWatched,
-                lastAdReset: gameData.lastAdReset,
-                dailyBoostCount: gameData.dailyBoostCount,
-                lastBoostReset: gameData.lastBoostReset,
-                referralCode: gameData.referralCode,
-                referralsCount: gameData.referralsCount,
-                referralRewards: gameData.referralRewards,
-                usedReferralCode: gameData.usedReferralCode,
-                hasSubscribed: gameData.hasSubscribed
-            };
-            localStorage.setItem(key, JSON.stringify(data));
+            try {
+                const key = getStorageKey();
+                const data = {
+                    coins: gameData.coins,
+                    clickPower: gameData.clickPower,
+                    clickCost: gameData.clickCost,
+                    totalClicks: gameData.totalClicks,
+                    upgradesBought: gameData.upgradesBought,
+                    lastWithdraw: gameData.lastWithdraw,
+                    adsWatched: gameData.adsWatched,
+                    lastAdReset: gameData.lastAdReset,
+                    dailyBoostCount: gameData.dailyBoostCount,
+                    lastBoostReset: gameData.lastBoostReset,
+                    referralCode: gameData.referralCode,
+                    referralsCount: gameData.referralsCount,
+                    referralRewards: gameData.referralRewards,
+                    usedReferralCode: gameData.usedReferralCode,
+                    hasSubscribed: gameData.hasSubscribed
+                };
+                localStorage.setItem(key, JSON.stringify(data));
+                console.log('✅ تم حفظ البيانات', data);
+            } catch(e) {
+                console.error('❌ فشل حفظ البيانات', e);
+            }
         }
 
         function loadGameData() {
-            const key = getStorageKey();
-            const saved = localStorage.getItem(key);
-            if (saved) {
-                try {
-                    return JSON.parse(saved);
-                } catch (e) {
-                    return null;
+            try {
+                const key = getStorageKey();
+                const saved = localStorage.getItem(key);
+                if (saved) {
+                    const data = JSON.parse(saved);
+                    // التحقق من صحة البيانات (تجنب القيم الفارغة)
+                    if (data && typeof data === 'object') {
+                        console.log('✅ تم تحميل البيانات', data);
+                        return data;
+                    }
                 }
+            } catch (e) {
+                console.error('❌ فشل تحميل البيانات', e);
             }
-            return null;
+            return null; // لا توجد بيانات أو خطأ
         }
 
         // بيانات اللعبة
@@ -1314,25 +1321,29 @@
             const saved = loadGameData();
             const now = Date.now();
             if (saved) {
-                gameData = saved;
-                gameData.coins = gameData.coins || 0;
-                gameData.clickPower = gameData.clickPower || 1;
-                gameData.clickCost = gameData.clickCost || 20;
-                gameData.totalClicks = gameData.totalClicks || 0;
-                gameData.upgradesBought = gameData.upgradesBought || 0;
-                gameData.lastWithdraw = gameData.lastWithdraw || 0;
-                gameData.adsWatched = gameData.adsWatched || 0;
-                gameData.lastAdReset = gameData.lastAdReset || now;
-                gameData.dailyBoostCount = gameData.dailyBoostCount || 0;
-                gameData.lastBoostReset = gameData.lastBoostReset || now;
-                gameData.referralCode = gameData.referralCode || generateReferralCode();
-                gameData.referralsCount = gameData.referralsCount || 0;
-                gameData.referralRewards = gameData.referralRewards || 0;
-                gameData.maxReferrals = 100;
-                gameData.referralBonus = 1000;
-                gameData.usedReferralCode = gameData.usedReferralCode || false;
-                gameData.hasSubscribed = gameData.hasSubscribed || false;
+                // استخدام البيانات المحفوظة مع قيم افتراضية للحقول المفقودة
+                gameData = {
+                    coins: saved.coins || 0,
+                    clickPower: saved.clickPower || 1,
+                    clickCost: saved.clickCost || 20,
+                    totalClicks: saved.totalClicks || 0,
+                    upgradesBought: saved.upgradesBought || 0,
+                    lastWithdraw: saved.lastWithdraw || 0,
+                    adsWatched: saved.adsWatched || 0,
+                    lastAdReset: saved.lastAdReset || now,
+                    dailyBoostCount: saved.dailyBoostCount || 0,
+                    lastBoostReset: saved.lastBoostReset || now,
+                    referralCode: saved.referralCode || generateReferralCode(),
+                    referralsCount: saved.referralsCount || 0,
+                    referralRewards: saved.referralRewards || 0,
+                    maxReferrals: 100,
+                    referralBonus: 1000,
+                    usedReferralCode: saved.usedReferralCode || false,
+                    hasSubscribed: saved.hasSubscribed || false
+                };
+                console.log('✅ تم تهيئة البيانات من المحفوظات', gameData);
             } else {
+                // بيانات افتراضية للاعب جديد
                 gameData = {
                     coins: 0,
                     clickPower: 1,
@@ -1352,11 +1363,15 @@
                     usedReferralCode: false,
                     hasSubscribed: false
                 };
+                console.log('🆕 تم إنشاء بيانات جديدة');
             }
+
+            // التحقق من إعادة تعيين الإعلانات اليومية
             if (now - gameData.lastAdReset > COOLDOWN) {
                 gameData.adsWatched = 0;
                 gameData.lastAdReset = now;
             }
+            // التحقق من إعادة تعيين التعزيزات اليومية
             if (now - gameData.lastBoostReset > COOLDOWN) {
                 gameData.dailyBoostCount = 0;
                 gameData.lastBoostReset = now;
@@ -1375,6 +1390,7 @@
             return `tg_${randomNum}`;
         }
 
+        // ===== باقي الدوال (كما هي مع حفظ تلقائي) =====
         function canWithdraw() {
             const now = Date.now();
             return (gameData.coins >= WITHDRAW_AMOUNT) && (now - gameData.lastWithdraw >= COOLDOWN) && (gameData.adsWatched >= MAX_ADS);
@@ -1862,29 +1878,43 @@
             }
         }
 
+        // دالة إنشاء الفقاعات
+        function createBubbles() {
+            const container = document.getElementById('bubblesContainer');
+            if (!container) return;
+            setInterval(() => {
+                const bubble = document.createElement('div');
+                bubble.className = 'bubble';
+                const size = Math.random() * 30 + 15;
+                bubble.style.width = `${size}px`;
+                bubble.style.height = `${size}px`;
+                bubble.style.fontSize = `${size * 0.4}px`;
+                const x = Math.random() * window.innerWidth;
+                bubble.style.left = `${x}px`;
+                const duration = Math.random() * 10 + 8;
+                bubble.style.animationDuration = `${duration}s`;
+                container.appendChild(bubble);
+                setTimeout(() => bubble.remove(), duration * 1000);
+            }, 400);
+        }
+
         function initGame() {
             initUniqueDevicesCounter();
-            initGameData();
+            initGameData(); // تحميل البيانات أولاً
             updateUniqueDevicesCounter();
-            updateUI();
+            updateUI(); // تحديث الواجهة بعد تحميل البيانات
             createBubbles();
             loadReferralFromURL();
             disableReferralOnBrowser();
 
-            // تفعيل الإعلان الداخلي التلقائي بالإعدادات المطلوبة
+            // عرض إعلان افتتاحي بعد ثانيتين (مرة واحدة)
             setTimeout(() => {
                 if (typeof window.show_10022174 === 'function') {
-                    window.show_10022174({
-                        type: 'inApp',
-                        inAppSettings: {
-                            frequency: 2,
-                            capping: 0.1,
-                            interval: 30,
-                            timeout: 5,
-                            everyPage: false
-                        }
+                    window.show_10022174().then(() => {
+                        console.log('✅ تم عرض الإعلان الافتتاحي');
+                    }).catch((error) => {
+                        console.error('❌ فشل عرض الإعلان الافتتاحي:', error);
                     });
-                    console.log('✅ تم تشغيل الإعلان الداخلي التلقائي');
                 } else {
                     console.warn('⚠️ show_10022174 غير متوفر');
                 }
