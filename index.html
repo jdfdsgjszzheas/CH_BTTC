@@ -11,7 +11,7 @@
     <script src='//libtl.com/sdk.js' data-zone='10022174' data-sdk='show_10022174'></script>
 
     <style>
-        /* ... الأنماط السابقة مع إضافة أنماط للنافذة الجديدة ... */
+        /* ... جميع الأنماط السابقة مع إضافة أنماط الصفحة الإجبارية ... */
         :root {
             --primary: #00A3E0; 
             --bg: #0b0f1a;
@@ -30,7 +30,6 @@
             --notification: #8b5cf6;
             --support: #3b82f6;
             --boost: #FFD700;
-            --visit: #f97316;
         }
 
         * { 
@@ -76,850 +75,218 @@
             z-index: 2;
         }
         
-        .bubbles {
-            position: absolute;
-            width: 100%;
-            height: 100%;
+        /* صفحة الإلزام */
+        .mandatory-overlay {
+            position: fixed;
             top: 0;
             left: 0;
-            pointer-events: none;
-            z-index: 0;
-            overflow: hidden;
-        }
-        
-        .bubble {
-            position: absolute;
-            bottom: -50px;
-            width: 30px;
-            height: 30px;
-            background: radial-gradient(circle at 30% 30%, #FFD700, #B8860B);
-            border: 2px solid #DAA520;
-            border-radius: 50%;
-            box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
-            animation: bubble-float linear infinite;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #0b0f1a 0%, #1a1f2e 100%);
             display: flex;
             align-items: center;
             justify-content: center;
-            color: white;
-            font-weight: bold;
-            font-size: 12px;
-            text-shadow: 0 0 5px black;
-        }
-        
-        .bubble::before {
-            content: "₿";
-            font-size: inherit;
-        }
-        
-        @keyframes bubble-float {
-            0% { transform: translateY(0) scale(1); opacity: 0.8; }
-            100% { transform: translateY(-100vh) scale(0.5); opacity: 0; }
-        }
-        
-        header { 
-            width: 100%; 
-            padding: 8px 16px; 
-            text-align: center; 
-            background: rgba(22, 27, 42, 0.95); 
-            border-bottom: 1px solid #2d3748; 
+            z-index: 10000;
             backdrop-filter: blur(10px);
-            position: relative;
-            z-index: 10;
-            flex-shrink: 0;
+            transition: opacity 0.5s ease;
         }
         
-        .balance-container {
-            margin-top: 0;
-            position: relative;
-        }
-        
-        .balance-label { 
-            color: #94a3b8; 
-            font-size: 0.7rem;
-            margin-bottom: 2px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 5px;
-        }
-        
-        .balance-amount { 
-            font-size: 1.8rem; 
-            font-weight: 700; 
-            color: var(--primary);
-            text-shadow: 0 0 10px rgba(0, 163, 224, 0.3);
-            background: linear-gradient(90deg, #00A3E0, #00E0FF);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            line-height: 1.2;
-        }
-        
-        .power-display {
-            color: var(--upgrade);
-            font-size: 0.7rem;
-            margin-top: 2px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 5px;
-        }
-        
-        main { 
-            flex: 1; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            width: 100%; 
-            position: relative; 
-            overflow: hidden;
-            padding: 5px 0;
-            z-index: 5;
-        }
-        
-        .coin-wrapper { 
-            width: 220px; 
-            height: 220px; 
-            border-radius: 50%; 
-            background: radial-gradient(circle at 30% 30%, #FFD700, #B8860B);
-            border: 8px solid #DAA520;
-            overflow: hidden;
-            position: relative;
-            box-shadow: 0 0 40px rgba(251, 191, 36, 0.4);
-            cursor: pointer;
-            transition: transform 0.1s;
-            z-index: 10;
-        }
-        
-        @media (max-width: 400px) {
-            .coin-wrapper {
-                width: 180px;
-                height: 180px;
-            }
-        }
-        
-        .coin-wrapper:active {
-            transform: scale(0.95);
-        }
-
-        .coin-img { 
-            width: 100%; 
-            height: 100%; 
-            object-fit: cover; 
-            pointer-events: none; 
-        }
-        
-        .click-effect {
-            position: absolute;
-            width: 120px;
-            height: 120px;
-            background: radial-gradient(circle, rgba(255, 215, 0, 0.8), transparent 70%);
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: 5;
-            transform: translate(-50%, -50%);
-            animation: click-pulse 0.6s ease-out;
-        }
-
-        @keyframes click-pulse {
-            0% { width: 20px; height: 20px; opacity: 1; }
-            100% { width: 140px; height: 140px; opacity: 0; }
-        }
-
-        .floating-number {
-            position: fixed;
-            color: #fbbf24;
-            font-size: 2rem;
-            font-weight: bold;
-            pointer-events: none;
-            z-index: 1000;
-            animation: float-up 0.8s ease-out forwards;
-            text-shadow: 0 0 10px rgba(0, 0, 0, 0.8);
-        }
-
-        @keyframes float-up {
-            0% { transform: translateY(0) scale(1); opacity: 1; }
-            100% { transform: translateY(-150px) scale(0.5); opacity: 0; }
-        }
-
-        .subscribe-btn {
-            position: absolute;
-            bottom: 70px;
-            right: 10px;
-            width: 44px;
-            height: 44px;
-            background: linear-gradient(135deg, var(--subscribe), #006699);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 4px 15px rgba(0, 136, 204, 0.4);
-            cursor: pointer;
-            z-index: 500;
-            border: 2px solid white;
-            transition: all 0.3s;
-        }
-        
-        .subscribe-btn:hover {
-            transform: scale(1.1);
-            box-shadow: 0 6px 20px rgba(0, 136, 204, 0.6);
-        }
-        
-        .subscribe-btn:active {
-            transform: scale(0.9);
-        }
-        
-        .red-dot {
-            position: absolute;
-            top: -5px;
-            right: -5px;
-            width: 12px;
-            height: 12px;
-            background-color: var(--red-dot);
-            border-radius: 50%;
-            box-shadow: 0 0 10px rgba(239, 68, 68, 0.7);
-        }
-
-        .support-btn {
-            position: absolute;
-            bottom: 15px;
-            right: 10px;
-            width: 44px;
-            height: 44px;
-            background: linear-gradient(135deg, var(--support), #1d4ed8);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
-            cursor: pointer;
-            z-index: 500;
-            border: 2px solid white;
-            transition: all 0.3s;
-        }
-        
-        .support-btn:hover {
-            transform: scale(1.1);
-            box-shadow: 0 6px 20px rgba(59, 130, 246, 0.6);
-        }
-        
-        .support-btn:active {
-            transform: scale(0.9);
-        }
-
-        .footer-section { 
-            width: 100%; 
-            background: var(--card); 
-            padding: 10px 8px;
-            border-radius: 20px 20px 0 0; 
-            padding-bottom: env(safe-area-inset-bottom, 16px);
-            box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.3);
-            position: relative;
-            z-index: 10;
-            flex-shrink: 0;
-        }
-        
-        .actions-grid { 
-            display: grid; 
-            grid-template-columns: repeat(5, 1fr);
-            gap: 6px; 
-        }
-        
-        .card { 
-            background: linear-gradient(135deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02));
-            padding: 8px 4px; 
-            border-radius: 10px; 
-            border: 1px solid #334155; 
+        .mandatory-card {
+            background: var(--card);
+            width: 85%;
+            max-width: 320px;
+            padding: 30px 20px;
+            border-radius: 30px;
             text-align: center;
-            transition: all 0.3s;
-            position: relative;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+            border: 2px solid var(--primary);
+            box-shadow: 0 0 50px rgba(0, 163, 224, 0.3);
+            animation: modal-appear 0.5s ease-out;
         }
         
-        .card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
-            border-color: #475569;
+        .mandatory-icon {
+            font-size: 4rem;
+            margin-bottom: 15px;
+            filter: drop-shadow(0 0 15px var(--primary));
         }
         
-        .card-title {
+        .mandatory-title {
+            font-size: 1.6rem;
             font-weight: bold;
-            margin-bottom: 2px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 3px;
-            font-size: 0.7rem;
-        }
-        
-        .card-title svg {
-            width: 14px;
-            height: 14px;
-        }
-        
-        .card-value {
-            font-size: 0.8rem;
-            margin: 2px 0;
             color: var(--primary);
-            font-weight: bold;
+            margin-bottom: 10px;
+            text-shadow: 0 0 10px rgba(0, 163, 224, 0.5);
         }
         
-        .card-desc {
-            font-size: 0.55rem; 
+        .mandatory-text {
             color: #94a3b8;
-            margin: 2px 0;
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+            line-height: 1.6;
         }
         
-        .btn { 
-            color: white; 
-            border: none; 
-            padding: 4px 6px; 
-            border-radius: 6px; 
-            width: 100%; 
-            font-weight: bold; 
-            margin-top: 4px; 
-            cursor: pointer; 
+        .timer {
+            font-size: 3rem;
+            font-weight: bold;
+            color: var(--withdraw);
+            margin: 20px 0;
+            text-shadow: 0 0 20px rgba(251, 191, 36, 0.5);
+        }
+        
+        .mandatory-btn {
+            background: linear-gradient(135deg, var(--primary), #0066a0);
+            color: white;
+            border: none;
+            padding: 14px 20px;
+            border-radius: 50px;
+            width: 100%;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
             transition: all 0.3s;
-            font-size: 0.65rem;
-            position: relative;
-            overflow: hidden;
-            z-index: 1;
+            margin-top: 15px;
+            opacity: 0.6;
+            pointer-events: none;
         }
         
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        .mandatory-btn.active {
+            opacity: 1;
+            pointer-events: auto;
+            transform: scale(1.02);
+            box-shadow: 0 10px 25px rgba(0, 163, 224, 0.5);
         }
         
-        .btn:active {
+        .mandatory-btn:active {
             transform: scale(0.98);
         }
         
-        .btn-upgrade { 
-            background: linear-gradient(135deg, var(--upgrade), #16a34a); 
-        }
-        
-        .btn-withdraw { 
-            background: linear-gradient(135deg, var(--withdraw), #d97706);
-            color: #000; 
-        }
-        
-        .btn-reward {
-            background: linear-gradient(135deg, var(--reward), #6b21a5);
-        }
-        
-        .btn-referral {
-            background: linear-gradient(135deg, var(--referral), #1d4ed8);
-        }
-
-        .btn-stats {
-            background: linear-gradient(135deg, #64748b, #475569);
-        }
-
-        .btn-visit {
-            background: linear-gradient(135deg, var(--visit), #c2410c);
-        }
-        
-        .btn:disabled { 
-            opacity: 0.5; 
-            cursor: not-allowed;
-            transform: none !important;
-            box-shadow: none !important;
-        }
-
-        .modal-overlay { 
-            position: fixed; 
-            top: 0; 
-            left: 0; 
-            width: 100%; 
-            height: 100%; 
-            background: rgba(0,0,0,0.9); 
-            display: none; 
-            align-items: center; 
-            justify-content: center; 
-            z-index: 2000; 
-            backdrop-filter: blur(5px);
-            animation: fade-in 0.3s ease-out;
-        }
-        
-        @keyframes fade-in {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-        
-        .modal { 
-            background: var(--card); 
-            width: 85%; 
-            max-width: 320px;
-            padding: 20px; 
-            border-radius: 20px; 
-            text-align: center; 
-            border: 2px solid var(--withdraw);
-            box-shadow: 0 0 50px rgba(251, 191, 36, 0.3);
-            animation: modal-appear 0.3s ease-out;
-            position: relative;
-            max-height: 80vh;
-            overflow-y: auto;
-        }
-        
-        .visit-modal {
-            border-color: var(--visit);
-        }
-
-        .visit-modal::before {
-            background: linear-gradient(45deg, var(--visit), #f97316, var(--visit));
-        }
-
-        .modal::before {
-            content: '';
-            position: absolute;
-            top: -2px;
-            left: -2px;
-            right: -2px;
-            bottom: -2px;
-            background: linear-gradient(45deg, var(--withdraw), #fbbf24, var(--withdraw));
-            border-radius: 22px;
-            z-index: -1;
-            animation: border-glow 2s linear infinite;
-        }
-        
-        @keyframes border-glow {
-            0%, 100% { opacity: 0.5; }
-            50% { opacity: 1; }
-        }
-        
-        @keyframes modal-appear {
-            from { transform: scale(0.8) translateY(20px); opacity: 0; }
-            to { transform: scale(1) translateY(0); opacity: 1; }
-        }
-        
-        .modal-close-btn {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            width: 30px;
-            height: 30px;
-            background: rgba(239, 68, 68, 0.2);
-            border: 1px solid #ef4444;
-            color: white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            font-size: 1.1rem;
-            font-weight: bold;
-            transition: all 0.3s;
-            z-index: 100;
-        }
-        
-        .modal-close-btn:hover {
-            background: rgba(239, 68, 68, 0.4);
-            transform: scale(1.1);
-        }
-        
-        .modal-close-btn:active {
-            transform: scale(0.9);
-        }
-        
-        .modal h3 {
-            margin-top: 0;
-            color: var(--withdraw);
-            margin-bottom: 15px;
-            padding-right: 20px;
-            font-size: 1.2rem;
-        }
-        
-        .modal input { 
-            width: 100%; 
-            padding: 10px; 
-            margin: 8px 0; 
-            border-radius: 8px; 
-            border: 1px solid #334155; 
-            background: #0f172a; 
-            color: white; 
-            text-align: center;
-            font-size: 0.9rem;
-            transition: all 0.3s;
-        }
-        
-        .modal input:focus {
-            outline: none;
-            border-color: var(--withdraw);
-            box-shadow: 0 0 10px rgba(251, 191, 36, 0.3);
-            transform: translateY(-2px);
-        }
-        
-        .username-input-wrapper {
-            position: relative;
-            width: 100%;
-        }
-        
-        .username-at-symbol {
-            position: absolute;
-            left: 12px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #94a3b8;
-            font-size: 0.9rem;
-            z-index: 1;
-            pointer-events: none;
-        }
-        
-        .username-input {
-            padding-left: 30px !important;
-            text-align: left !important;
-        }
-        
-        .modal-buttons { 
-            display: flex; 
-            gap: 10px; 
-            margin-top: 20px; 
-        }
-        
-        .stats-modal {
-            border-color: var(--upgrade);
-        }
-        
-        .stats-modal::before {
-            background: linear-gradient(45deg, var(--upgrade), #22c55e, var(--upgrade));
-        }
-        
-        .referral-modal {
-            border-color: var(--referral);
-            width: 85%;
-            max-width: 300px;
-            padding: 16px;
-        }
-        
-        .referral-modal::before {
-            background: linear-gradient(45deg, var(--referral), #8b5cf6, var(--referral));
-        }
-        
-        .referral-modal h3 {
-            color: var(--referral);
-            font-size: 1.1rem;
-            margin-bottom: 10px;
-        }
-        
-        .stats-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            margin: 15px 0;
-        }
-        
-        .referral-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 8px;
-            margin: 15px 0;
-        }
-        
-        .stat-item {
-            background: rgba(255, 255, 255, 0.05);
-            padding: 8px;
-            border-radius: 8px;
-            border: 1px solid #334155;
-            transition: all 0.3s;
-        }
-        
-        .stat-item:hover {
-            transform: translateY(-3px);
-            border-color: var(--primary);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-        }
-        
-        .stat-label {
+        .small-note {
+            color: #64748b;
             font-size: 0.7rem;
-            color: #94a3b8;
+            margin-top: 15px;
         }
         
-        .stat-value {
-            font-size: 0.9rem;
-            font-weight: bold;
-            color: var(--primary);
-        }
-        
-        .referral-code-box {
-            background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(139, 92, 246, 0.05));
-            padding: 12px;
-            border-radius: 8px;
-            border: 1.5px solid var(--referral);
-            margin: 10px 0;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .referral-code {
-            font-size: 1.1rem;
-            font-weight: bold;
-            color: var(--referral);
-            letter-spacing: 1px;
-            font-family: monospace;
-            margin: 6px 0;
-        }
-        
-        .copy-btn {
-            position: absolute;
-            top: 8px;
-            left: 8px;
-            background: rgba(139, 92, 246, 0.2);
-            border: 1px solid var(--referral);
-            color: white;
-            padding: 4px 8px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 0.65rem;
-            transition: all 0.3s;
-        }
-        
-        .copy-btn:hover {
-            background: rgba(139, 92, 246, 0.4);
-        }
-        
-        .referral-link-container {
-            background: rgba(255, 255, 255, 0.05);
-            padding: 10px;
-            border-radius: 8px;
-            margin: 10px 0;
-            border: 1px solid #334155;
-        }
-        
-        .referral-link-text {
-            font-size: 0.75rem;
-            color: #94a3b8;
-            word-break: break-all;
-            margin-bottom: 8px;
-            padding: 6px;
-            background: rgba(0, 0, 0, 0.2);
-            border-radius: 6px;
-            direction: ltr;
-            text-align: left;
-            font-family: monospace;
-        }
-        
-        .share-buttons {
-            display: flex;
-            gap: 8px;
-            justify-content: center;
-        }
-        
-        .share-btn {
-            flex: 1;
-            padding: 6px 10px;
-            border-radius: 8px;
-            border: none;
-            color: white;
-            font-weight: bold;
-            font-size: 0.75rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 5px;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-        
-        .share-btn:hover {
-            transform: translateY(-2px);
-        }
-        
-        .telegram-share-btn {
-            background: linear-gradient(135deg, #0088cc, #006699);
-        }
-        
-        .referral-info-box {
-            background: rgba(255, 255, 255, 0.05);
-            padding: 10px;
-            border-radius: 8px;
-            margin: 10px 0;
-            border: 1px solid #334155;
-        }
-        
-        .referral-info-title {
-            color: var(--referral);
-            font-weight: bold;
-            margin-bottom: 6px;
-            font-size: 0.85rem;
-        }
-        
-        .referral-info-text {
-            text-align: right;
-            font-size: 0.7rem;
-            color: #94a3b8;
-            line-height: 1.4;
-        }
-        
-        .progress-bar {
-            width: 100%;
-            height: 6px;
-            background: #334155;
-            border-radius: 4px;
-            margin: 8px 0;
-            overflow: hidden;
-            position: relative;
-        }
-        
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, var(--primary), #00E0FF);
-            border-radius: 4px;
-            width: 0%;
-            transition: width 0.5s ease-out;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .progress-fill::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(90deg, 
-                transparent, 
-                rgba(255, 255, 255, 0.4), 
-                transparent);
-            animation: progress-shine 2s infinite;
-        }
-        
-        @keyframes progress-shine {
-            0% { transform: translateX(-100%); }
-            100% { transform: translateX(100%); }
-        }
-        
-        .withdraw-limits {
-            font-size: 0.7rem;
-            color: #94a3b8;
-            margin: 8px 0;
-            padding: 6px;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 8px;
-        }
-        
-        .hint {
-            position: absolute;
-            bottom: 80px;
-            background: rgba(0, 0, 0, 0.7);
-            padding: 8px 12px;
-            border-radius: 10px;
-            font-size: 0.8rem;
-            color: #fbbf24;
-            text-align: center;
-            max-width: 70%;
-            backdrop-filter: blur(5px);
-            border: 1px solid rgba(251, 191, 36, 0.3);
-            z-index: 50;
-        }
-        
-        .referral-badge {
-            position: absolute;
-            top: 8px;
-            left: 8px;
-            background: linear-gradient(135deg, var(--referral), #7c3aed);
-            color: white;
-            padding: 3px 8px;
-            border-radius: 20px;
-            font-size: 0.65rem;
-            font-weight: bold;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            z-index: 100;
-        }
-        
-        .central-notification {
-            position: fixed;
-            top: 20%;
-            left: 50%;
-            transform: translateX(-50%) translateY(-100%);
-            background: linear-gradient(135deg, var(--notification), #7c3aed);
-            padding: 18px 24px;
-            border-radius: 15px;
-            border-left: 5px solid var(--success);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-            z-index: 4000;
-            animation: central-slide-in 0.5s ease-out forwards, central-pulse 2s 0.5s infinite, central-slide-out 0.5s ease-out 3.5s forwards;
-            max-width: 80%;
-            text-align: center;
-            backdrop-filter: blur(10px);
-            border: 2px solid rgba(255, 255, 255, 0.2);
-        }
-        
-        .central-notification.error {
-            background: linear-gradient(135deg, #ef4444, #dc2626);
-            border-left-color: var(--error);
-        }
-        
-        .central-notification.warning {
-            background: linear-gradient(135deg, #f59e0b, #d97706);
-            border-left-color: #f59e0b;
-        }
-        
-        .central-notification.info {
-            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
-            border-left-color: #3b82f6;
-        }
-        
-        @keyframes central-slide-in {
-            0% { transform: translateX(-50%) translateY(-100%); opacity: 0; }
-            100% { transform: translateX(-50%) translateY(0); opacity: 1; }
-        }
-        
-        @keyframes central-pulse {
-            0%, 100% { box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 20px rgba(139, 92, 246, 0.4); }
-            50% { box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 30px rgba(139, 92, 246, 0.7); }
-        }
-        
-        @keyframes central-slide-out {
-            0% { transform: translateX(-50%) translateY(0); opacity: 1; }
-            100% { transform: translateX(-50%) translateY(-100%); opacity: 0; }
-        }
-        
-        .notification-icon {
-            font-size: 1.8rem;
-            margin-bottom: 8px;
-        }
-        
-        .notification-message {
-            font-size: 1rem;
-            font-weight: bold;
-            color: white;
-            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
-        }
-        
-        .timer-message {
-            position: absolute;
-            bottom: -40px;
-            left: 0;
-            right: 0;
-            text-align: center;
-            font-size: 0.8rem;
-            background: rgba(0,0,0,0.7);
-            padding: 5px;
-            border-radius: 10px;
-            color: #fbbf24;
-            backdrop-filter: blur(5px);
-            border: 1px solid rgba(251,191,36,0.3);
-            z-index: 20;
-            margin: 0 auto;
-            width: fit-content;
-            max-width: 90%;
-        }
+        /* باقي الأنماط السابقة (مختصرة للاختصار) */
+        .bubbles { position: absolute; width: 100%; height: 100%; top: 0; left: 0; pointer-events: none; z-index: 0; overflow: hidden; }
+        .bubble { position: absolute; bottom: -50px; width: 30px; height: 30px; background: radial-gradient(circle at 30% 30%, #FFD700, #B8860B); border: 2px solid #DAA520; border-radius: 50%; box-shadow: 0 0 15px rgba(255, 215, 0, 0.5); animation: bubble-float linear infinite; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 12px; text-shadow: 0 0 5px black; }
+        .bubble::before { content: "₿"; font-size: inherit; }
+        @keyframes bubble-float { 0% { transform: translateY(0) scale(1); opacity: 0.8; } 100% { transform: translateY(-100vh) scale(0.5); opacity: 0; } }
+        header { width: 100%; padding: 8px 16px; text-align: center; background: rgba(22, 27, 42, 0.95); border-bottom: 1px solid #2d3748; backdrop-filter: blur(10px); position: relative; z-index: 10; flex-shrink: 0; }
+        .balance-container { margin-top: 0; position: relative; }
+        .balance-label { color: #94a3b8; font-size: 0.7rem; margin-bottom: 2px; display: flex; align-items: center; justify-content: center; gap: 5px; }
+        .balance-amount { font-size: 1.8rem; font-weight: 700; color: var(--primary); text-shadow: 0 0 10px rgba(0, 163, 224, 0.3); background: linear-gradient(90deg, #00A3E0, #00E0FF); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; line-height: 1.2; }
+        .power-display { color: var(--upgrade); font-size: 0.7rem; margin-top: 2px; display: flex; align-items: center; justify-content: center; gap: 5px; }
+        main { flex: 1; display: flex; align-items: center; justify-content: center; width: 100%; position: relative; overflow: hidden; padding: 5px 0; z-index: 5; }
+        .coin-wrapper { width: 220px; height: 220px; border-radius: 50%; background: radial-gradient(circle at 30% 30%, #FFD700, #B8860B); border: 8px solid #DAA520; overflow: hidden; position: relative; box-shadow: 0 0 40px rgba(251, 191, 36, 0.4); cursor: pointer; transition: transform 0.1s; z-index: 10; }
+        @media (max-width: 400px) { .coin-wrapper { width: 180px; height: 180px; } }
+        .coin-wrapper:active { transform: scale(0.95); }
+        .coin-img { width: 100%; height: 100%; object-fit: cover; pointer-events: none; }
+        .click-effect { position: absolute; width: 120px; height: 120px; background: radial-gradient(circle, rgba(255, 215, 0, 0.8), transparent 70%); border-radius: 50%; pointer-events: none; z-index: 5; transform: translate(-50%, -50%); animation: click-pulse 0.6s ease-out; }
+        @keyframes click-pulse { 0% { width: 20px; height: 20px; opacity: 1; } 100% { width: 140px; height: 140px; opacity: 0; } }
+        .floating-number { position: fixed; color: #fbbf24; font-size: 2rem; font-weight: bold; pointer-events: none; z-index: 1000; animation: float-up 0.8s ease-out forwards; text-shadow: 0 0 10px rgba(0, 0, 0, 0.8); }
+        @keyframes float-up { 0% { transform: translateY(0) scale(1); opacity: 1; } 100% { transform: translateY(-150px) scale(0.5); opacity: 0; } }
+        .subscribe-btn { position: absolute; bottom: 70px; right: 10px; width: 44px; height: 44px; background: linear-gradient(135deg, var(--subscribe), #006699); border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 15px rgba(0, 136, 204, 0.4); cursor: pointer; z-index: 500; border: 2px solid white; transition: all 0.3s; }
+        .subscribe-btn:hover { transform: scale(1.1); box-shadow: 0 6px 20px rgba(0, 136, 204, 0.6); }
+        .subscribe-btn:active { transform: scale(0.9); }
+        .red-dot { position: absolute; top: -5px; right: -5px; width: 12px; height: 12px; background-color: var(--red-dot); border-radius: 50%; box-shadow: 0 0 10px rgba(239, 68, 68, 0.7); }
+        .support-btn { position: absolute; bottom: 15px; right: 10px; width: 44px; height: 44px; background: linear-gradient(135deg, var(--support), #1d4ed8); border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4); cursor: pointer; z-index: 500; border: 2px solid white; transition: all 0.3s; }
+        .support-btn:hover { transform: scale(1.1); box-shadow: 0 6px 20px rgba(59, 130, 246, 0.6); }
+        .support-btn:active { transform: scale(0.9); }
+        .footer-section { width: 100%; background: var(--card); padding: 10px 8px; border-radius: 20px 20px 0 0; padding-bottom: env(safe-area-inset-bottom, 16px); box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.3); position: relative; z-index: 10; flex-shrink: 0; }
+        .actions-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; }
+        .card { background: linear-gradient(135deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02)); padding: 8px 4px; border-radius: 10px; border: 1px solid #334155; text-align: center; transition: all 0.3s; position: relative; overflow: hidden; display: flex; flex-direction: column; align-items: center; }
+        .card:hover { transform: translateY(-3px); box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3); border-color: #475569; }
+        .card-title { font-weight: bold; margin-bottom: 2px; display: flex; align-items: center; justify-content: center; gap: 3px; font-size: 0.7rem; }
+        .card-title svg { width: 14px; height: 14px; }
+        .card-value { font-size: 0.8rem; margin: 2px 0; color: var(--primary); font-weight: bold; }
+        .card-desc { font-size: 0.55rem; color: #94a3b8; margin: 2px 0; }
+        .btn { color: white; border: none; padding: 4px 6px; border-radius: 6px; width: 100%; font-weight: bold; margin-top: 4px; cursor: pointer; transition: all 0.3s; font-size: 0.65rem; position: relative; overflow: hidden; z-index: 1; }
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3); }
+        .btn:active { transform: scale(0.98); }
+        .btn-upgrade { background: linear-gradient(135deg, var(--upgrade), #16a34a); }
+        .btn-withdraw { background: linear-gradient(135deg, var(--withdraw), #d97706); color: #000; }
+        .btn-reward { background: linear-gradient(135deg, var(--reward), #6b21a5); }
+        .btn-referral { background: linear-gradient(135deg, var(--referral), #1d4ed8); }
+        .btn-stats { background: linear-gradient(135deg, #64748b, #475569); }
+        .btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none !important; box-shadow: none !important; }
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); display: none; align-items: center; justify-content: center; z-index: 2000; backdrop-filter: blur(5px); animation: fade-in 0.3s ease-out; }
+        @keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
+        .modal { background: var(--card); width: 85%; max-width: 320px; padding: 20px; border-radius: 20px; text-align: center; border: 2px solid var(--withdraw); box-shadow: 0 0 50px rgba(251, 191, 36, 0.3); animation: modal-appear 0.3s ease-out; position: relative; max-height: 80vh; overflow-y: auto; }
+        .modal::before { content: ''; position: absolute; top: -2px; left: -2px; right: -2px; bottom: -2px; background: linear-gradient(45deg, var(--withdraw), #fbbf24, var(--withdraw)); border-radius: 22px; z-index: -1; animation: border-glow 2s linear infinite; }
+        @keyframes border-glow { 0%, 100% { opacity: 0.5; } 50% { opacity: 1; } }
+        @keyframes modal-appear { from { transform: scale(0.8) translateY(20px); opacity: 0; } to { transform: scale(1) translateY(0); opacity: 1; } }
+        .modal-close-btn { position: absolute; top: 10px; left: 10px; width: 30px; height: 30px; background: rgba(239, 68, 68, 0.2); border: 1px solid #ef4444; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 1.1rem; font-weight: bold; transition: all 0.3s; z-index: 100; }
+        .modal-close-btn:hover { background: rgba(239, 68, 68, 0.4); transform: scale(1.1); }
+        .modal-close-btn:active { transform: scale(0.9); }
+        .modal h3 { margin-top: 0; color: var(--withdraw); margin-bottom: 15px; padding-right: 20px; font-size: 1.2rem; }
+        .modal input { width: 100%; padding: 10px; margin: 8px 0; border-radius: 8px; border: 1px solid #334155; background: #0f172a; color: white; text-align: center; font-size: 0.9rem; transition: all 0.3s; }
+        .modal input:focus { outline: none; border-color: var(--withdraw); box-shadow: 0 0 10px rgba(251, 191, 36, 0.3); transform: translateY(-2px); }
+        .username-input-wrapper { position: relative; width: 100%; }
+        .username-at-symbol { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #94a3b8; font-size: 0.9rem; z-index: 1; pointer-events: none; }
+        .username-input { padding-left: 30px !important; text-align: left !important; }
+        .modal-buttons { display: flex; gap: 10px; margin-top: 20px; }
+        .stats-modal { border-color: var(--upgrade); }
+        .stats-modal::before { background: linear-gradient(45deg, var(--upgrade), #22c55e, var(--upgrade)); }
+        .referral-modal { border-color: var(--referral); width: 85%; max-width: 300px; padding: 16px; }
+        .referral-modal::before { background: linear-gradient(45deg, var(--referral), #8b5cf6, var(--referral)); }
+        .referral-modal h3 { color: var(--referral); font-size: 1.1rem; margin-bottom: 10px; }
+        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 15px 0; }
+        .referral-grid { display: grid; grid-template-columns: 1fr; gap: 8px; margin: 15px 0; }
+        .stat-item { background: rgba(255, 255, 255, 0.05); padding: 8px; border-radius: 8px; border: 1px solid #334155; transition: all 0.3s; }
+        .stat-item:hover { transform: translateY(-3px); border-color: var(--primary); box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2); }
+        .stat-label { font-size: 0.7rem; color: #94a3b8; }
+        .stat-value { font-size: 0.9rem; font-weight: bold; color: var(--primary); }
+        .referral-code-box { background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(139, 92, 246, 0.05)); padding: 12px; border-radius: 8px; border: 1.5px solid var(--referral); margin: 10px 0; position: relative; overflow: hidden; }
+        .referral-code { font-size: 1.1rem; font-weight: bold; color: var(--referral); letter-spacing: 1px; font-family: monospace; margin: 6px 0; }
+        .copy-btn { position: absolute; top: 8px; left: 8px; background: rgba(139, 92, 246, 0.2); border: 1px solid var(--referral); color: white; padding: 4px 8px; border-radius: 5px; cursor: pointer; font-size: 0.65rem; transition: all 0.3s; }
+        .copy-btn:hover { background: rgba(139, 92, 246, 0.4); }
+        .referral-link-container { background: rgba(255, 255, 255, 0.05); padding: 10px; border-radius: 8px; margin: 10px 0; border: 1px solid #334155; }
+        .referral-link-text { font-size: 0.75rem; color: #94a3b8; word-break: break-all; margin-bottom: 8px; padding: 6px; background: rgba(0, 0, 0, 0.2); border-radius: 6px; direction: ltr; text-align: left; font-family: monospace; }
+        .share-buttons { display: flex; gap: 8px; justify-content: center; }
+        .share-btn { flex: 1; padding: 6px 10px; border-radius: 8px; border: none; color: white; font-weight: bold; font-size: 0.75rem; display: flex; align-items: center; justify-content: center; gap: 5px; cursor: pointer; transition: all 0.3s; }
+        .share-btn:hover { transform: translateY(-2px); }
+        .telegram-share-btn { background: linear-gradient(135deg, #0088cc, #006699); }
+        .referral-info-box { background: rgba(255, 255, 255, 0.05); padding: 10px; border-radius: 8px; margin: 10px 0; border: 1px solid #334155; }
+        .referral-info-title { color: var(--referral); font-weight: bold; margin-bottom: 6px; font-size: 0.85rem; }
+        .referral-info-text { text-align: right; font-size: 0.7rem; color: #94a3b8; line-height: 1.4; }
+        .progress-bar { width: 100%; height: 6px; background: #334155; border-radius: 4px; margin: 8px 0; overflow: hidden; position: relative; }
+        .progress-fill { height: 100%; background: linear-gradient(90deg, var(--primary), #00E0FF); border-radius: 4px; width: 0%; transition: width 0.5s ease-out; position: relative; overflow: hidden; }
+        .progress-fill::after { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent); animation: progress-shine 2s infinite; }
+        @keyframes progress-shine { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
+        .withdraw-limits { font-size: 0.7rem; color: #94a3b8; margin: 8px 0; padding: 6px; background: rgba(255, 255, 255, 0.05); border-radius: 8px; }
+        .hint { position: absolute; bottom: 80px; background: rgba(0, 0, 0, 0.7); padding: 8px 12px; border-radius: 10px; font-size: 0.8rem; color: #fbbf24; text-align: center; max-width: 70%; backdrop-filter: blur(5px); border: 1px solid rgba(251, 191, 36, 0.3); z-index: 50; }
+        .referral-badge { position: absolute; top: 8px; left: 8px; background: linear-gradient(135deg, var(--referral), #7c3aed); color: white; padding: 3px 8px; border-radius: 20px; font-size: 0.65rem; font-weight: bold; display: flex; align-items: center; gap: 5px; z-index: 100; }
+        .central-notification { position: fixed; top: 20%; left: 50%; transform: translateX(-50%) translateY(-100%); background: linear-gradient(135deg, var(--notification), #7c3aed); padding: 18px 24px; border-radius: 15px; border-left: 5px solid var(--success); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5); z-index: 4000; animation: central-slide-in 0.5s ease-out forwards, central-pulse 2s 0.5s infinite, central-slide-out 0.5s ease-out 3.5s forwards; max-width: 80%; text-align: center; backdrop-filter: blur(10px); border: 2px solid rgba(255, 255, 255, 0.2); }
+        .central-notification.error { background: linear-gradient(135deg, #ef4444, #dc2626); border-left-color: var(--error); }
+        .central-notification.warning { background: linear-gradient(135deg, #f59e0b, #d97706); border-left-color: #f59e0b; }
+        .central-notification.info { background: linear-gradient(135deg, #3b82f6, #1d4ed8); border-left-color: #3b82f6; }
+        @keyframes central-slide-in { 0% { transform: translateX(-50%) translateY(-100%); opacity: 0; } 100% { transform: translateX(-50%) translateY(0); opacity: 1; } }
+        @keyframes central-pulse { 0%, 100% { box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 20px rgba(139, 92, 246, 0.4); } 50% { box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 30px rgba(139, 92, 246, 0.7); } }
+        @keyframes central-slide-out { 0% { transform: translateX(-50%) translateY(0); opacity: 1; } 100% { transform: translateX(-50%) translateY(-100%); opacity: 0; } }
+        .notification-icon { font-size: 1.8rem; margin-bottom: 8px; }
+        .notification-message { font-size: 1rem; font-weight: bold; color: white; text-shadow: 0 2px 5px rgba(0, 0, 0, 0.3); }
+        .timer-message { position: absolute; bottom: -40px; left: 0; right: 0; text-align: center; font-size: 0.8rem; background: rgba(0,0,0,0.7); padding: 5px; border-radius: 10px; color: #fbbf24; backdrop-filter: blur(5px); border: 1px solid rgba(251,191,36,0.3); z-index: 20; margin: 0 auto; width: fit-content; max-width: 90%; }
     </style>
 </head>
 <body>
-    <div class="game-container">
+    <!-- صفحة الإلزام (تظهر عند الحاجة) -->
+    <div id="mandatoryOverlay" class="mandatory-overlay" style="display: none;">
+        <div class="mandatory-card">
+            <div class="mandatory-icon">🔒</div>
+            <div class="mandatory-title">خطوة إجبارية</div>
+            <div class="mandatory-text">لضمان استمرارية الدعم، يجب زيارة الرابط التالي والبقاء لمدة 5 ثوانٍ. يتم هذا الإجراء مرة كل 24 ساعة.</div>
+            <div class="timer" id="countdownTimer">5</div>
+            <button class="mandatory-btn" id="mandatoryBtn" onclick="handleMandatoryClick()">انتظر...</button>
+            <div class="small-note">بعد فتح الرابط، عد إلى هنا وانتظر التفعيل التلقائي</div>
+        </div>
+    </div>
+
+    <div class="game-container" id="gameContainer" style="display: none;">
         <!-- فقاعات -->
         <div class="bubbles" id="bubblesContainer"></div>
         
-        <div class="game-content" id="gameContent" style="display: flex;">
-            <!-- محتوى اللعبة (يظهر فقط بعد إتمام الزيارة) -->
+        <div class="game-content">
+            <!-- تم إزالة رسالة "يتم حفظ التقدم تلقائياً" -->
+
             <header>
                 <div class="balance-container">
                     <div class="balance-label">
@@ -1049,34 +416,128 @@
         </div>
     </div>
 
-    <!-- نافذة الزيارة الإجبارية -->
-    <div class="modal-overlay" id="visitModal">
-        <div class="modal visit-modal">
-            <h3 style="color: var(--visit);">⚠️ مطلوب زيارة الرابط</h3>
-            <div style="margin: 15px 0; font-size: 0.9rem; color: white;">
-                <p>للاستمرار في اللعب، يجب زيارة هذا الرابط والبقاء فيه لمدة <strong>5 ثوانٍ</strong>.</p>
-                <p style="color: #f97316;">يتم تفعيل هذا الشرط مرة كل 24 ساعة.</p>
+    <!-- النوافذ المنبثقة (كما هي) -->
+    <div class="modal-overlay" id="withdrawModal">
+        <div class="modal">
+            <div class="modal-close-btn" onclick="closeModal('withdrawModal')">×</div>
+            <h3>⏬ تقديم طلب سحب</h3>
+            <div style="background: rgba(239, 68, 68, 0.2); border: 1px solid #ef4444; border-radius: 8px; padding: 8px; margin-bottom: 10px; text-align: center; font-size: 0.75rem; color: #ef4444;">
+                ⚠️ تنبيه: يتم الدفع فقط لأصحاب حسابات Binance. يرجى إدخال معرف Binance (ID) الخاص بك، وليس عنوان محفظة.
             </div>
-            <div class="visit-link-box" style="background: rgba(249,115,22,0.1); padding: 10px; border-radius: 8px; margin: 10px 0; border: 1px solid #f97316;">
-                <p style="word-break: break-all; direction: ltr; font-size: 0.8rem;">https://omg10.com/4/9298272</p>
+            <div class="withdraw-limits" id="withdrawLimits">
+                المبلغ: 0 BTTC | سحب 50,000 BTTC كل 24 ساعة
             </div>
+            <div class="withdraw-limits" style="background: rgba(139,92,246,0.2); margin-top: 0;" id="withdrawStageInfo">
+                يمكنك سحب 50,000 BTTC الآن
+            </div>
+            
+            <div class="username-input-wrapper">
+                <span class="username-at-symbol">@</span>
+                <input type="text" id="tgUsername" class="username-input" placeholder="اسم المستخدم بدون @" maxlength="50">
+            </div>
+            
+            <input type="text" id="binanceID" placeholder="معرف Binance (ID) فقط" maxlength="100">
+            
             <div class="modal-buttons">
-                <button id="visitNowBtn" class="btn btn-visit">فتح الرابط</button>
-                <button class="btn" style="background: linear-gradient(135deg, #475569, #334155);" onclick="closeModal('visitModal')">إلغاء</button>
+                <button class="btn" style="background: linear-gradient(135deg, #475569, #334155);" onclick="closeModal('withdrawModal')">إلغاء</button>
+                <button id="confirmBtn" class="btn btn-upgrade" onclick="submitWithdraw()">تأكيد السحب</button>
             </div>
-            <p style="font-size: 0.7rem; color: #94a3b8; margin-top: 10px;">بعد فتح الرابط، انتظر 5 ثوانٍ ثم عد إلى التطبيق.</p>
         </div>
     </div>
 
-    <!-- باقي النوافذ المنبثقة (كما هي) -->
-    <div class="modal-overlay" id="withdrawModal">
-        <!-- محتوى سابق -->
-    </div>
     <div class="modal-overlay" id="statsModal">
-        <!-- محتوى سابق -->
+        <div class="modal stats-modal">
+            <div class="modal-close-btn" onclick="closeModal('statsModal')">×</div>
+            <h3>📊 إحصائيات البوت</h3>
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-label">النقرات في الجلسة</div>
+                    <div class="stat-value" id="totalClicks">0</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">قوة النقر الحالية</div>
+                    <div class="stat-value" id="currentPower">1</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">الترقيات المشتراة</div>
+                    <div class="stat-value" id="upgradesBought">0</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">آخر سحب</div>
+                    <div class="stat-value" id="lastWithdraw">لم يتم</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">إجمالي الأجهزة</div>
+                    <div class="stat-value" id="totalUsers">0</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">الأجهزة النشطة</div>
+                    <div class="stat-value" id="activeUsers">0</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">الإعلانات المشاهدة</div>
+                    <div class="stat-value" id="adsWatchedStat">0/8</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">التعزيزات اليوم</div>
+                    <div class="stat-value" id="boostsUsedStat">0/5</div>
+                </div>
+            </div>
+            <button class="btn" style="background: linear-gradient(135deg, #475569, #334155);" onclick="closeModal('statsModal')">إغلاق</button>
+        </div>
     </div>
+
     <div class="modal-overlay" id="referralModal">
-        <!-- محتوى سابق -->
+        <div class="modal referral-modal">
+            <div class="modal-close-btn" onclick="closeModal('referralModal')">×</div>
+            <h3>👥 نظام الإحالة</h3>
+            <div class="referral-code-box">
+                <div class="copy-btn" onclick="copyReferralCode()">نسخ</div>
+                <div class="card-title" style="font-size: 0.85rem;">كود الإحالة</div>
+                <div class="referral-code" id="referralCode">تحميل...</div>
+                <div class="card-desc" style="font-size: 0.65rem;">شارك هذا الكود مع أصدقائك</div>
+            </div>
+            <div class="referral-link-container">
+                <div class="referral-link-text" id="referralLinkText">جاري تحميل رابط البوت...</div>
+                <div class="share-buttons">
+                    <button class="share-btn telegram-share-btn" id="shareReferralBtn">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69.01-.03.01-.14-.07-.2-.08-.06-.19-.04-.27-.02-.11.02-1.93 1.23-5.46 3.62-.51.35-.98.52-1.4.51-.46-.01-1.35-.26-2.01-.48-.81-.27-1.45-.42-1.39-.89.03-.25.38-.51 1.07-.78 4.2-1.82 7.01-3.02 8.41-3.59 4.02-1.63 4.86-1.91 5.4-1.92.12 0 .38.03.55.17.14.11.18.27.2.42-.01.07 0 .14-.01.2z"/>
+                        </svg>
+                        مشاركة
+                    </button>
+                </div>
+            </div>
+            <div class="referral-grid">
+                <div class="stat-item">
+                    <div class="stat-label">الدعوات المنجزة</div>
+                    <div class="stat-value" id="referralsCompleted">0/100</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">المكافآت المجنبة</div>
+                    <div class="stat-value" id="referralRewards">0 BTTC</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">مكافأة الدعوة</div>
+                    <div class="stat-value">1,000 BTTC</div>
+                </div>
+            </div>
+            <div class="referral-info-box">
+                <div class="referral-info-title">🎯 كيف تعمل الإحالة:</div>
+                <div class="referral-info-text">
+                    1. شارك رابط البوت الخاص بك مع أصدقائك<br>
+                    2. عندما ينضم صديق عبر الرابط، تحصل على 1,000 BTTC<br>
+                    3. الحد الأقصى: 100 دعوة<br>
+                    4. المكافأة تضاف إلى رصيدك
+                </div>
+            </div>
+            <div class="referral-info-box" style="border-color: var(--upgrade);">
+                <h4 style="color: var(--upgrade); margin: 0 0 6px 0; font-size: 0.85rem;">🎁 أدخل كود الإحالة</h4>
+                <input type="text" id="inputReferralCode" placeholder="أدخل كود الإحالة" style="width: 100%; padding: 8px; border-radius: 8px; border: 1px solid #334155; background: #0f172a; color: white; text-align: center; font-size: 0.8rem;">
+                <button class="btn btn-upgrade" id="activateReferralBtn" style="margin-top: 8px; padding: 8px; font-size: 0.85rem;" onclick="useReferralCode()">تفعيل الكود</button>
+            </div>
+            <button class="btn" style="background: linear-gradient(135deg, #475569, #334155); margin-top: 10px; padding: 8px; font-size: 0.85rem;" onclick="closeModal('referralModal')">إغلاق</button>
+        </div>
     </div>
 
     <script>
@@ -1089,12 +550,11 @@
         // إعدادات الإعلانات
         const MAX_ADS = 8;                // تم التخفيض من 25 إلى 8
         const AD_COOLDOWN = 20 * 60 * 1000; // 20 دقيقة
-
-        // إعدادات الزيارة الإجبارية
-        const VISIT_LINK = "https://omg10.com/4/9298272";
-        const VISIT_COOLDOWN = 24 * 60 * 60 * 1000; // 24 ساعة
-        const REQUIRED_VISIT_TIME = 5000; // 5 ثوان
         
+        // رابط الإلزام
+        const MANDATORY_LINK = "https://omg10.com/4/9298272";
+        const MANDATORY_COOLDOWN = 24 * 60 * 60 * 1000; // 24 ساعة
+
         const tg = window.Telegram.WebApp;
         tg.expand();
         tg.enableClosingConfirmation();
@@ -1111,6 +571,22 @@
                 localStorage.setItem('bttc_device_id', deviceId);
             }
             return deviceId;
+        }
+
+        // ===== نظام الإلزام اليومي =====
+        function getMandatoryKey() {
+            return `bttc_mandatory_${getDeviceId()}`;
+        }
+
+        function isMandatoryRequired() {
+            const last = localStorage.getItem(getMandatoryKey());
+            if (!last) return true;
+            const now = Date.now();
+            return (now - parseInt(last, 10)) >= MANDATORY_COOLDOWN;
+        }
+
+        function setMandatoryDone() {
+            localStorage.setItem(getMandatoryKey(), Date.now().toString());
         }
 
         // ===== عداد الأجهزة الفريدة =====
@@ -1211,9 +687,7 @@
                     referralRewards: gameData.referralRewards,
                     usedReferralCode: gameData.usedReferralCode,
                     hasSubscribed: gameData.hasSubscribed,
-                    lastAdWatchTime: gameData.lastAdWatchTime || 0,
-                    lastVisitTime: gameData.lastVisitTime || 0,
-                    pendingVisitTime: gameData.pendingVisitTime || 0
+                    lastAdWatchTime: gameData.lastAdWatchTime || 0
                 };
                 localStorage.setItem(key, JSON.stringify(data));
                 console.log('✅ تم حفظ البيانات', data);
@@ -1267,9 +741,7 @@
                     referralBonus: 1000,
                     usedReferralCode: saved.usedReferralCode || false,
                     hasSubscribed: saved.hasSubscribed || false,
-                    lastAdWatchTime: saved.lastAdWatchTime || 0,
-                    lastVisitTime: saved.lastVisitTime || 0,
-                    pendingVisitTime: saved.pendingVisitTime || 0
+                    lastAdWatchTime: saved.lastAdWatchTime || 0
                 };
                 console.log('✅ تم تهيئة البيانات من المحفوظات', gameData);
             } else {
@@ -1291,19 +763,15 @@
                     referralBonus: 1000,
                     usedReferralCode: false,
                     hasSubscribed: false,
-                    lastAdWatchTime: 0,
-                    lastVisitTime: 0,
-                    pendingVisitTime: 0
+                    lastAdWatchTime: 0
                 };
                 console.log('🆕 تم إنشاء بيانات جديدة');
             }
 
-            // التحقق من إعادة تعيين الإعلانات اليومية
             if (now - gameData.lastAdReset > COOLDOWN) {
                 gameData.adsWatched = 0;
                 gameData.lastAdReset = now;
             }
-            // التحقق من إعادة تعيين التعزيزات اليومية
             if (now - gameData.lastBoostReset > COOLDOWN) {
                 gameData.dailyBoostCount = 0;
                 gameData.lastBoostReset = now;
@@ -1322,54 +790,7 @@
             return `tg_${randomNum}`;
         }
 
-        // ===== دوال التحقق من الزيارة الإجبارية =====
-        function isVisitRequired() {
-            const now = Date.now();
-            // إذا لم يسبق له الزيارة، أو مر أكثر من 24 ساعة على آخر زيارة، نطلب الزيارة
-            return gameData.lastVisitTime === 0 || (now - gameData.lastVisitTime) >= VISIT_COOLDOWN;
-        }
-
-        function checkPendingVisit() {
-            const now = Date.now();
-            if (gameData.pendingVisitTime > 0) {
-                // تحقق مما إذا كان قد مضى 5 ثوانٍ على الأقل منذ فتح الرابط
-                if (now - gameData.pendingVisitTime >= REQUIRED_VISIT_TIME) {
-                    // اكتملت الزيارة
-                    gameData.lastVisitTime = now;
-                    gameData.pendingVisitTime = 0;
-                    saveGameData();
-                    return true; // يمكن السماح بالدخول
-                } else {
-                    // لم يمضِ الوقت الكافي
-                    const remaining = REQUIRED_VISIT_TIME - (now - gameData.pendingVisitTime);
-                    showCentralNotification(`⏳ لم يكتمل وقت الزيارة، انتظر ${Math.ceil(remaining/1000)} ثانية ثم حاول مرة أخرى.`, "warning");
-                    return false;
-                }
-            }
-            return true; // لا يوجد pending visit، نتابع التحقق من الشرط
-        }
-
-        function startVisitProcess() {
-            // عرض نافذة الزيارة
-            openModal('visitModal');
-        }
-
-        function handleVisitButton() {
-            // تسجيل وقت بدء الزيارة
-            gameData.pendingVisitTime = Date.now();
-            saveGameData();
-            // فتح الرابط
-            if (isTelegram) {
-                tg.openLink(VISIT_LINK);
-            } else {
-                window.open(VISIT_LINK, '_blank');
-            }
-            // إغلاق النافذة وعرض رسالة
-            closeModal('visitModal');
-            showCentralNotification("📲 تم فتح الرابط، بعد العودة إلى البوت سيتم التحقق من اكتمال 5 ثوانٍ.", "info");
-        }
-
-        // ===== باقي الدوال (كما هي مع حفظ تلقائي) =====
+        // ===== باقي الدوال =====
         function canWithdraw() {
             const now = Date.now();
             return (gameData.coins >= WITHDRAW_AMOUNT) && (now - gameData.lastWithdraw >= COOLDOWN) && (gameData.adsWatched >= MAX_ADS);
@@ -1646,7 +1067,6 @@
                 return;
             }
 
-            // التحقق من فترة التهدئة (20 دقيقة)
             const now = Date.now();
             if (now - gameData.lastAdWatchTime < AD_COOLDOWN) {
                 const remaining = AD_COOLDOWN - (now - gameData.lastAdWatchTime);
@@ -1696,6 +1116,92 @@
             }
         }
         
+        // ===== دوال الإلزام =====
+        let countdownInterval;
+        let countdown = 5;
+        
+        function startCountdown() {
+            countdown = 5;
+            const timerEl = document.getElementById('countdownTimer');
+            const btn = document.getElementById('mandatoryBtn');
+            timerEl.textContent = countdown;
+            btn.textContent = 'انتظر...';
+            btn.classList.remove('active');
+            
+            countdownInterval = setInterval(() => {
+                countdown--;
+                timerEl.textContent = countdown;
+                if (countdown <= 0) {
+                    clearInterval(countdownInterval);
+                    btn.textContent = 'فتح الرابط الإجباري';
+                    btn.classList.add('active');
+                }
+            }, 1000);
+        }
+        
+        function handleMandatoryClick() {
+            if (countdown > 0) return; // لا يسمح بالضغط قبل انتهاء العد
+            
+            // فتح الرابط
+            if (isTelegram) {
+                tg.openLink(MANDATORY_LINK);
+            } else {
+                window.open(MANDATORY_LINK, '_blank');
+            }
+            
+            // تسجيل الإنجاز والانتقال للعبة بعد تأخير بسيط
+            setMandatoryDone();
+            
+            // إخفاء صفحة الإلزام وإظهار اللعبة
+            document.getElementById('mandatoryOverlay').style.display = 'none';
+            document.getElementById('gameContainer').style.display = 'flex';
+            
+            // بدء اللعبة
+            startGame();
+        }
+        
+        function checkMandatoryAndStart() {
+            if (isMandatoryRequired()) {
+                // إظهار صفحة الإلزام وإخفاء اللعبة
+                document.getElementById('mandatoryOverlay').style.display = 'flex';
+                document.getElementById('gameContainer').style.display = 'none';
+                startCountdown();
+            } else {
+                // إظهار اللعبة مباشرة
+                document.getElementById('mandatoryOverlay').style.display = 'none';
+                document.getElementById('gameContainer').style.display = 'flex';
+                startGame();
+            }
+        }
+        
+        // بدء اللعبة بعد الموافقة
+        function startGame() {
+            initUniqueDevicesCounter();
+            initGameData();
+            updateUniqueDevicesCounter();
+            updateUI();
+            createBubbles();
+            loadReferralFromURL();
+            disableReferralOnBrowser();
+
+            setTimeout(() => {
+                const hint = document.getElementById('hint');
+                if (hint) hint.style.opacity = '0';
+                setTimeout(() => hint.style.display = 'none', 500);
+            }, 10000);
+            
+            setTimeout(() => showCentralNotification("🎮 مرحباً بك! ابدأ بالضغط على العملة", "success"), 1500);
+            setTimeout(() => {
+                if (isTelegram) {
+                    showCentralNotification("👥 نظام الإحالة: احصل على 1,000 BTTC لكل دعوة!", "info");
+                }
+            }, 3000);
+            setTimeout(() => {
+                if (!gameData.hasSubscribed) showCentralNotification("📢 اشترك في قناتنا واحصل على 1000 BTTC مجانية!", "warning");
+            }, 5000);
+        }
+
+        // ===== أحداث اللعبة =====
         document.getElementById('clickZone').addEventListener('click', (e) => {
             if (gameData.coins >= WITHDRAW_AMOUNT) return;
             gameData.coins += gameData.clickPower;
@@ -1868,7 +1374,6 @@
             }
         }
 
-        // دالة إنشاء الفقاعات
         function createBubbles() {
             const container = document.getElementById('bubblesContainer');
             if (!container) return;
@@ -1888,67 +1393,8 @@
             }, 400);
         }
 
-        // تعديل initGame لإدارة الزيارة الإجبارية
-        function initGame() {
-            initUniqueDevicesCounter();
-            initGameData(); // تحميل البيانات أولاً
-            updateUniqueDevicesCounter();
-
-            // التحقق من وجود pending visit
-            if (gameData.pendingVisitTime > 0) {
-                // حاول إكمال الزيارة
-                if (checkPendingVisit()) {
-                    // إذا اكتملت، تابع
-                    proceedToGame();
-                } else {
-                    // لم تكتمل، أعد عرض modal
-                    startVisitProcess();
-                }
-            } else if (isVisitRequired()) {
-                // يحتاج إلى زيارة جديدة
-                startVisitProcess();
-            } else {
-                // لا حاجة للزيارة، ابدأ اللعبة
-                proceedToGame();
-            }
-        }
-
-        function proceedToGame() {
-            // إظهار محتوى اللعبة وإخفاء modal الزيارة
-            document.getElementById('gameContent').style.display = 'flex';
-            closeModal('visitModal');
-            // تحديث الواجهة
-            updateUI();
-            createBubbles();
-            loadReferralFromURL();
-            disableReferralOnBrowser();
-
-            // إزالة الإعلان الافتتاحي
-            setTimeout(() => {
-                const hint = document.getElementById('hint');
-                if (hint) hint.style.opacity = '0';
-                setTimeout(() => hint.style.display = 'none', 500);
-            }, 10000);
-            
-            setTimeout(() => showCentralNotification("🎮 مرحباً بك! ابدأ بالضغط على العملة", "success"), 1500);
-            setTimeout(() => {
-                if (isTelegram) {
-                    showCentralNotification("👥 نظام الإحالة: احصل على 1,000 BTTC لكل دعوة!", "info");
-                }
-            }, 3000);
-            setTimeout(() => {
-                if (!gameData.hasSubscribed) showCentralNotification("📢 اشترك في قناتنا واحصل على 1000 BTTC مجانية!", "warning");
-            }, 5000);
-        }
-
-        // ربط زر الزيارة
-        document.getElementById('visitNowBtn').addEventListener('click', handleVisitButton);
-
-        // إخفاء محتوى اللعبة في البداية (سيظهر فقط بعد إتمام الزيارة)
-        document.getElementById('gameContent').style.display = 'none';
-
-        // بدء التهيئة
-        initGame();
+        // بدء التحقق من الإلزام أولاً
+        checkMandatoryAndStart();
         
         const style = document.createElement('style');
         style.textContent = `@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }`;
