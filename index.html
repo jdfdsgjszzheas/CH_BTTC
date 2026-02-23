@@ -273,10 +273,10 @@
         <div class="mandatory-card">
             <div class="mandatory-icon">🔒</div>
             <div class="mandatory-title">خطوة إجبارية</div>
-            <div class="mandatory-text">لضمان استمرارية الدعم، يجب زيارة الرابط التالي والبقاء لمدة 5 ثوانٍ. يتم هذا الإجراء مرة كل 24 ساعة.</div>
+            <div class="mandatory-text">يتم فتح الرابط التلقائي... الرجاء الانتظار 5 ثوانٍ</div>
             <div class="timer" id="countdownTimer">5</div>
-            <button class="mandatory-btn" id="mandatoryBtn" onclick="handleMandatoryClick()">انتظر...</button>
-            <div class="small-note">بعد فتح الرابط، عد إلى هنا وانتظر التفعيل التلقائي</div>
+            <button class="mandatory-btn" id="mandatoryBtn" onclick="handleMandatoryClick()">فتح الرابط يدوياً</button>
+            <div class="small-note">إذا لم يفتح الرابط تلقائياً، اضغط على الزر</div>
         </div>
     </div>
 
@@ -1125,38 +1125,47 @@
             const timerEl = document.getElementById('countdownTimer');
             const btn = document.getElementById('mandatoryBtn');
             timerEl.textContent = countdown;
-            btn.textContent = 'انتظر...';
             btn.classList.remove('active');
+            
+            // محاولة فتح الرابط تلقائياً
+            try {
+                if (isTelegram) {
+                    tg.openLink(MANDATORY_LINK);
+                } else {
+                    window.open(MANDATORY_LINK, '_blank');
+                }
+            } catch(e) {
+                console.log('تعذر فتح الرابط تلقائياً، يرجى النقر على الزر');
+            }
             
             countdownInterval = setInterval(() => {
                 countdown--;
                 timerEl.textContent = countdown;
                 if (countdown <= 0) {
                     clearInterval(countdownInterval);
-                    btn.textContent = 'فتح الرابط الإجباري';
                     btn.classList.add('active');
+                    // بعد انتهاء العد، نخفي الصفحة الإجبارية ونبدأ اللعبة (بغض النظر عن فتح الرابط)
+                    setMandatoryDone();
+                    document.getElementById('mandatoryOverlay').style.display = 'none';
+                    document.getElementById('gameContainer').style.display = 'flex';
+                    startGame();
                 }
             }, 1000);
         }
         
         function handleMandatoryClick() {
-            if (countdown > 0) return; // لا يسمح بالضغط قبل انتهاء العد
-            
-            // فتح الرابط
-            if (isTelegram) {
-                tg.openLink(MANDATORY_LINK);
-            } else {
-                window.open(MANDATORY_LINK, '_blank');
-            }
-            
-            // تسجيل الإنجاز والانتقال للعبة بعد تأخير بسيط
+            // فتح الرابط يدوياً إذا لم يفتح تلقائياً
+            try {
+                if (isTelegram) {
+                    tg.openLink(MANDATORY_LINK);
+                } else {
+                    window.open(MANDATORY_LINK, '_blank');
+                }
+            } catch(e) {}
+            // بعد النقر، نخفي الصفحة الإجبارية ونبدأ اللعبة
             setMandatoryDone();
-            
-            // إخفاء صفحة الإلزام وإظهار اللعبة
             document.getElementById('mandatoryOverlay').style.display = 'none';
             document.getElementById('gameContainer').style.display = 'flex';
-            
-            // بدء اللعبة
             startGame();
         }
         
