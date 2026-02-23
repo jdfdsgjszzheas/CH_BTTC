@@ -124,13 +124,7 @@
             line-height: 1.6;
         }
         
-        .timer {
-            font-size: 3rem;
-            font-weight: bold;
-            color: var(--withdraw);
-            margin: 20px 0;
-            text-shadow: 0 0 20px rgba(251, 191, 36, 0.5);
-        }
+        /* تم إزالة التايمر */
         
         .mandatory-btn {
             background: linear-gradient(135deg, var(--primary), #0066a0);
@@ -268,8 +262,8 @@
         <div class="mandatory-card">
             <div class="mandatory-icon">🔒</div>
             <div class="mandatory-title">خطوة إجبارية</div>
-            <div class="mandatory-text">يرجى فتح الرابط التالي ثم العودة لبدء اللعبة</div>
-            <div class="timer" id="countdownTimer">5</div>
+            <div class="mandatory-text">يرجى فتح الرابط التالي ثم العودة لبدء اللعبة. هذا الإجراء مرة واحدة كل 24 ساعة.</div>
+            <!-- تم إزالة التايمر -->
             <button class="mandatory-btn" id="mandatoryBtn" onclick="handleMandatoryClick()">🔗 فتح الرابط</button>
             <div class="small-note">بعد فتح الرابط، عد إلى هنا وستبدأ اللعبة تلقائياً</div>
         </div>
@@ -1112,27 +1106,7 @@
         }
         
         // ===== دوال الإلزام =====
-        let countdownInterval;
-        let countdown = 5;
         let gameStarted = false; // لمنع بدء اللعبة مرتين
-        
-        function startCountdown() {
-            countdown = 5;
-            const timerEl = document.getElementById('countdownTimer');
-            timerEl.textContent = countdown;
-            
-            countdownInterval = setInterval(() => {
-                countdown--;
-                timerEl.textContent = countdown;
-                if (countdown <= 0) {
-                    clearInterval(countdownInterval);
-                    // إذا لم يبدأ بعد، نبدأ اللعبة تلقائياً
-                    if (!gameStarted) {
-                        startGameAfterMandatory();
-                    }
-                }
-            }, 1000);
-        }
         
         function startGameAfterMandatory() {
             if (gameStarted) return;
@@ -1163,7 +1137,7 @@
                 // إظهار صفحة الإلزام وإخفاء اللعبة
                 document.getElementById('mandatoryOverlay').style.display = 'flex';
                 document.getElementById('gameContainer').style.display = 'none';
-                startCountdown();
+                // لا يوجد عداد تنازلي، فقط ننتظر النقر
             } else {
                 // إظهار اللعبة مباشرة
                 document.getElementById('mandatoryOverlay').style.display = 'none';
