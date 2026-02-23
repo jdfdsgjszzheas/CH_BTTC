@@ -11,7 +11,7 @@
     <script src='//libtl.com/sdk.js' data-zone='10022174' data-sdk='show_10022174'></script>
 
     <style>
-        /* ... جميع الأنماط السابقة مع إضافة أنماط الصفحة الإجبارية ... */
+        /* جميع الأنماط السابقة (مختصرة للاختصار) */
         :root {
             --primary: #00A3E0; 
             --bg: #0b0f1a;
@@ -144,11 +144,6 @@
             cursor: pointer;
             transition: all 0.3s;
             margin-top: 15px;
-            opacity: 0.6;
-            pointer-events: none;
-        }
-        
-        .mandatory-btn.active {
             opacity: 1;
             pointer-events: auto;
             transform: scale(1.02);
@@ -273,10 +268,10 @@
         <div class="mandatory-card">
             <div class="mandatory-icon">🔒</div>
             <div class="mandatory-title">خطوة إجبارية</div>
-            <div class="mandatory-text">يتم فتح الرابط التلقائي... الرجاء الانتظار 5 ثوانٍ</div>
+            <div class="mandatory-text">يرجى فتح الرابط التالي ثم العودة لبدء اللعبة</div>
             <div class="timer" id="countdownTimer">5</div>
-            <button class="mandatory-btn" id="mandatoryBtn" onclick="handleMandatoryClick()">فتح الرابط يدوياً</button>
-            <div class="small-note">إذا لم يفتح الرابط تلقائياً، اضغط على الزر</div>
+            <button class="mandatory-btn" id="mandatoryBtn" onclick="handleMandatoryClick()">🔗 فتح الرابط</button>
+            <div class="small-note">بعد فتح الرابط، عد إلى هنا وستبدأ اللعبة تلقائياً</div>
         </div>
     </div>
 
@@ -1119,56 +1114,48 @@
         // ===== دوال الإلزام =====
         let countdownInterval;
         let countdown = 5;
-        let linkOpened = false; // لمنع فتح الرابط عدة مرات
-        
-        function openMandatoryLink() {
-            if (linkOpened) return;
-            linkOpened = true;
-            try {
-                if (isTelegram) {
-                    // محاولة فتح الرابط باستخدام openLink (قد يتطلب تفاعل المستخدم، لكن نجربه)
-                    tg.openLink(MANDATORY_LINK);
-                } else {
-                    window.open(MANDATORY_LINK, '_blank');
-                }
-            } catch(e) {
-                console.log('فشل فتح الرابط تلقائياً');
-            }
-        }
+        let gameStarted = false; // لمنع بدء اللعبة مرتين
         
         function startCountdown() {
             countdown = 5;
             const timerEl = document.getElementById('countdownTimer');
-            const btn = document.getElementById('mandatoryBtn');
             timerEl.textContent = countdown;
-            btn.classList.remove('active');
-            
-            // محاولة فتح الرابط فور ظهور الصفحة
-            setTimeout(() => openMandatoryLink(), 100);
             
             countdownInterval = setInterval(() => {
                 countdown--;
                 timerEl.textContent = countdown;
                 if (countdown <= 0) {
                     clearInterval(countdownInterval);
-                    btn.classList.add('active');
-                    // بعد انتهاء العد، نخفي الصفحة الإجبارية ونبدأ اللعبة (بغض النظر عن فتح الرابط)
-                    setMandatoryDone();
-                    document.getElementById('mandatoryOverlay').style.display = 'none';
-                    document.getElementById('gameContainer').style.display = 'flex';
-                    startGame();
+                    // إذا لم يبدأ بعد، نبدأ اللعبة تلقائياً
+                    if (!gameStarted) {
+                        startGameAfterMandatory();
+                    }
                 }
             }, 1000);
         }
         
-        function handleMandatoryClick() {
-            // فتح الرابط يدوياً إذا لم يفتح تلقائياً
-            openMandatoryLink();
-            // بعد النقر، نخفي الصفحة الإجبارية ونبدأ اللعبة
+        function startGameAfterMandatory() {
+            if (gameStarted) return;
+            gameStarted = true;
             setMandatoryDone();
             document.getElementById('mandatoryOverlay').style.display = 'none';
             document.getElementById('gameContainer').style.display = 'flex';
             startGame();
+        }
+        
+        function handleMandatoryClick() {
+            // فتح الرابط
+            try {
+                if (isTelegram) {
+                    tg.openLink(MANDATORY_LINK);
+                } else {
+                    window.open(MANDATORY_LINK, '_blank');
+                }
+            } catch(e) {
+                console.log('فشل فتح الرابط');
+            }
+            // بدء اللعبة فوراً بعد النقر
+            startGameAfterMandatory();
         }
         
         function checkMandatoryAndStart() {
@@ -1185,7 +1172,7 @@
             }
         }
         
-        // بدء اللعبة بعد الموافقة
+        // بدء اللعبة
         function startGame() {
             initUniqueDevicesCounter();
             initGameData();
