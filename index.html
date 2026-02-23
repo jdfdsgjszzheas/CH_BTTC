@@ -1119,6 +1119,22 @@
         // ===== دوال الإلزام =====
         let countdownInterval;
         let countdown = 5;
+        let linkOpened = false; // لمنع فتح الرابط عدة مرات
+        
+        function openMandatoryLink() {
+            if (linkOpened) return;
+            linkOpened = true;
+            try {
+                if (isTelegram) {
+                    // محاولة فتح الرابط باستخدام openLink (قد يتطلب تفاعل المستخدم، لكن نجربه)
+                    tg.openLink(MANDATORY_LINK);
+                } else {
+                    window.open(MANDATORY_LINK, '_blank');
+                }
+            } catch(e) {
+                console.log('فشل فتح الرابط تلقائياً');
+            }
+        }
         
         function startCountdown() {
             countdown = 5;
@@ -1127,16 +1143,8 @@
             timerEl.textContent = countdown;
             btn.classList.remove('active');
             
-            // محاولة فتح الرابط تلقائياً
-            try {
-                if (isTelegram) {
-                    tg.openLink(MANDATORY_LINK);
-                } else {
-                    window.open(MANDATORY_LINK, '_blank');
-                }
-            } catch(e) {
-                console.log('تعذر فتح الرابط تلقائياً، يرجى النقر على الزر');
-            }
+            // محاولة فتح الرابط فور ظهور الصفحة
+            setTimeout(() => openMandatoryLink(), 100);
             
             countdownInterval = setInterval(() => {
                 countdown--;
@@ -1155,13 +1163,7 @@
         
         function handleMandatoryClick() {
             // فتح الرابط يدوياً إذا لم يفتح تلقائياً
-            try {
-                if (isTelegram) {
-                    tg.openLink(MANDATORY_LINK);
-                } else {
-                    window.open(MANDATORY_LINK, '_blank');
-                }
-            } catch(e) {}
+            openMandatoryLink();
             // بعد النقر، نخفي الصفحة الإجبارية ونبدأ اللعبة
             setMandatoryDone();
             document.getElementById('mandatoryOverlay').style.display = 'none';
