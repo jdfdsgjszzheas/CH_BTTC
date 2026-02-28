@@ -748,7 +748,8 @@
             } else { document.getElementById('friendsFooterCard').style.display = 'none'; document.getElementById('referralBadge').style.display = 'none'; }
 
             setTimeout(() => { const h = document.getElementById('hint'); if(h) { h.style.opacity='0'; setTimeout(()=>h.style.display='none',500); } }, 8000);
-            setTimeout(() => { if (typeof window.show_10022174 === 'function') window.show_10022174().catch(()=>{}); }, 2000);
+            
+            // تمت إزالة الإعلان الافتتاحي (كان هنا)
         }
 
         // تشغيل فحص الإلزام أولاً عند تحميل الصفحة
