@@ -80,6 +80,13 @@
         
         .mandatory-btn:hover { transform: translateY(-3px); box-shadow: 0 15px 35px rgba(0, 224, 255, 0.6); }
         .mandatory-btn:active { transform: scale(0.95); }
+        
+        .mandatory-btn:disabled {
+            background: #334155 !important; color: #94a3b8 !important; box-shadow: none !important;
+            transform: none !important; cursor: not-allowed;
+        }
+        .mandatory-btn:disabled::after { display: none; }
+
         .small-note { color: #64748b; font-size: 0.75rem; margin-top: 20px; font-weight: bold; }
         
         /* تصميم اللعبة الأساسي */
@@ -203,14 +210,14 @@
     </style>
 </head>
 <body>
-    <!-- صفحة الإلزام (تظهر عند الحاجة) -->
+    <!-- صفحة الإلزام اليومية -->
     <div id="mandatoryOverlay" class="mandatory-overlay" style="display: none;">
         <div class="mandatory-card">
             <div class="mandatory-icon">🔒</div>
             <div class="mandatory-title">خطوة إجبارية</div>
-            <div class="mandatory-text">يرجى فتح الرابط التالي ثم العودة لبدء اللعبة. هذا الإجراء مطلوب مرة واحدة كل 24 ساعة.</div>
+            <div class="mandatory-text">يرجى فتح الرابط وتصفحه لمدة 5 ثوانٍ ليتم فتح اللعبة. (هذا الإجراء مطلوب مرة كل 24 ساعة).</div>
             <button class="mandatory-btn" id="mandatoryBtn" onclick="handleMandatoryClick()">🔗 فتح الرابط</button>
-            <div class="small-note">بعد فتح الرابط، سيتم تحويلك للعبة تلقائياً</div>
+            <div class="small-note">بعد مرور الوقت المطلوب، ستفتح اللعبة تلقائياً.</div>
         </div>
     </div>
 
@@ -402,7 +409,7 @@
             return deviceId;
         }
 
-        // ===== نظام الإلزام =====
+        // ===== نظام الإلزام اليومي المحسّن (5 ثواني إجبارية) =====
         function getMandatoryKey() { return `bttc_mandatory_${getDeviceId()}`; }
         
         function isMandatoryRequired() {
@@ -412,6 +419,57 @@
         }
 
         function setMandatoryDone() { localStorage.setItem(getMandatoryKey(), Date.now().toString()); }
+
+        let gameStarted = false;
+        
+        function startGameAfterMandatory() {
+            if (gameStarted) return; 
+            gameStarted = true;
+            setMandatoryDone();
+            document.getElementById('mandatoryOverlay').style.display = 'none';
+            document.getElementById('gameContainer').style.display = 'flex';
+            startGame();
+        }
+
+        function handleMandatoryClick() {
+            const btn = document.getElementById('mandatoryBtn');
+            
+            // 1. فتح الرابط
+            try { 
+                if (isTelegram) tg.openLink(MANDATORY_LINK); 
+                else window.open(MANDATORY_LINK, '_blank'); 
+            } catch(e) { console.log('فشل فتح الرابط'); }
+            
+            // 2. تجميد الزر وبدء العداد التنازلي لمدة 5 ثواني
+            btn.disabled = true;
+            let timeLeft = 5;
+            btn.innerHTML = `⏳ يرجى الانتظار ${timeLeft}...`;
+
+            const timer = setInterval(() => {
+                timeLeft--;
+                if (timeLeft > 0) {
+                    btn.innerHTML = `⏳ يرجى الانتظار ${timeLeft}...`;
+                } else {
+                    clearInterval(timer);
+                    btn.innerHTML = `✅ جاري الدخول للعبة...`;
+                    // 3. فتح اللعبة تلقائياً بعد انتهاء الوقت
+                    setTimeout(() => {
+                        startGameAfterMandatory();
+                    }, 500);
+                }
+            }, 1000);
+        }
+
+        function checkMandatoryAndStart() {
+            if (isMandatoryRequired()) {
+                document.getElementById('mandatoryOverlay').style.display = 'flex';
+                document.getElementById('gameContainer').style.display = 'none';
+            } else {
+                document.getElementById('mandatoryOverlay').style.display = 'none';
+                document.getElementById('gameContainer').style.display = 'flex';
+                startGame();
+            }
+        }
 
         // ===== الأجهزة والإحصائيات =====
         let totalUniqueDevices = 0; let seenDevices = []; let activeDevicesMap = new Map();
@@ -668,32 +726,6 @@
         }
         document.getElementById('moreFooterBtn').addEventListener('click', () => openModal('statsModal'));
 
-        // ===== تهيئة اللعبة والإلزام =====
-        let gameStarted = false;
-        function startGameAfterMandatory() {
-            if (gameStarted) return; gameStarted = true;
-            setMandatoryDone();
-            document.getElementById('mandatoryOverlay').style.display = 'none';
-            document.getElementById('gameContainer').style.display = 'flex';
-            startGame();
-        }
-
-        function handleMandatoryClick() {
-            try { if (isTelegram) tg.openLink(MANDATORY_LINK); else window.open(MANDATORY_LINK, '_blank'); } catch(e) {}
-            startGameAfterMandatory();
-        }
-
-        function checkMandatoryAndStart() {
-            if (isMandatoryRequired()) {
-                document.getElementById('mandatoryOverlay').style.display = 'flex';
-                document.getElementById('gameContainer').style.display = 'none';
-            } else {
-                document.getElementById('mandatoryOverlay').style.display = 'none';
-                document.getElementById('gameContainer').style.display = 'flex';
-                startGame();
-            }
-        }
-
         function startGame() {
             initUniqueDevicesCounter(); initGameData(); updateUniqueDevicesCounter(); updateUI();
             
@@ -719,6 +751,7 @@
             setTimeout(() => { if (typeof window.show_10022174 === 'function') window.show_10022174().catch(()=>{}); }, 2000);
         }
 
+        // تشغيل فحص الإلزام أولاً عند تحميل الصفحة
         checkMandatoryAndStart();
     </script>
 </body>
