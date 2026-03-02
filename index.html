@@ -40,7 +40,7 @@
 
         @keyframes gradientBG { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
         
-        /* صفحة الإلزام (Mandatory) بتصميم Glassmorphism */
+        /* صفحة الإلزام */
         .mandatory-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(7, 9, 19, 0.85); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
@@ -119,13 +119,13 @@
         .balance-amount { font-size: 3rem; font-weight: 900; color: var(--text-main); text-shadow: 0 0 20px rgba(0, 224, 255, 0.6), 0 0 40px rgba(0, 224, 255, 0.2); background: linear-gradient(180deg, #ffffff, var(--primary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; line-height: 1; margin: 5px 0; font-family: 'Arial Rounded MT Bold', Arial, sans-serif; }
         .power-display { display: inline-flex; align-items: center; justify-content: center; gap: 5px; background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.3); padding: 4px 12px; border-radius: 20px; color: var(--upgrade); font-size: 0.75rem; font-weight: bold; box-shadow: 0 0 15px rgba(16, 185, 129, 0.2); }
         
-        main { flex: 1; display: flex; align-items: center; justify-content: center; width: 100%; position: relative; z-index: 5; }
+        main { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; position: relative; z-index: 5; }
         
-        .click-area { animation: float-coin 4s ease-in-out infinite; }
+        .click-area { animation: float-coin 4s ease-in-out infinite; position: relative; display: flex; flex-direction: column; align-items: center; }
         @keyframes float-coin { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-15px); } }
 
         .coin-wrapper { 
-            width: 240px; height: 240px; border-radius: 50%; 
+            width: 230px; height: 230px; border-radius: 50%; 
             background: radial-gradient(circle at 30% 30%, #FFE55C, #D4AF37, #8B6508);
             border: 4px solid rgba(255, 255, 255, 0.3); overflow: hidden; position: relative;
             box-shadow: 0 0 60px rgba(212, 175, 55, 0.4), inset 0 0 30px rgba(255, 255, 255, 0.5), 0 20px 40px rgba(0,0,0,0.5);
@@ -135,10 +135,31 @@
         .coin-wrapper:active { transform: scale(0.92) rotate(-3deg) translateY(10px); box-shadow: 0 0 20px rgba(212, 175, 55, 0.6), inset 0 0 40px rgba(0,0,0,0.3); filter: brightness(1.2); }
         .coin-img { width: 100%; height: 100%; object-fit: cover; pointer-events: none; mix-blend-mode: overlay; opacity: 0.9; }
         
+        /* شريط التقدم الجديد */
+        .progress-container {
+            width: 80%; max-width: 200px; height: 16px;
+            background: rgba(0, 0, 0, 0.6); border-radius: 20px;
+            border: 1px solid rgba(0, 224, 255, 0.3);
+            margin-top: 30px; position: relative; overflow: hidden;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.8), 0 5px 15px rgba(0,0,0,0.3);
+        }
+        .progress-bar-fill {
+            height: 100%; width: 0%;
+            background: linear-gradient(90deg, #00A3E0, #00E0FF);
+            border-radius: 20px; transition: width 0.1s ease-out;
+            box-shadow: 0 0 10px rgba(0, 224, 255, 0.6);
+        }
+        .progress-text {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.65rem; font-weight: bold; color: white;
+            text-shadow: 0 1px 3px black; pointer-events: none; letter-spacing: 1px;
+        }
+
         .click-effect { position: absolute; width: 100px; height: 100px; background: radial-gradient(circle, rgba(255, 255, 255, 0.9), rgba(255, 215, 0, 0.5) 40%, transparent 70%); border-radius: 50%; pointer-events: none; z-index: 5; transform: translate(-50%, -50%) scale(0); animation: click-explosion 0.5s cubic-bezier(0.165, 0.84, 0.44, 1) forwards; mix-blend-mode: screen; }
         @keyframes click-explosion { 0% { transform: translate(-50%, -50%) scale(0.5); opacity: 1; } 100% { transform: translate(-50%, -50%) scale(2.5); opacity: 0; } }
 
-        .floating-number { position: fixed; color: #FFF; font-size: 2.2rem; font-weight: 900; pointer-events: none; z-index: 1000; text-shadow: 0 0 15px rgba(255, 215, 0, 1), 0 0 30px rgba(255, 100, 0, 0.8); font-family: 'Arial Rounded MT Bold', sans-serif; animation: float-up-dynamic 0.8s cubic-bezier(0.25, 1, 0.5, 1) forwards; }
+        .floating-number { position: fixed; color: #fbbf24; font-size: 3rem; font-weight: 900; pointer-events: none; z-index: 1000; text-shadow: 0 0 15px rgba(251, 191, 36, 1), 0 0 30px rgba(255, 100, 0, 0.8); font-family: 'Arial Rounded MT Bold', sans-serif; animation: float-up-dynamic 1s cubic-bezier(0.25, 1, 0.5, 1) forwards; }
         @keyframes float-up-dynamic { 0% { transform: translateY(0) scale(0.5); opacity: 0; } 20% { transform: translateY(-30px) scale(1.2); opacity: 1; } 100% { transform: translateY(-180px) scale(0.8); opacity: 0; } }
 
         .subscribe-btn, .support-btn { position: absolute; width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 500; backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.2); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
@@ -206,16 +227,16 @@
         .central-notification.warning { border-left-color: #f59e0b; }
         .notification-icon { font-size: 1.5rem; }
         .notification-message { font-size: 0.9rem; font-weight: bold; line-height: 1.4; }
-        .timer-message { position: absolute; bottom: -50px; left: 50%; transform: translateX(-50%); font-size: 0.85rem; font-weight: bold; background: rgba(0,0,0,0.8); padding: 8px 16px; border-radius: 12px; color: var(--withdraw); backdrop-filter: blur(5px); border: 1px solid rgba(251,191,36,0.3); z-index: 20; white-space: nowrap; }
+        .timer-message { position: absolute; bottom: -60px; left: 50%; transform: translateX(-50%); font-size: 0.85rem; font-weight: bold; background: rgba(0,0,0,0.8); padding: 8px 16px; border-radius: 12px; color: var(--withdraw); backdrop-filter: blur(5px); border: 1px solid rgba(251,191,36,0.3); z-index: 20; white-space: nowrap; text-align: center; }
     </style>
 </head>
 <body>
-    <!-- صفحة الإلزام اليومية -->
+    <!-- صفحة الإلزام عند الوصول لكل 5000 عملة -->
     <div id="mandatoryOverlay" class="mandatory-overlay" style="display: none;">
         <div class="mandatory-card">
             <div class="mandatory-icon">🔒</div>
             <div class="mandatory-title">خطوة إجبارية</div>
-            <div class="mandatory-text">يرجى فتح الرابط وتصفحه لمدة 5 ثوانٍ ليتم فتح اللعبة. (هذا الإجراء مطلوب مرة كل 24 ساعة).</div>
+            <div class="mandatory-text">يرجى فتح الرابط وتصفحه لمدة 5 ثوانٍ لتتمكن من إكمال اللعب. (يظهر هذا الإجراء كلما جمعت 5,000 عملة).</div>
             <button class="mandatory-btn" id="mandatoryBtn" onclick="handleMandatoryClick()">🔗 فتح الرابط</button>
             <div class="small-note">بعد مرور الوقت المطلوب، ستفتح اللعبة تلقائياً.</div>
         </div>
@@ -235,7 +256,7 @@
                     <div id="balance" class="balance-amount">0</div>
                     <div class="power-display">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M13 2.05v3.03c3.39.49 6 3.39 6 6.92 0 .9-.18 1.75-.5 2.54l2.27 2.27c.78-1.42 1.23-3.05 1.23-4.81 0-5.17-4-9.42-9-9.95zM4.05 13c-.03-.33-.05-.66-.05-1 0-2.61 1.67-4.83 4-5.65v-3.1c-3.95.96-7 4.54-7 8.75 0 1.76.45 3.39 1.23 4.81l2.27-2.27c-.32-.79-.5-1.64-.5-2.54zM12 19c-3.87 0-7-3.13-7-7 0-3.53 2.61-6.43 6-6.92V2.05c-5 .53-9 4.78-9 9.95 0 5.52 4.48 10 10 10 5.52 0 10-4.48 10-10 0-1.9-.54-3.67-1.46-5.14l-2.26 2.26C18.66 10.15 19 11.03 19 12c0 3.87-3.13 7-7 7z"/></svg>
-                        قوة التعدين: <span id="clickPower">1</span>
+                        العملات لكل شريط: <span id="clickPower">1</span>
                     </div>
                 </div>
                 
@@ -246,7 +267,7 @@
             </header>
 
             <main>
-                <div class="hint" id="hint">✨ انقر للتعدين الآن</div>
+                <div class="hint" id="hint">✨ املأ الشريط (20 نقرة) لجمع العملات</div>
                 
                 <div class="subscribe-btn" id="subscribeBtn">
                     <div class="red-dot" id="redDot"></div>
@@ -261,6 +282,13 @@
                     <div class="coin-wrapper">
                         <img src="https://i.postimg.cc/y8QNPynB/5990161721064541916-99.jpg" alt="BTTC Logo" class="coin-img">
                     </div>
+                    
+                    <!-- شريط الطاقة -->
+                    <div class="progress-container">
+                        <div class="progress-bar-fill" id="clickProgressBar"></div>
+                        <div class="progress-text" id="clickProgressText">0/20</div>
+                    </div>
+                    
                     <div id="timerMessage" class="timer-message" style="display: none;"></div>
                 </div>
             </main>
@@ -288,7 +316,7 @@
                     <div class="card">
                         <div class="card-title"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg> السحب</div>
                         <div class="card-value" id="withdrawAmount" style="color:#fbbf24">0</div>
-                        <div class="card-desc" id="withdrawDesc">25k ₿</div>
+                        <div class="card-desc" id="withdrawDesc" style="font-size:0.5rem">25k + صديق</div>
                         <button id="withdrawBtn" class="btn btn-withdraw">سحب</button>
                     </div>
                     <div class="card">
@@ -310,8 +338,13 @@
             <div style="background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); border-radius: 12px; padding: 10px; margin-bottom: 15px; font-size: 0.75rem; color: #fca5a5;">
                 ⚠️ الدفع لأصحاب حسابات Binance فقط. أدخل المعرف (ID) وليس عنوان محفظة.
             </div>
-            <div class="withdraw-limits" id="withdrawLimits">المبلغ: 0 | سحب 25,000 كل 24 ساعة</div>
-            <div class="withdraw-limits" style="background: rgba(16,185,129,0.1); border-color: rgba(16,185,129,0.3); color:#6ee7b7;" id="withdrawStageInfo">يمكنك سحب 25,000 الآن</div>
+            
+            <div class="withdraw-limits" id="withdrawLimits" style="margin-bottom:5px;">
+                شرط السحب: جمع 25,000 + دعوة صديق جديد
+            </div>
+            <div class="withdraw-limits" style="margin-top: 0; margin-bottom: 15px;" id="withdrawStageInfo">
+                جاري التحقق من الشروط...
+            </div>
             
             <div class="username-input-wrapper">
                 <span class="username-at-symbol">@</span>
@@ -331,7 +364,7 @@
             <div class="modal-close-btn" onclick="closeModal('statsModal')">×</div>
             <h3 style="color:var(--primary); margin-top:0;">📊 إحصائيات النظام</h3>
             <div class="stats-grid">
-                <div class="stat-item"><div class="stat-label">نقرات الجلسة</div><div class="stat-value" id="totalClicks">0</div></div>
+                <div class="stat-item"><div class="stat-label">إجمالي النقرات</div><div class="stat-value" id="totalClicks">0</div></div>
                 <div class="stat-item"><div class="stat-label">القوة الحالية</div><div class="stat-value" id="currentPower">1</div></div>
                 <div class="stat-item"><div class="stat-label">الترقيات</div><div class="stat-value" id="upgradesBought">0</div></div>
                 <div class="stat-item"><div class="stat-label">آخر سحب</div><div class="stat-value" style="font-size:0.8rem;" id="lastWithdraw">لم يتم</div></div>
@@ -385,11 +418,11 @@
         
         // المتغيرات المطلوبة
         const MAX_ADS = 8;
-        const AD_COOLDOWN = 20 * 60 * 1000; // 20 دقيقة
+        const AD_COOLDOWN = 5 * 60 * 1000; // 5 دقائق بين كل إعلان
         const MANDATORY_LINK = "https://omg10.com/4/9298272";
-        const MANDATORY_COOLDOWN = 24 * 60 * 60 * 1000; // 24 ساعة
-        const WITHDRAW_AMOUNT = 25000; // الحد الأدنى للسحب 25 ألف
-        const COOLDOWN = 24 * 60 * 60 * 1000; // 24 ساعة للسحب
+        const MANDATORY_THRESHOLD = 5000; // الرابط يظهر كل 5000 عملة
+        const WITHDRAW_AMOUNT = 25000; 
+        const COOLDOWN = 24 * 60 * 60 * 1000; 
         const MAX_DAILY_BOOST = 5;
 
         const tg = window.Telegram.WebApp;
@@ -409,38 +442,36 @@
             return deviceId;
         }
 
-        // ===== نظام الإلزام اليومي المحسّن (5 ثواني إجبارية) =====
-        function getMandatoryKey() { return `bttc_mandatory_${getDeviceId()}`; }
-        
+        // ===== نظام الإلزام (يظهر كل 5000 عملة) =====
         function isMandatoryRequired() {
-            const last = localStorage.getItem(getMandatoryKey());
-            if (!last) return true;
-            return (Date.now() - parseInt(last, 10)) >= MANDATORY_COOLDOWN;
+            const currentThreshold = Math.floor(gameData.coins / MANDATORY_THRESHOLD);
+            return currentThreshold > gameData.lastMandatoryThreshold;
         }
 
-        function setMandatoryDone() { localStorage.setItem(getMandatoryKey(), Date.now().toString()); }
+        function setMandatoryDone() { 
+            gameData.lastMandatoryThreshold = Math.floor(gameData.coins / MANDATORY_THRESHOLD);
+            saveGameData();
+        }
 
         let gameStarted = false;
         
         function startGameAfterMandatory() {
-            if (gameStarted) return; 
-            gameStarted = true;
             setMandatoryDone();
             document.getElementById('mandatoryOverlay').style.display = 'none';
             document.getElementById('gameContainer').style.display = 'flex';
-            startGame();
+            if (!gameStarted) {
+                gameStarted = true;
+                startGame();
+            }
         }
 
         function handleMandatoryClick() {
             const btn = document.getElementById('mandatoryBtn');
-            
-            // 1. فتح الرابط
             try { 
                 if (isTelegram) tg.openLink(MANDATORY_LINK); 
                 else window.open(MANDATORY_LINK, '_blank'); 
             } catch(e) { console.log('فشل فتح الرابط'); }
             
-            // 2. تجميد الزر وبدء العداد التنازلي لمدة 5 ثواني
             btn.disabled = true;
             let timeLeft = 5;
             btn.innerHTML = `⏳ يرجى الانتظار ${timeLeft}...`;
@@ -452,7 +483,6 @@
                 } else {
                     clearInterval(timer);
                     btn.innerHTML = `✅ جاري الدخول للعبة...`;
-                    // 3. فتح اللعبة تلقائياً بعد انتهاء الوقت
                     setTimeout(() => {
                         startGameAfterMandatory();
                     }, 500);
@@ -460,14 +490,13 @@
             }, 1000);
         }
 
-        function checkMandatoryAndStart() {
+        function checkMandatoryThreshold() {
             if (isMandatoryRequired()) {
-                document.getElementById('mandatoryOverlay').style.display = 'flex';
                 document.getElementById('gameContainer').style.display = 'none';
-            } else {
-                document.getElementById('mandatoryOverlay').style.display = 'none';
-                document.getElementById('gameContainer').style.display = 'flex';
-                startGame();
+                document.getElementById('mandatoryOverlay').style.display = 'flex';
+                const btn = document.getElementById('mandatoryBtn');
+                btn.disabled = false;
+                btn.innerHTML = `🔗 فتح الرابط`;
             }
         }
 
@@ -529,13 +558,20 @@
         function initGameData() {
             const saved = loadGameData(); const now = Date.now();
             if (saved) {
-                gameData = { ...saved, lastAdWatchTime: saved.lastAdWatchTime || 0 };
+                gameData = { 
+                    ...saved, 
+                    lastAdWatchTime: saved.lastAdWatchTime || 0, 
+                    withdrawalsCount: saved.withdrawalsCount || 0,
+                    barClicks: saved.barClicks || 0,
+                    lastMandatoryThreshold: saved.lastMandatoryThreshold || 0
+                };
             } else {
                 gameData = {
                     coins: 0, clickPower: 1, clickCost: 20, totalClicks: 0, upgradesBought: 0,
                     lastWithdraw: 0, adsWatched: 0, lastAdReset: now, dailyBoostCount: 0, lastBoostReset: now,
                     referralCode: generateReferralCode(), referralsCount: 0, referralRewards: 0,
-                    maxReferrals: 100, referralBonus: 1000, usedReferralCode: false, hasSubscribed: false, lastAdWatchTime: 0
+                    maxReferrals: 100, referralBonus: 1000, usedReferralCode: false, hasSubscribed: false, 
+                    lastAdWatchTime: 0, withdrawalsCount: 0, barClicks: 0, lastMandatoryThreshold: 0
                 };
             }
             if (now - gameData.lastAdReset > COOLDOWN) { gameData.adsWatched = 0; gameData.lastAdReset = now; }
@@ -550,7 +586,13 @@
         }
 
         // ===== الدوال المنطقية والواجهة =====
-        function canWithdraw() { return (gameData.coins >= WITHDRAW_AMOUNT) && (Date.now() - gameData.lastWithdraw >= COOLDOWN) && (gameData.adsWatched >= MAX_ADS); }
+        function canWithdraw() { 
+            return (gameData.coins >= WITHDRAW_AMOUNT) && 
+                   (Date.now() - gameData.lastWithdraw >= COOLDOWN) && 
+                   (gameData.adsWatched >= MAX_ADS) &&
+                   (gameData.referralsCount > gameData.withdrawalsCount);
+        }
+        
         function getTimeRemaining() { const next = gameData.lastWithdraw + COOLDOWN; return Date.now() >= next ? 0 : next - Date.now(); }
         function formatTime(ms) {
             if (ms <= 0) return 'متاح الآن';
@@ -563,12 +605,44 @@
             document.getElementById('clickPower').textContent = gameData.clickPower;
             document.getElementById('upgradeCost').textContent = gameData.clickCost.toLocaleString();
             
+            // Progress Bar Update
+            document.getElementById('clickProgressBar').style.width = (gameData.barClicks / 20) * 100 + "%";
+            document.getElementById('clickProgressText').textContent = gameData.barClicks + "/20";
+
             // Withdraw UI
             const withdrawBtn = document.getElementById('withdrawBtn');
             const withdrawDesc = document.getElementById('withdrawDesc');
             document.getElementById('withdrawAmount').textContent = Math.floor(gameData.coins).toLocaleString();
-            if (canWithdraw()) { withdrawBtn.disabled = false; withdrawDesc.textContent = 'جاهز للسحب!'; withdrawDesc.style.color = '#10b981'; } 
-            else { withdrawBtn.disabled = true; withdrawDesc.textContent = '25k كل 24h'; withdrawDesc.style.color = '#64748b'; }
+            
+            if (canWithdraw()) { 
+                withdrawBtn.disabled = false; 
+                withdrawDesc.textContent = 'جاهز للسحب!'; 
+                withdrawDesc.style.color = '#10b981'; 
+            } else { 
+                withdrawBtn.disabled = true; 
+                if (gameData.coins >= WITHDRAW_AMOUNT && gameData.referralsCount <= gameData.withdrawalsCount) {
+                    withdrawDesc.textContent = 'تحتاج دعوة صديق!'; 
+                    withdrawDesc.style.color = '#ef4444';
+                } else {
+                    withdrawDesc.textContent = '25k كل 24h'; 
+                    withdrawDesc.style.color = '#64748b'; 
+                }
+            }
+
+            const stageInfo = document.getElementById('withdrawStageInfo');
+            if (stageInfo) {
+                if (gameData.referralsCount > gameData.withdrawalsCount) {
+                    stageInfo.innerHTML = `✅ شرط الدعوة: مكتمل<br>يمكنك سحب 25,000 الآن`;
+                    stageInfo.style.color = "#10b981";
+                    stageInfo.style.borderColor = "rgba(16,185,129,0.3)";
+                    stageInfo.style.background = "rgba(16,185,129,0.1)";
+                } else {
+                    stageInfo.innerHTML = `❌ شرط الدعوة: غير مكتمل<br>يجب دعوة صديق واحد على الأقل لإتمام السحب`;
+                    stageInfo.style.color = "#ef4444";
+                    stageInfo.style.borderColor = "rgba(239,68,68,0.3)";
+                    stageInfo.style.background = "rgba(239,68,68,0.1)";
+                }
+            }
             
             // Ads UI
             if (document.getElementById('adsWatchedDisplay')) document.getElementById('adsWatchedDisplay').textContent = `${gameData.adsWatched}/${MAX_ADS}`;
@@ -587,6 +661,7 @@
                 const r = getTimeRemaining();
                 if (r > 0) { timerMsg.style.display = 'block'; timerMsg.innerHTML = `⏳ السحب بعد: ${formatTime(r)}`; } 
                 else if (gameData.adsWatched < MAX_ADS) { timerMsg.style.display = 'block'; timerMsg.innerHTML = `📢 شاهد ${MAX_ADS-gameData.adsWatched} إعلان للسحب`; } 
+                else if (gameData.referralsCount <= gameData.withdrawalsCount) { timerMsg.style.display = 'block'; timerMsg.innerHTML = `📢 يجب دعوة صديق جديد لتتمكن من السحب`; }
                 else { timerMsg.style.display = 'none'; coinWrapper.style.pointerEvents = 'auto'; coinWrapper.style.filter = 'none'; }
             } else { coinWrapper.style.pointerEvents = 'auto'; coinWrapper.style.filter = 'none'; timerMsg.style.display = 'none'; }
             
@@ -619,9 +694,13 @@
         }
         
         function spawnFloatingNumber(x, y, value) {
-            const el = document.createElement('div'); el.className = 'floating-number'; el.textContent = `+${value}`;
-            el.style.left = `calc(${x}px + ${(Math.random() - 0.5) * 60}px)`; el.style.top = `${y}px`;
-            document.body.appendChild(el); setTimeout(() => el.remove(), 800);
+            const el = document.createElement('div'); 
+            el.className = 'floating-number'; 
+            el.textContent = `+${value}`;
+            el.style.left = `calc(${x}px + ${(Math.random() - 0.5) * 60}px)`; 
+            el.style.top = `${y}px`;
+            document.body.appendChild(el); 
+            setTimeout(() => el.remove(), 1000);
         }
         
         function showCentralNotification(message, type = "success") {
@@ -636,11 +715,29 @@
         function openModal(modalId) { document.getElementById(modalId).style.display = 'flex'; if (isTelegram && tg.HapticFeedback) tg.HapticFeedback.selectionChanged(); }
         function closeModal(modalId) { document.getElementById(modalId).style.display = 'none'; }
 
-        // ===== التفاعلات (أزرار) =====
+        // ===== التفاعلات (أزرار ونقر) =====
         document.getElementById('clickZone').addEventListener('click', (e) => {
             if (gameData.coins >= WITHDRAW_AMOUNT) return;
-            gameData.coins += gameData.clickPower; gameData.totalClicks++; saveGameData();
-            createClickEffect(e.clientX, e.clientY); spawnFloatingNumber(e.clientX, e.clientY, gameData.clickPower);
+            
+            gameData.totalClicks++; 
+            gameData.barClicks++;
+            
+            createClickEffect(e.clientX, e.clientY); 
+            
+            // إضافة الرصيد فقط عند اكتمال 20 نقرة (امتلاء الشريط)
+            if (gameData.barClicks >= 20) {
+                gameData.coins += gameData.clickPower; 
+                gameData.barClicks = 0;
+                
+                // ظهور الرقم المتطاير عند الحصول على العملة فقط
+                spawnFloatingNumber(e.clientX, e.clientY, gameData.clickPower); 
+                
+                saveGameData();
+                checkMandatoryThreshold(); // التحقق من بلوغ 5000 لإظهار الرابط الإجباري
+            } else {
+                saveGameData();
+            }
+
             updateUI();
         });
 
@@ -649,7 +746,7 @@
             if (gameData.coins >= gameData.clickCost) {
                 gameData.coins -= gameData.clickCost; gameData.clickPower++; gameData.clickCost = Math.floor(gameData.clickCost * 1.8);
                 gameData.upgradesBought++; gameData.dailyBoostCount++; saveGameData(); updateUI();
-                showCentralNotification(`🚀 تم الترقية! قوة النقر: ${gameData.clickPower}`, "success");
+                showCentralNotification(`🚀 تم الترقية! العملات لكل شريط: ${gameData.clickPower}`, "success");
                 if (isTelegram && tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
             }
         });
@@ -684,7 +781,8 @@
                 openModal('withdrawModal');
                 try { const tgUser = tg.initDataUnsafe?.user; if (tgUser?.username) document.getElementById('tgUsername').value = tgUser.username.replace('@', ''); } catch (e) {}
             } else {
-                if (gameData.adsWatched < MAX_ADS) showCentralNotification(`💡 شاهد ${MAX_ADS} إعلان أولاً`, "info");
+                if (gameData.referralsCount <= gameData.withdrawalsCount) showCentralNotification(`💡 يجب دعوة صديق جديد لإتمام السحب`, "error");
+                else if (gameData.adsWatched < MAX_ADS) showCentralNotification(`💡 شاهد ${MAX_ADS} إعلان أولاً`, "info");
                 else if (gameData.coins < WITHDRAW_AMOUNT) showCentralNotification(`💡 تحتاج ${WITHDRAW_AMOUNT.toLocaleString()} للسحب`, "info");
                 else showCentralNotification(`⏳ متاح بعد: ${formatTime(getTimeRemaining())}`, "warning");
             }
@@ -702,12 +800,15 @@
                 const msg = `🌟 طلب سحب جديد\n━━━━━━━━━━\n💰 المبلغ: ${WITHDRAW_AMOUNT} BTTC\n👤 يوزر: ${username}\n💳 بينانس: ${binanceId}\n━━━━━━━━━━`;
                 const res = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ chat_id: ADMIN_CHAT_ID, text: msg }) });
                 if ((await res.json()).ok) {
-                    gameData.coins -= WITHDRAW_AMOUNT; gameData.lastWithdraw = Date.now(); saveGameData(); updateUI(); closeModal('withdrawModal');
+                    gameData.coins -= WITHDRAW_AMOUNT; 
+                    gameData.lastWithdraw = Date.now(); 
+                    gameData.withdrawalsCount++;
+                    saveGameData(); updateUI(); closeModal('withdrawModal');
                     showCentralNotification("🎉 تم تقديم طلب السحب بنجاح!", "success"); tg.showAlert(`✅ تم الإرسال بنجاح!\nسيتم الدفع لـ ${binanceId} خلال 24 ساعة.`);
                 } else throw new Error("فشل");
             } catch (e) {
                 tg.showAlert(`⚠️ صور الشاشة للمشرف @chmkhani\n\nالمبلغ: ${WITHDRAW_AMOUNT}\nيوزر: ${username}\nبينانس: ${binanceId}`);
-                gameData.coins -= WITHDRAW_AMOUNT; gameData.lastWithdraw = Date.now(); saveGameData(); updateUI(); closeModal('withdrawModal');
+                gameData.coins -= WITHDRAW_AMOUNT; gameData.lastWithdraw = Date.now(); gameData.withdrawalsCount++; saveGameData(); updateUI(); closeModal('withdrawModal');
             } finally { btn.disabled = false; btn.textContent = 'تأكيد السحب'; }
         }
 
@@ -729,7 +830,6 @@
         function startGame() {
             initUniqueDevicesCounter(); initGameData(); updateUniqueDevicesCounter(); updateUI();
             
-            // Bubbles
             const c = document.getElementById('bubblesContainer');
             if (c) setInterval(() => {
                 const b = document.createElement('div'); b.className = 'bubble'; const s = Math.random() * 25 + 15;
@@ -738,7 +838,6 @@
                 c.appendChild(b); setTimeout(() => b.remove(), d*1000);
             }, 600);
 
-            // Referral check
             if (isTelegram) {
                 const refCode = new URLSearchParams(window.location.search).get('start');
                 if (refCode && !gameData.usedReferralCode && refCode !== gameData.referralCode) {
@@ -748,12 +847,16 @@
             } else { document.getElementById('friendsFooterCard').style.display = 'none'; document.getElementById('referralBadge').style.display = 'none'; }
 
             setTimeout(() => { const h = document.getElementById('hint'); if(h) { h.style.opacity='0'; setTimeout(()=>h.style.display='none',500); } }, 8000);
-            
-            // تمت إزالة الإعلان الافتتاحي (كان هنا)
         }
 
-        // تشغيل فحص الإلزام أولاً عند تحميل الصفحة
-        checkMandatoryAndStart();
+        // تشغيل اللعبة أو شاشة الإلزام إذا تم تحميل الصفحة لأول مرة
+        initGameData(); 
+        if (isMandatoryRequired() && gameData.coins >= MANDATORY_THRESHOLD) {
+            checkMandatoryAndStart();
+        } else {
+            document.getElementById('gameContainer').style.display = 'flex';
+            startGame();
+        }
     </script>
 </body>
 </html>
