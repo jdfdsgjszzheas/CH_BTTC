@@ -31,9 +31,9 @@
         * { 
             box-sizing: border-box; 
             -webkit-tap-highlight-color: transparent; 
-            touch-action: manipulation; /* مهم جداً لمنع التكبير بالنقر المزدوج */
+            touch-action: manipulation; 
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-            user-select: none; /* منع تحديد النصوص في تليجرام */
+            user-select: none; 
             -webkit-user-select: none;
         }
         
@@ -45,8 +45,8 @@
             display: flex; align-items: center; justify-content: center;
             height: 100vh; width: 100vw;
             color: var(--text-main); 
-            overflow: hidden; /* منع التمرير في تليجرام */
-            overscroll-behavior-y: none; /* منع السحب للتحديث pull-to-refresh */
+            overflow: hidden; 
+            overscroll-behavior-y: none; 
         }
 
         @keyframes gradientBG { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
@@ -197,12 +197,12 @@
     </style>
 </head>
 <body>
-    <!-- صفحة الإلزام عند الوصول لكل 5000 عملة -->
+    <!-- صفحة الإلزام تظهر عند فتح البوت دائماً وأيضاً كل 5000 عملة -->
     <div id="mandatoryOverlay" class="mandatory-overlay" style="display: none;">
         <div class="mandatory-card">
             <div class="mandatory-icon">🔒</div>
             <div class="mandatory-title">مهمة إجبارية</div>
-            <div class="mandatory-text">يرجى زيارة الرابط وتصفحه لمدة 5 ثوانٍ للاستمرار في التعدين. (مطلوب كل 5,000 ₿).</div>
+            <div class="mandatory-text">يرجى زيارة الرابط وتصفحه لمدة 5 ثوانٍ للاستمرار. (مطلوب عند الدخول وكل 5,000 ₿).</div>
             <button class="mandatory-btn" id="mandatoryBtn" onclick="handleMandatoryClick()">🔗 زيارة الرابط</button>
             <div class="small-note">سيتم تحويلك للعبة تلقائياً بعد انتهاء الوقت.</div>
         </div>
@@ -256,7 +256,7 @@
                         <div class="card-desc">النظام</div>
                         <button id="moreFooterBtn" class="btn btn-stats">عرض</button>
                     </div>
-                    <div class="card">
+                    <div class="card" id="friendsFooterCard">
                         <div class="card-title"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zM8 11c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zM16 13c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zM8 13c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg> أصدقاء</div>
                         <div class="card-value" id="referralsCountFooter">0</div>
                         <div class="card-desc">+1000 ₿</div>
@@ -362,7 +362,7 @@
         const tg = window.Telegram.WebApp;
         tg.ready();
         tg.expand();
-        try { tg.disableVerticalSwipes(); } catch(e) {} // يمنع سحب الشاشة للأسفل لإغلاق التطبيق (للإصدارات الحديثة)
+        try { tg.disableVerticalSwipes(); } catch(e) {} 
         tg.setHeaderColor('#070913');
         tg.setBackgroundColor('#070913');
         const isTelegram = tg.initData !== '';
@@ -374,7 +374,7 @@
         const BOT_USERNAME = "CH_BTTC_bot";
         
         const MAX_ADS = 8;
-        const AD_COOLDOWN = 5 * 60 * 1000; // 5 دقائق
+        const AD_COOLDOWN = 5 * 60 * 1000; 
         const MANDATORY_LINK = "https://omg10.com/4/9298272";
         const MANDATORY_THRESHOLD = 5000;
         const WITHDRAW_AMOUNT = 25000; 
@@ -419,19 +419,36 @@
             return id;
         }
 
-        // ===== نظام الإلزام كل 5000 =====
-        function isMandatoryRequired() {
-            const currentThreshold = Math.floor(gameData.coins / MANDATORY_THRESHOLD);
-            return currentThreshold > gameData.lastMandatoryThreshold;
-        }
-        function setMandatoryDone() { 
-            gameData.lastMandatoryThreshold = Math.floor(gameData.coins / MANDATORY_THRESHOLD);
-            saveGameData();
+        // ===== بيانات اللعبة =====
+        let gameData = {};
+        function saveGameData() { localStorage.setItem(`bttc_data_${getDeviceId()}`, JSON.stringify(gameData)); }
+        function loadGameData() { return JSON.parse(localStorage.getItem(`bttc_data_${getDeviceId()}`)) || null; }
+
+        function initGameData() {
+            const saved = loadGameData(); const now = Date.now();
+            if (saved) {
+                let target = saved.nextMandatoryTarget;
+                if (!target) target = (Math.floor((saved.coins || 0) / MANDATORY_THRESHOLD) + 1) * MANDATORY_THRESHOLD;
+                
+                gameData = { ...saved, lastAdWatchTime: saved.lastAdWatchTime || 0, withdrawalsCount: saved.withdrawalsCount || 0, barClicks: saved.barClicks || 0, nextMandatoryTarget: target };
+            } else {
+                gameData = {
+                    coins: 0, clickPower: 1, clickCost: 20, totalClicks: 0, upgradesBought: 0, lastWithdraw: 0, adsWatched: 0, lastAdReset: now, dailyBoostCount: 0, lastBoostReset: now, referralCode: generateReferralCode(), referralsCount: 0, referralRewards: 0, maxReferrals: 100, usedReferralCode: false, hasSubscribed: false, lastAdWatchTime: 0, withdrawalsCount: 0, barClicks: 0, nextMandatoryTarget: MANDATORY_THRESHOLD
+                };
+            }
+            if (now - gameData.lastAdReset > COOLDOWN) { gameData.adsWatched = 0; gameData.lastAdReset = now; }
+            if (now - gameData.lastBoostReset > COOLDOWN) { gameData.dailyBoostCount = 0; gameData.lastBoostReset = now; }
         }
 
+        function generateReferralCode() {
+            const tgUser = tg.initDataUnsafe?.user;
+            return tgUser?.id ? `tg_${tgUser.id}` : `ref_${Math.floor(Math.random() * 1000000000)}`;
+        }
+
+        // ===== نظام الإلزام (تظهر إجبارياً في البداية وكل 5000) =====
         let gameStarted = false;
+
         function startGameAfterMandatory() {
-            setMandatoryDone();
             document.getElementById('mandatoryOverlay').style.display = 'none';
             document.getElementById('gameContainer').style.display = 'flex';
             if (!gameStarted) { gameStarted = true; startGame(); }
@@ -452,13 +469,19 @@
                 else {
                     clearInterval(timer);
                     btn.innerHTML = `✅ جاري الدخول للعبة...`;
-                    setTimeout(startGameAfterMandatory, 500);
+                    setTimeout(() => {
+                        // تحديث الهدف القادم للرسالة ليصبح أعلى من الرصيد الحالي
+                        gameData.nextMandatoryTarget = (Math.floor(gameData.coins / MANDATORY_THRESHOLD) + 1) * MANDATORY_THRESHOLD;
+                        saveGameData();
+                        startGameAfterMandatory();
+                    }, 500);
                 }
             }, 1000);
         }
 
+        // يتم استدعاء هذه الدالة أثناء النقر للتحقق من الوصول لـ 5000
         function checkMandatoryThreshold() {
-            if (isMandatoryRequired()) {
+            if (gameData.coins >= gameData.nextMandatoryTarget) {
                 document.getElementById('gameContainer').style.display = 'none';
                 document.getElementById('mandatoryOverlay').style.display = 'flex';
                 document.getElementById('mandatoryBtn').disabled = false;
@@ -466,27 +489,44 @@
             }
         }
 
-        // ===== بيانات اللعبة =====
-        let gameData = {};
-        function saveGameData() { localStorage.setItem(`bttc_data_${getDeviceId()}`, JSON.stringify(gameData)); }
-        function loadGameData() { return JSON.parse(localStorage.getItem(`bttc_data_${getDeviceId()}`)) || null; }
+        // ===== الأجهزة والإحصائيات =====
+        let totalUniqueDevices = 0; let seenDevices = []; let activeDevicesMap = new Map();
 
-        function initGameData() {
-            const saved = loadGameData(); const now = Date.now();
-            if (saved) {
-                gameData = { ...saved, lastAdWatchTime: saved.lastAdWatchTime || 0, withdrawalsCount: saved.withdrawalsCount || 0, barClicks: saved.barClicks || 0, lastMandatoryThreshold: saved.lastMandatoryThreshold || 0 };
-            } else {
-                gameData = {
-                    coins: 0, clickPower: 1, clickCost: 20, totalClicks: 0, upgradesBought: 0, lastWithdraw: 0, adsWatched: 0, lastAdReset: now, dailyBoostCount: 0, lastBoostReset: now, referralCode: generateReferralCode(), referralsCount: 0, referralRewards: 0, maxReferrals: 100, usedReferralCode: false, hasSubscribed: false, lastAdWatchTime: 0, withdrawalsCount: 0, barClicks: 0, lastMandatoryThreshold: 0
-                };
-            }
-            if (now - gameData.lastAdReset > COOLDOWN) { gameData.adsWatched = 0; gameData.lastAdReset = now; }
-            if (now - gameData.lastBoostReset > COOLDOWN) { gameData.dailyBoostCount = 0; gameData.lastBoostReset = now; }
+        function initUniqueDevicesCounter() {
+            const savedCount = localStorage.getItem('bttc_unique_devices_count');
+            const savedDevices = localStorage.getItem('bttc_unique_devices_set');
+            const savedActive = localStorage.getItem('bttc_active_devices_map');
+            
+            totalUniqueDevices = savedCount !== null ? parseInt(savedCount, 10) : 0;
+            if (savedDevices !== null) { try { seenDevices = JSON.parse(savedDevices); } catch(e) { seenDevices = []; } }
+            if (savedActive !== null) { try { activeDevicesMap = new Map(Object.entries(JSON.parse(savedActive))); } catch(e) { activeDevicesMap = new Map(); } }
+            
+            updateActiveDevicesCount(); updateTotalDevicesDisplay();
         }
 
-        function generateReferralCode() {
-            const tgUser = tg.initDataUnsafe?.user;
-            return tgUser?.id ? `tg_${tgUser.id}` : `ref_${Math.floor(Math.random() * 1000000000)}`;
+        function updateActiveDevicesCount() {
+            const now = Date.now();
+            for (let [deviceId, lastSeen] of activeDevicesMap.entries()) {
+                if (now - lastSeen > 24 * 60 * 60 * 1000) activeDevicesMap.delete(deviceId);
+            }
+            localStorage.setItem('bttc_active_devices_map', JSON.stringify(Object.fromEntries(activeDevicesMap)));
+        }
+
+        function updateUniqueDevicesCounter() {
+            const deviceId = getDeviceId();
+            if (!seenDevices.includes(deviceId)) {
+                seenDevices.push(deviceId); totalUniqueDevices++;
+                localStorage.setItem('bttc_unique_devices_count', totalUniqueDevices.toString());
+                localStorage.setItem('bttc_unique_devices_set', JSON.stringify(seenDevices));
+            }
+            activeDevicesMap.set(deviceId, Date.now());
+            localStorage.setItem('bttc_active_devices_map', JSON.stringify(Object.fromEntries(activeDevicesMap)));
+            updateActiveDevicesCount(); updateTotalDevicesDisplay();
+        }
+
+        function updateTotalDevicesDisplay() {
+            if (document.getElementById('totalUsers')) document.getElementById('totalUsers').textContent = totalUniqueDevices.toLocaleString('en');
+            if (document.getElementById('activeUsers')) document.getElementById('activeUsers').textContent = activeDevicesMap.size.toLocaleString('en');
         }
 
         // ===== الدوال المنطقية والواجهة =====
@@ -504,11 +544,9 @@
             document.getElementById('clickPower').textContent = gameData.clickPower.toLocaleString();
             document.getElementById('upgradeCost').textContent = gameData.clickCost.toLocaleString();
             
-            // تحديث شريط التقدم 20 نقرة
             document.getElementById('clickProgressBar').style.width = (gameData.barClicks / 20) * 100 + "%";
             document.getElementById('clickProgressText').textContent = gameData.barClicks + "/20";
 
-            // السحب
             const withdrawBtn = document.getElementById('withdrawBtn');
             const withdrawDesc = document.getElementById('withdrawDesc');
             document.getElementById('withdrawAmount').textContent = Math.floor(gameData.coins).toLocaleString();
@@ -527,9 +565,11 @@
                 if (gameData.referralsCount > gameData.withdrawalsCount) {
                     stageInfo.innerHTML = `✅ شرط الدعوة: مكتمل<br>يمكنك سحب 25,000 الآن`;
                     stageInfo.style.color = "#10b981"; stageInfo.style.background = "rgba(16,185,129,0.1)";
+                    stageInfo.style.borderColor = "rgba(16,185,129,0.3)";
                 } else {
                     stageInfo.innerHTML = `❌ شرط الدعوة: غير مكتمل<br>تحتاج لدعوة صديق واحد على الأقل لإتمام السحب`;
                     stageInfo.style.color = "#ef4444"; stageInfo.style.background = "rgba(239,68,68,0.1)";
+                    stageInfo.style.borderColor = "rgba(239,68,68,0.3)";
                 }
             }
             
@@ -547,6 +587,7 @@
                 else { timerMsg.style.display = 'none'; coinWrapper.style.pointerEvents = 'auto'; coinWrapper.style.filter = 'none'; }
             } else { coinWrapper.style.pointerEvents = 'auto'; coinWrapper.style.filter = 'none'; timerMsg.style.display = 'none'; }
             
+            updateTotalDevicesDisplay();
             document.getElementById('totalClicks').textContent = gameData.totalClicks.toLocaleString();
             document.getElementById('currentPower').textContent = gameData.clickPower.toLocaleString();
             document.getElementById('upgradesBought').textContent = gameData.upgradesBought;
@@ -557,7 +598,7 @@
             document.getElementById('redDot').style.display = gameData.hasSubscribed ? 'none' : 'block';
         }
 
-        // ===== التفاعل مع النقر (العملة وشريط التقدم) =====
+        // ===== التفاعل مع النقر =====
         function createClickEffect(x, y) {
             const effect = document.createElement('div'); effect.className = 'click-effect';
             effect.style.left = `${x}px`; effect.style.top = `${y}px`; document.body.appendChild(effect);
@@ -571,7 +612,7 @@
             el.style.left = `calc(${x}px + ${(Math.random() - 0.5) * 60}px)`; el.style.top = `${y}px`;
             document.body.appendChild(el); 
             setTimeout(() => el.remove(), 1000);
-            if (isTelegram && tg.HapticFeedback) tg.HapticFeedback.impactOccurred('heavy'); // اهتزاز قوي عند الكسب
+            if (isTelegram && tg.HapticFeedback) tg.HapticFeedback.impactOccurred('heavy'); 
         }
 
         document.getElementById('clickZone').addEventListener('click', (e) => {
@@ -581,7 +622,6 @@
             gameData.barClicks++;
             createClickEffect(e.clientX, e.clientY); 
             
-            // إضافة الرصيد فقط عند اكتمال 20 نقرة
             if (gameData.barClicks >= 20) {
                 gameData.coins += gameData.clickPower; 
                 gameData.barClicks = 0;
@@ -708,14 +748,13 @@
             setTimeout(() => { const h = document.getElementById('hint'); if(h) h.style.display='none'; }, 8000);
         }
 
-        // البدء
+        // البدء الصارم: الشاشة الإجبارية أولاً دائماً عند تحميل التطبيق
         initGameData(); 
-        if (isMandatoryRequired() && gameData.coins >= MANDATORY_THRESHOLD) {
-            checkMandatoryThreshold();
-        } else {
-            document.getElementById('gameContainer').style.display = 'flex';
-            startGame();
-        }
+        document.getElementById('gameContainer').style.display = 'none';
+        document.getElementById('mandatoryOverlay').style.display = 'flex';
+        document.getElementById('mandatoryBtn').disabled = false;
+        document.getElementById('mandatoryBtn').innerHTML = `🔗 زيارة الرابط`;
+
     </script>
 </body>
 </html>
